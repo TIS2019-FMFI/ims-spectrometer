@@ -35,6 +35,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Management.Instrumentation" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,6 +48,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Backend\Converter\Hadamard.cs" />
+    <Compile Include="Backend\Service\ArduinoConnectionService.cs" />
+    <Compile Include="Backend\Service\DataManagementService.cs" />
+    <Compile Include="Backend\Service\FileService.cs" />
+    <Compile Include="Backend\Model\AggregatedData.cs" />
+    <Compile Include="Backend\Model\ArduinoData.cs" />
+    <Compile Include="Backend\Model\IntensityData.cs" />
+    <Compile Include="Backend\Model\Mobility.cs" />
+    <Compile Include="Backend\Model\Settings.cs" />
     <Compile Include="Forms\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -78,7 +89,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ArduinConfig\" />
-    <Folder Include="Backend\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
