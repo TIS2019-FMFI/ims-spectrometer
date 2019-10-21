@@ -11,6 +11,8 @@ namespace Arduin
 {
     public partial class Form1 : Form
     {
+        private bool heatisVisible = false;
+
         public Form1()
         {
             InitializeComponent();
@@ -83,6 +85,24 @@ namespace Arduin
             panel1.Visible = false;
             panel2.Visible = false;
             panel3.Visible = true;
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            chart2.Enabled = !chart2.Enabled;
+            chart3.Enabled = !chart3.Enabled;
+            chart2.Visible = !chart2.Visible;
+            chart3.Visible = !chart3.Visible;
+
+            if (!heatisVisible)
+            {
+                chart1.Size = new Size(chart1.Size.Width, chart1.Size.Height / 2);
+            } else
+            {
+                chart1.Size = new Size(chart1.Size.Width, chart1.Size.Height * 2);
+            }
+
+            heatisVisible = !heatisVisible;
         }
     }
 }
