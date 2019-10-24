@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -105,5 +106,45 @@ namespace Arduin
             heatisVisible = !heatisVisible;
         }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            Debug.WriteLine("load");
+            InitializeSettings();
+            InitializeMobility();
+            InitializeGraphSettings();
+        }
+
+        private void InitializeSettings()
+        {
+            numericUpDown1.Value = (decimal)Backend.Model.Settings.repeatSeconds;
+            numericUpDown2.Value = Backend.Model.Settings.sampling;
+            numericUpDown3.Value = Backend.Model.Settings.repeatCycles;
+            ComboBoxIntialize();
+        }
+
+        private void ComboBoxIntialize()
+        {
+            object[] ItemObject = new object[10];
+            int index = Backend.Model.Settings.gate;
+            for (int i = 0; i < 10; i++)
+            {
+                ItemObject[i] = "Width " + i + " pulse";
+            }
+            comboBox1.Items.AddRange(ItemObject);
+            comboBox1.SelectedIndex = index;
+        }
+
+        private void InitializeMobility()
+        {
+            numericUpDown4.Value = (decimal)Backend.Model.Mobility.L;
+            numericUpDown5.Value = (decimal)Backend.Model.Mobility.p;
+            numericUpDown6.Value = (decimal)Backend.Model.Mobility.T;
+            numericUpDown7.Value = (decimal)Backend.Model.Mobility.U;
+        }
+
+        private void InitializeGraphSettings()
+        {
+            //Default X,Y
+        }
     }
 }
