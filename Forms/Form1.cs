@@ -90,6 +90,30 @@ namespace Arduin
 
         private void button5_Click(object sender, EventArgs e)
         {
+            ChartManagment();
+            OpenHeatMap();
+        }
+
+        private void OpenHeatMap()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "csv|*.csv";
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                Backend.Model.AggregatedData ad = new Backend.Model.AggregatedData();
+                ad.path = ofd.FileName;
+            } else
+            {
+                DialogResult dr = MessageBox.Show("Please choose a file", "File not found", MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning);
+                if (dr == DialogResult.Retry)
+                {
+                    OpenHeatMap();
+                }
+            }
+        }
+
+        private void ChartManagment()
+        {
             chart2.Enabled = !chart2.Enabled;
             chart3.Enabled = !chart3.Enabled;
             chart2.Visible = !chart2.Visible;
@@ -98,7 +122,8 @@ namespace Arduin
             if (!heatisVisible)
             {
                 chart1.Size = new Size(chart1.Size.Width, chart1.Size.Height / 2);
-            } else
+            }
+            else
             {
                 chart1.Size = new Size(chart1.Size.Width, chart1.Size.Height * 2);
             }
@@ -108,7 +133,6 @@ namespace Arduin
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Debug.WriteLine("load");
             InitializeSettings();
             InitializeMobility();
             InitializeGraphSettings();
@@ -144,7 +168,16 @@ namespace Arduin
 
         private void InitializeGraphSettings()
         {
-            //Default X,Y
+            //Default X
+            int xmin = 1; 
+            int xmax = 10; 
+            textBox1.Text = xmin.ToString();
+            textBox2.Text = xmax.ToString();
+            //Default Y
+            int ymin = 1;
+            int ymax = 10;
+            textBox3.Text = ymin.ToString();
+            textBox4.Text = ymax.ToString();
         }
     }
 }
