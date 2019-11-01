@@ -59,5 +59,10 @@ namespace Arduin.Properties {
                 resourceCulture = value;
             }
         }
+
+        internal static object GetObject(string v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
