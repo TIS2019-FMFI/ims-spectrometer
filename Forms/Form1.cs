@@ -72,8 +72,8 @@ namespace Arduin
 
         private void button5_Click(object sender, EventArgs e)
         {
-            CreateHeatMap();
-            //DecideAction();
+            //CreateHeatMap();
+            DecideAction();
             //ChartManagment();
             //OpenHeatMap();
         }
@@ -82,7 +82,6 @@ namespace Arduin
         {
             AgregateForm myMessageBoxh = new AgregateForm();
             myMessageBoxh.ShowDialog();
-            
         }
 
         public void OpenHeatMap()
@@ -111,6 +110,7 @@ namespace Arduin
             heatchart.Size = new Size(524,355);
             heatchart.Left = 0;
             heatchart.Top = panel3.Height - 400;
+            heatchart.Legends.Add(new Legend("Heat"));
             //heatchart.Anchor = AnchorStyles.Bottom;
             //heatchart.Anchor = AnchorStyles.Left;
             panel3.Controls.Add(heatchart);
