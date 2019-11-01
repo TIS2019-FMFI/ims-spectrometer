@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 
 namespace Arduin.Backend.Model
 {
-    class AggregatedData
-    {
+    class AggregatedData{
+
+        /**
+         * tells how many ArduinoData was averaged to create this data structure
+         */
+        public UInt16 number { get; set; } = 0;
+
         /**
          * path where a corresponding csv file is located for this AggregatedData
          */

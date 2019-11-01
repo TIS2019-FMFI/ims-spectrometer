@@ -11,13 +11,19 @@ namespace Arduin.Backend.Model{
      * One measurement , lasting around 20 000 microseconds
      */
     class Measurement{
+        /**
+         * container for measured data by arduino, maximum 4095 points
+         * hadamard encoding, but may be less if time exceed 20 000 microseconds.
+         * How many numbers of measurement should be valid will tell validData, only those will be displayed on graph
+         */
         public double[] measurement { get; set; } = new double[4095];
 
         /**
-         * tells how many data from measurement are valid and will be displayed on graph,
+         * tells how many data from measurement are valid and will be displayed on graph.
+         * May happen that from measurement only the first 1500 data are some acctualy value, rest will be 0 (will not be presented on graph)
          * usualy it will be 4095, but may be less (never more)
          */
-        public int validData { get; set; } = 4095;
+        public int validData { get; set; } = 0;
     }
 
 
@@ -32,27 +38,8 @@ namespace Arduin.Backend.Model{
     class ArduinoData{
 
 
-        /**
-         * will contain measured data from arduino by one cycle. One cycle will be usualy 4095 points
-         * hadamard encoding, but may less if time would exceed 20 000 microseconds.
-         * So for example :
-         *          sampling = 20
-         *          points = 4095
-         *          time = sampling * points = 4095 * 20 -> 80 000+
-         *          so in this case only the first 1000 data from measurement will be valid, rest will be 0, becasue
-         *          20 000 / 20 = 1 000
-         */
-        public List<Measurement> arduinoMeasurements { get; set; } = new List<Measurement>();
-
-
-        /**
-         * number which tells how many arduinoMeasurements has been done
-         * so acctually arduinoMeasurements.size() == cycles
-         * this number will help to get the average data from arduinoMeasurements
-         */
-        public int cycles { get; set; } = 0;
-
-       
+        // container for measured data from arduino by one cycle
+        public List<Measurement> arduinoMeasurements { get; set; } = new List<Measurement>();       
 
     }
 }

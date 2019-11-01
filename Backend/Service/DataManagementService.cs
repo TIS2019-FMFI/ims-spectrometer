@@ -29,13 +29,23 @@ namespace Arduin.Backend{
          * will call ArduinoConnectionService.getMeasurementFromArduino()
          * life cycle means data which were generated in i.e. 1 second
          * call this method as : https://www.youtube.com/watch?v=C5VhaxQWcpE from UI
+         * this method may take around 1 second to execute, must be called async
          */
-        public ArduinoData getOneLifeCycleOfArduinoData(){
+        private async Task<ArduinoData> getOneLifeCycleOfArduinoData(){
             ArduinoData arduinoData = new ArduinoData();
-            // TODO - Edo
-            // this method will take 1-2-3 etc SECONDS, 
-            // waiting specifing amount of data from ArduinoConnectionService.getMeasurementFromArduino()
-            Thread.Sleep(3000);
+
+            if (Settings.applyRepeatSeconds) {
+                // get measurement from serial connection for spexific seconds
+                DateTime start = DateTime.Now;
+                while (DateTime.Now.Subtract(start).Seconds <= Settings.repeatSeconds) {
+                    arduinoData.arduinoMeasurements.Add(ArduinoConnectionService.Instance.getMeasurementFromArduino());
+                }
+
+            } else {
+                // get measurement from serial connection Settings.repeatCycles TIMES
+                arduinoData.arduinoMeasurements.AddRange(System.Linq.Enumerable.Range(0, Settings.repeatCycles)
+                    .Select(_ => ArduinoConnectionService.Instance.getMeasurementFromArduino()).ToList());
+            }
 
             return arduinoData;
         }
@@ -48,9 +58,14 @@ namespace Arduin.Backend{
          * arduinoData.cycles - tells how many data has to be averaged
          * arduinoData.arduinoMeasurements.validData - tells how many data from arduinoData.measurement are valid (unvalid data exceeded 20miliseconds)
          */
-        public AggregatedData getAggregatedData(ArduinoData arduinoData) {
+        public async Task<AggregatedData> getAggregatedData() {
             AggregatedData aggregatedData = new AggregatedData();
-            // TODO - Andrej
+            ArduinoData arduinoData = await getOneLifeCycleOfArduinoData();
+
+            // TODO - Andrej - vytvor agregaciu dat z arduinoData do aggregatedData
+            // musis vyplnit v aggregatedData.number - to je arduinoData.arduinoMeasurements.size()
+            //  aggregatedData.sampling - aktualny sampling Sitting.sampling
+            // aggregatedData.aggregatedData - priemer dat
 
 
 
