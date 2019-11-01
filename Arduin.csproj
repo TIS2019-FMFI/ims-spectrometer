@@ -50,6 +50,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\AgregateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AgregateForm.Designer.cs">
+      <DependentUpon>AgregateForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Backend\Converter\Hadamard.cs" />
     <Compile Include="Backend\Service\ArduinoConnectionService.cs" />
     <Compile Include="Backend\Service\DataManagementService.cs" />
@@ -67,6 +73,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\AgregateForm.resx">
+      <DependentUpon>AgregateForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
