@@ -10,7 +10,7 @@ namespace Arduin.Backend.Model{
     /**
      * One measurement , lasting around 20 000 microseconds
      */
-    class Measurement{
+    public class Measurement{
         /**
          * container for measured data by arduino, maximum 4095 points
          * hadamard encoding, but may be less if time exceed 20 000 microseconds.
@@ -35,7 +35,7 @@ namespace Arduin.Backend.Model{
      * This class is used to make and average data from all collected measurements (which will be measured every 20 miliseconds)
      * from one life cycle (i.e 1 seconds), so list may contains around 50 measurements from which has to be make an average
      */
-    class ArduinoData{
+    public class ArduinoData{
 
 
         // container for measured data from arduino by one cycle

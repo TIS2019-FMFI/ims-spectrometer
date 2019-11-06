@@ -10,7 +10,7 @@ using Arduin.Backend.Model;
 namespace Arduin.Backend{
 
     // SINGLETON , use as ArduinoConnectionService.instance.XXXX !!!
-    class ArduinoConnectionService {
+    public class ArduinoConnectionService {
         // SINGLETON , use as ArduinoConnectionService.instance.XXXX !!!
         private static ArduinoConnectionService instance;
 

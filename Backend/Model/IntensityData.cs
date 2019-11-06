@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Arduin.Backend.Model{
-    class IntensityData {
+    public class IntensityData {
 
         /**
          * path where a corresponding csv file is located for this AggregatedData

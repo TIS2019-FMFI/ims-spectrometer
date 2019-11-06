@@ -8,7 +8,7 @@ using Arduin.Backend.Model;
 namespace Arduin.Backend
 {
     // SINGLETON , use as FileService.instance.XXXX !!!
-    class FileService
+    public class FileService
     {
         // SINGLETON , use as FileService.instance.XXXX !!!
         private static FileService instance;

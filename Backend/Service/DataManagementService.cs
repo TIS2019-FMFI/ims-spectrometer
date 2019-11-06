@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace Arduin.Backend{
     // SINGLETON , use as DataManagementService.instance.XXXX !!!
-    class DataManagementService {
+    public class DataManagementService {
         // SINGLETON , use as DataManagementService.instance.XXXX !!!
         private static DataManagementService instance;
 

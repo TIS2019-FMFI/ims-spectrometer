@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Arduin.Backend.Model
 {
-    class AggregatedData{
+    public class AggregatedData{
 
         /**
          * tells how many ArduinoData was averaged to create this data structure
