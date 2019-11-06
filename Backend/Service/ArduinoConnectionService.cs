@@ -84,12 +84,12 @@ namespace Arduin.Backend{
         /**
          * will send gate and sampling to arduino in format "gate sampling"
          */
-        internal void sendSettingsToArduino(){
+        public void sendSettingsToArduino(){
             if (serial.IsOpen)
                 serial.Write(Settings.gate + " " + Settings.sampling); // + Environment.NewLine
         }
 
-        private static string portFromName(string name = "Infineon DAS JDS COM"){
+        private string portFromName(string name = "Infineon DAS JDS COM"){
             //find the port accrding to name
             var port = "";
             using (var mos = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PnPEntity WHERE ClassGuid=\"{4d36e978-e325-11ce-bfc1-08002be10318}\""))
