@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Arduin.Backend.Model
 {
-    class AggregatedData{
+    public class AggregatedData{
 
         /**
          * tells how many ArduinoData was averaged to create this data structure
          */
-        public UInt16 number { get; set; } = 0;
+        public int numberOfMeasurements { get; set; } = 0;
 
         /**
          * path where a corresponding csv file is located for this AggregatedData
@@ -28,9 +28,9 @@ namespace Arduin.Backend.Model
         *  After one lifecycle (i.e. 1 second), arduinoMeasurements will contain X measurements and 
         *  those data has to be averaged into this attribute
         */
-        public double[] aggregatedData { get; private set; }
+        public double[] aggregatedData { get; private set; } = new double[4095];
 
 
-        
+
     }
 }

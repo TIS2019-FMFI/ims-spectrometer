@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace Arduin.Backend{
     // SINGLETON , use as DataManagementService.instance.XXXX !!!
-    class DataManagementService {
+    public class DataManagementService {
         // SINGLETON , use as DataManagementService.instance.XXXX !!!
         private static DataManagementService instance;
 
@@ -35,7 +35,7 @@ namespace Arduin.Backend{
             ArduinoData arduinoData = new ArduinoData();
 
             if (Settings.applyRepeatSeconds) {
-                // get measurement from serial connection for spexific seconds
+                // get measurement from serial connection for specific seconds
                 DateTime start = DateTime.Now;
                 while (DateTime.Now.Subtract(start).Seconds <= Settings.repeatSeconds) {
                     arduinoData.arduinoMeasurements.Add(ArduinoConnectionService.Instance.getMeasurementFromArduino());
@@ -52,22 +52,30 @@ namespace Arduin.Backend{
 
 
         /**
-         * from arduinoMeasurements will make a :  aggregatedData = new double[arduinoData.length]
-         * and create average data and save to into this.aggregatedData .
-         * 
-         * arduinoData.cycles - tells how many data has to be averaged
-         * arduinoData.arduinoMeasurements.validData - tells how many data from arduinoData.measurement are valid (unvalid data exceeded 20miliseconds)
+         * sync await for one lifecycle of measurement.
+         * List will contains N number of measurement which has to be averaged into one double[] which will be displayed on the graph
          */
         public async Task<AggregatedData> getAggregatedData() {
             AggregatedData aggregatedData = new AggregatedData();
+
+            // synchronized waiting for arduino to send back measurements
             ArduinoData arduinoData = await getOneLifeCycleOfArduinoData();
 
-            // TODO - Andrej - vytvor agregaciu dat z arduinoData do aggregatedData
-            // musis vyplnit v aggregatedData.number - to je arduinoData.arduinoMeasurements.size()
-            //  aggregatedData.sampling - aktualny sampling Sitting.sampling
-            // aggregatedData.aggregatedData - priemer dat
+            // if there is no data received from arduino, throw exception
+            if (!arduinoData.arduinoMeasurements.Any()) {
+                throw new ArithmeticException("There were no measurements found to aggregate data.");
+            }
 
+            // save how many measurements will be aggregated
+            aggregatedData.numberOfMeasurements = arduinoData.arduinoMeasurements.Count;
 
+            // perform data aggregation
+           for (int i=0; i < arduinoData.arduinoMeasurements.First().measurement.Length; i++) {
+                foreach(Measurement data in arduinoData.arduinoMeasurements) {
+                    aggregatedData.aggregatedData[i] += data.measurement[i];
+                }
+                aggregatedData.aggregatedData[i] /= aggregatedData.numberOfMeasurements;
+            }
 
             return aggregatedData;
         }
@@ -82,13 +90,13 @@ namespace Arduin.Backend{
         * 
         * Mobility may be applied on aggregated data, mobility is one life cycle of measurement 
         */
-        public double[] calculateMobilities(double[] aggregatedData) {
-            double[] mobilityData = new double[aggregatedData.Length];
+        public double[] calculateMobilities(AggregatedData data) {
+            double[] mobilityData = new double[data.aggregatedData.Length];
 
             double Pa = 100.0 * Mobility.p;//Pa <- mbar
             double kV = 1000.0 * Mobility.U; //V <- kV
 
-            for (int i = 0; i < aggregatedData.Length; i++) {
+            for (int i = 0; i < data.aggregatedData.Length; i++) {
                 double t = (i + 0.5) * Settings.sampling / 1000.0e3;//milliseconds       
                 var K0 = (Mobility.L * Mobility.L / (kV * t)) * (Pa * 293.15 / (101325.0 * Mobility.T));
                 mobilityData[i] = K0;
