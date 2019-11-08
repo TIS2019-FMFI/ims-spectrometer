@@ -74,8 +74,6 @@ namespace Arduin
         {
             //CreateHeatMap();
             DecideAction();
-            //ChartManagment();
-            //OpenHeatMap();
         }
 
         private void DecideAction()
@@ -105,14 +103,12 @@ namespace Arduin
 
         private void CreateHeatMap()
         {
-            ResizePanel();
+            //ResizePanel();
             Chart heatchart = new Chart();
             heatchart.Size = new Size(524,355);
             heatchart.Left = 0;
-            heatchart.Top = panel3.Height - 400;
+            heatchart.Top = panel3.Height;
             heatchart.Legends.Add(new Legend("Heat"));
-            //heatchart.Anchor = AnchorStyles.Bottom;
-            //heatchart.Anchor = AnchorStyles.Left;
             panel3.Controls.Add(heatchart);
         }
 
@@ -121,30 +117,21 @@ namespace Arduin
             panel3.Size = new Size(panel3.Width, panel3.Height + 400);
         }
 
-        private void ChartManagment()
-        {
-            chart2.Enabled = !chart2.Enabled;
-            chart3.Enabled = !chart3.Enabled;
-            chart2.Visible = !chart2.Visible;
-            chart3.Visible = !chart3.Visible;
-
-            if (!heatisVisible)
-            {
-                chart1.Size = new Size(chart1.Size.Width, chart1.Size.Height / 2);
-            }
-            else
-            {
-                chart1.Size = new Size(chart1.Size.Width, chart1.Size.Height * 2);
-            }
-
-            heatisVisible = !heatisVisible;
-        }
-
         private void Form1_Load(object sender, EventArgs e)
         {
             InitializeSettings();
             InitializeMobility();
             InitializeGraphSettings();
+            EnableScrolling();
+        }
+
+        private void EnableScrolling()
+        {
+            panel3.AutoScroll = false;
+            panel3.VerticalScroll.Enabled = false;
+            panel3.VerticalScroll.Visible = false;
+            panel3.VerticalScroll.Maximum = 0;
+            panel3.AutoScroll = true;
         }
 
         private void InitializeSettings()
@@ -188,13 +175,13 @@ namespace Arduin
             if (isStarted) {
                 // start
                 //tak ako je nazvany image v resources
-                //button1.Image = Properties.Resources.Stop;
+                button1.Image = Properties.Resources.Stop;
             }
             else
             {
                 //stop
                 //tak ako je nazvany image v resources
-                //button1.Image = Properties.Resources.Play;
+                button1.Image = Properties.Resources.Play;
             }
         }
     }

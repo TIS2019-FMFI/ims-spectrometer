@@ -105,5 +105,20 @@
   <ItemGroup>
     <Folder Include="ArduinConfig\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Play.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Play,Stop\Play.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Play,Stop\Plus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Play,Stop\Stop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Play,Stop\Otaznik.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
