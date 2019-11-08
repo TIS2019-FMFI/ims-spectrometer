@@ -72,8 +72,8 @@ namespace Arduin
 
         private void button5_Click(object sender, EventArgs e)
         {
-            CreateHeatMap();
-            //DecideAction();
+            //CreateHeatMap();
+            DecideAction();
         }
 
         private void DecideAction()
@@ -122,6 +122,11 @@ namespace Arduin
             InitializeSettings();
             InitializeMobility();
             InitializeGraphSettings();
+            EnableScrolling();
+        }
+
+        private void EnableScrolling()
+        {
             panel3.AutoScroll = false;
             panel3.VerticalScroll.Enabled = false;
             panel3.VerticalScroll.Visible = false;
