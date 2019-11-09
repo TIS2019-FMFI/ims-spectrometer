@@ -30,34 +30,21 @@ namespace Arduin.Backend.Model{
          * boolean which tells whether to use repeatSeconds or repeatCycles to aggregate data
          * if applyRepeatSeconds == true -> repeatSeconds
          * if applyRepeatSeconds == false -> repeatCycles
-         * this value should be a checkbox in UI
+         * this value should be a check box in UI
          */
         public static bool applyRepeatSeconds { get; set; } = true;
 
 
         /**
-         * values are in microseconds.
-         * 1 miliseconds = 10000 microseconds
-         * value describes how often should an Arduino make measurement point in spectrometer,
-         * so for example arduino will make each 
-         * 5 mikroseconds a measurement which will be repeated 4000 times so one cycle will take 20 000 microsends
-         * 20 000 = 4000 * 5 
+         * values are in microseconds. Space between points of measurement 
          */
         public static int sampling { get; set; } = 5;
 
 
         /**
          * Pulse width which allows ions to move into drift.
-         * How long will be the gate open for ions to access drift is calculated by = sampling * gate
          */
         public static int gate { get; set; } = 2;
-
-
-        /**
-         * determine if user wants to apply hadamard transformation for aggregated data to display on the screen
-         */
-        public static bool hadamard { get; set; } = false;
-
 
     }
 

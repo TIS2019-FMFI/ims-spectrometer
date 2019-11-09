@@ -1,5 +1,9 @@
-#HIMS 5, Width 16 pulse, 489
-t(ms), signal(%full range)
+#Header
+numberOfMeasurements = 54
+sampling = 6
+gate = 2
+appliedMobility = true
+X(ms), Y1
 3247.014, 5.518
 1082.338, 4.811
 649.403, 4.466

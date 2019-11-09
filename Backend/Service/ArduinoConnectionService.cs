@@ -68,7 +68,6 @@ namespace Arduin.Backend{
                 } else {
                     try {
                         oneMeasurementCycle.measurement[position++] = Convert.ToDouble(line);
-                        oneMeasurementCycle.validData++;
                     } catch (Exception ex) {
                         Console.WriteLine("Error occured converting data from serial port do double : " + ex.Message);
                     }

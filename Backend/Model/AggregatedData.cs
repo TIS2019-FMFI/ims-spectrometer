@@ -9,26 +9,29 @@ namespace Arduin.Backend.Model
     public class AggregatedData{
 
         /**
-         * tells how many ArduinoData was averaged to create this data structure
+         * tells how many measurements was averaged to create this data structure
          */
         public int numberOfMeasurements { get; set; } = 0;
 
         /**
-         * path where a corresponding csv file is located for this AggregatedData
+         * sampling from current measurement - will be display on Aggregated or mirror graph
          */
-        public string path { get; set; } = "";
+        public int sampling { get; private set; } = Settings.sampling;
 
         /**
-         * number tells how far are each data from aggregatedData to each other.
-         * This sampling is usefull when data from aggregatedData will be display on Aggregated GRAPH
+         * gate from current measurement - - will be display on Aggregated or mirror graph
          */
-        public int sampling { get; set; } = Settings.sampling;
+        public int gate { get; private set; } = Settings.gate;
 
         /**
-        *  After one lifecycle (i.e. 1 second), arduinoMeasurements will contain X measurements and 
-        *  those data has to be averaged into this attribute
+         *  true if mobility was checked on gui
+         */
+        public bool appliedMobility { get; set; } = false;
+
+        /**
+        *  container for average measurements
         */
-        public double[] aggregatedData { get; private set; } = new double[4095];
+        public double[] aggregatedData { get; private set; } = new double[8001];
 
 
 

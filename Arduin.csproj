@@ -56,12 +56,11 @@
     <Compile Include="Forms\AgregateForm.Designer.cs">
       <DependentUpon>AgregateForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Backend\Converter\Hadamard.cs" />
     <Compile Include="Backend\Service\ArduinoConnectionService.cs" />
     <Compile Include="Backend\Service\DataManagementService.cs" />
     <Compile Include="Backend\Service\FileService.cs" />
     <Compile Include="Backend\Model\AggregatedData.cs" />
-    <Compile Include="Backend\Model\ArduinoData.cs" />
+    <Compile Include="Backend\Model\Measurement.cs" />
     <Compile Include="Backend\Model\IntensityData.cs" />
     <Compile Include="Backend\Model\Mobility.cs" />
     <Compile Include="Backend\Model\Settings.cs" />
