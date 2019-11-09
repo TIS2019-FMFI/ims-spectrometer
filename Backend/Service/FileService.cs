@@ -24,27 +24,22 @@ namespace Arduin.Backend
             }
         }
 
-        private const string SETTINGS_PATH = "Data/Settings_Data/";  // path where settings will be save 
+        private const string SETTINGS_PATH = "Data/Configuration/";  // path where settings will be save 
 
         private const string AGGREGATED_DATA_PATH = "Data/Aggregated_Data/";  // path where aggregated data will be save 
-
-        private const string MOBILITY_DATA_PATH = "Data/Moblity_Data/";  // path where mobility data will be save 
 
         private const string INTENSITY_PATH = "Data/Intensity_Data/";  // path where intensity graph will be save 
 
         /**
-         * will save all setting from class Settings into csv like :
-         * repeatSeconds : Settings.instance.repeatSeconds ,
-         * repeatCycles :  Settings.instance.repeatCycles,
-         * etc....
+         * will save all setting and Mobility
          */
         public bool saveSettings() {
-            // TODO !!!!!
+            // TODO !!!!! - check settings_sample
             return false;
         }
 
         /**
-         * will load settings, will inicialise all attribues in Settings.X = N 
+         * will load settings and mobility
          */
         public bool loadSettings() {
             // TODO !!!!!
@@ -54,64 +49,34 @@ namespace Arduin.Backend
 
 
         /**
-         * aggregated data is an average of data which was measured in one life cycle, 
-         * i.e. one life cycle is around 1 seconds and one measurement
-         * may be around 20 miliseconds, so aggregatedData is an average data of 50 measurements 
-         * 
-         * CSV header must contains : 
-         * 1. #Aggregated data <-- Title
-         * 2. settings from  Settings --> repeatSeconds : value , repeatCycles : value , etc.... 
-         *          2.1 sampling MUST be from aggregatedData.sampling !
-         * 3. t(ms), signal(%full range)
-         * 4. Data.....
-         * 
-         * aggregatedData - data which has to be saved
-         * specificPath - dateTime (specific date which files has been created) + random name of csv (i.e. : 1.csv , 2.csv , etc.)
-         * appliedMobility - if true, put them in folder AGGREGATED_DATA_PATH + currentDaty 
-         *                  else MOBILITY_PATH + currentDaty + "/" 
+         * - everything will be save in path : AGGREGATED_DATA_PATH
+         * - name of the file will be aggregated_data_(currentTimestamp) 
+         * -  X represents time or mobility base on (appliedMobility is true or false)
+         * - Y column represents all data in  AggregatedData.aggregatedData
          */
-        public bool saveAggregatedData(AggregatedData aggregatedData, string specificPath, bool appliedMobility = false){
-            // TODO !!!!!
+        public bool saveAggregatedData(AggregatedData aggregatedData, bool appliedMobility = false){
+            // TODO !!!!! - see example in aggregated_sample and mobility_sample
             return false;
         }
 
 
 
-
         /**
-         * will load data from AGGREGATED_DATA_PATH + specificPath ,
-         * specificPath = DateTime (which data was a folder created ) + CSV (specific csv picked by user)
-         * data loaded from csv has to be added into arduinoData.aggregatedData
+         * for each AggregatedData in the list will be save as a new column.
+         * First column X represents time or mobility base on (appliedMobility is true or false)
+         * each Y in column represents an aggregated data, so if Intensity data contains
+         * 50 aggregated data, there will be Y1, Y2....Y50 in csv file
          */
-        public AggregatedData loadAggregatedData(string specificPath){
-            AggregatedData aggregatedData = new AggregatedData();
-            // must load data , sampling and path into aggregatedData
-            // TODO !!!!!
-
-
-
-            return aggregatedData;
-        }
-
-
-        /**
-         * this CSV will be different than CSV for aggregated data.
-         * This CSV will contain PATH to the aggegated data which will be then loaded
-         * 
-         * loop though all intensityData.intensityData , and for each intensityData save
-         * its path into the generated CSV
-         */
-        public bool saveIntensityData(IntensityData intensityData, string specificPath) {
-            // TODO !!!!!
+        public bool saveIntensityData(IntensityData intensityData) {
+            // check sample - intensity_data_sample
             return false;
         }
 
 
         /**
-         * read the for all aggregated data its path and load their data with this.loadAggregatedData(path) 
-         * into IntensityData.intensityData
+         * specificPath - should be defined by user
          */
-        public IntensityData loadIntensityData( string specificPath){
+        public IntensityData loadIntensityData(string specificPath){
             IntensityData intensityData = new IntensityData();
             // TODO !!!!!
 

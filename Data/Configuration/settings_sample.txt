@@ -1,0 +1,10 @@
+repeatSeconds 1
+repeatCycles 60
+applyRepeatSeconds false
+sampling 5
+gate 10
+---------
+L 13.05
+p 700.0
+T 293.0
+U 7.0

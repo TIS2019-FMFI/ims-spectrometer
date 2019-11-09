@@ -89,7 +89,6 @@ namespace Arduin
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 Backend.Model.AggregatedData ad = new Backend.Model.AggregatedData();
-                ad.path = ofd.FileName;
                 CreateHeatMap();
             } else
             {
