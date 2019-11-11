@@ -23,10 +23,6 @@ namespace Arduin.Backend.Model
          */
         public int gate { get; private set; } = Settings.gate;
 
-        /**
-         *  true if mobility was checked on gui
-         */
-        public bool appliedMobility { get; set; } = false;
 
         /**
         *  container for average measurements

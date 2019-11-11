@@ -46,6 +46,12 @@ namespace Arduin.Backend.Model{
          */
         public static int gate { get; set; } = 2;
 
+
+        /**
+         * Name of the project defined by User
+         */
+        public static string projectName { get; set; } = "undefined";
+
     }
 
 }

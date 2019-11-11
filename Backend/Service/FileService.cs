@@ -50,12 +50,13 @@ namespace Arduin.Backend
 
         /**
          * - everything will be save in path : AGGREGATED_DATA_PATH
-         * - name of the file will be aggregated_data_(currentTimestamp) 
-         * -  X represents time or mobility base on (appliedMobility is true or false)
+         * - name of the file will be in format : Settings.projectName_currentTimestamp
+         * - X represents time or mobility base on (appliedMobility is true or false)
          * - Y column represents all data in  AggregatedData.aggregatedData
+         * - in Header of the file save everithing what is in AggregatedData - numberOfMeasurements , sampling , gate
          */
-        public bool saveAggregatedData(AggregatedData aggregatedData, bool appliedMobility = false){
-            // TODO !!!!! - see example in aggregated_sample and mobility_sample
+        public bool saveAggregatedData(AggregatedData aggregatedData){
+            // TODO !!!!! - see example in aggregated_sample  - nezalezi ako v CSV budu udaje, len aby si ich vedel ulozit a nacitat
             return false;
         }
 
@@ -63,9 +64,10 @@ namespace Arduin.Backend
 
         /**
          * for each AggregatedData in the list will be save as a new column.
-         * First column X represents time or mobility base on (appliedMobility is true or false)
+         * First column X represents time
          * each Y in column represents an aggregated data, so if Intensity data contains
          * 50 aggregated data, there will be Y1, Y2....Y50 in csv file
+         * name of the file will be in format : Settings.projectName_currentTimestamp
          */
         public bool saveIntensityData(IntensityData intensityData) {
             // check sample - intensity_data_sample
