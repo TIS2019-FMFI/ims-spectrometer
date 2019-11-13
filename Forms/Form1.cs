@@ -43,7 +43,7 @@ namespace Arduin
         private void label5_MouseHover(object sender, EventArgs e)
         {
             toolTip1.ToolTipTitle = "Hint";
-            toolTip1.SetToolTip(label5, "Precision of measurement");
+            toolTip1.SetToolTip(label5, "Repeat 'Count' times");
         }
 
         private void label6_MouseHover(object sender, EventArgs e)
@@ -137,20 +137,6 @@ namespace Arduin
         {
             numericUpDown1.Value = (decimal)Backend.Model.Settings.repeatSeconds;
             numericUpDown2.Value = Backend.Model.Settings.sampling;
-            numericUpDown3.Value = Backend.Model.Settings.repeatCycles;
-            ComboBoxIntialize();
-        }
-
-        private void ComboBoxIntialize()
-        {
-            object[] ItemObject = new object[10];
-            int index = Backend.Model.Settings.gate;
-            for (int i = 0; i < 10; i++)
-            {
-                ItemObject[i] = "Width " + i + " pulse";
-            }
-            comboBox1.Items.AddRange(ItemObject);
-            comboBox1.SelectedIndex = index;
         }
 
         private void InitializeMobility()
@@ -182,6 +168,16 @@ namespace Arduin
                 //tak ako je nazvany image v resources
                 button1.Image = Properties.Resources.Play;
             }
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            // aplikovat mobilitu
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            this.Text = textBox1.Text;
         }
     }
 }
