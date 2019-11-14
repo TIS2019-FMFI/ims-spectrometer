@@ -26,9 +26,9 @@ namespace Arduin.Backend
 
         private const string SETTINGS_PATH = "Data/Configuration/";  // path where settings will be save 
 
-        private const string AGGREGATED_DATA_PATH = "Data/Aggregated_Data/";  // path where aggregated data will be save 
+        private const string AGGREGATED_DATA_PATH = "Data/Aggregated_Data/";  // path where aggregated data will be saved
 
-        private const string INTENSITY_PATH = "Data/Intensity_Data/";  // path where intensity graph will be save 
+        private const string INTENSITY_PATH = "Data/Intensity_Data/";  // path where intensity graph will be saved 
 
         /**
          * will save all setting and Mobility

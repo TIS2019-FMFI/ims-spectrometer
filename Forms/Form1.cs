@@ -14,8 +14,15 @@ namespace Arduin
 {
     public partial class Form1 : Form
     {
-        private bool heatisVisible = false;
         private bool isStarted = false;
+
+        // Velkost intezitneho grafu X, Y
+        private int heatSizeX = 524;
+        private int heatSizeY = 355;
+
+        // Velkost panelu kde su vsetky komponenty intensity grafu
+        private int heatPanelSizeX = 1060;
+        private int heatPanelSizeY = 455; // 380
 
         public Form1()
         {
@@ -73,6 +80,7 @@ namespace Arduin
         private void button5_Click(object sender, EventArgs e)
         {
             //CreateHeatMap();
+            //CreateHeatFromCurrent();
             DecideAction();
         }
 
@@ -100,20 +108,72 @@ namespace Arduin
             }
         }
 
+        //nejde dorabam
+        public void CreateHeatFromCurrent()
+        {
+            Panel heatCurrentPanel = CreateHeatPanel();
+            AddHeatChart(heatCurrentPanel);
+            AddButtons(heatCurrentPanel, true);
+            Debug.WriteLine(graphpanel.Size);
+            graphpanel.Controls.Add(heatCurrentPanel);
+            CreateHeatMap();
+            Debug.WriteLine(graphpanel.Size);
+        }
+
         private void CreateHeatMap()
         {
-            //ResizePanel();
+            Panel heatpanel = CreateHeatPanel();
+
+            AddHeatChart(heatpanel);
+            AddButtons(heatpanel);
+            graphpanel.Controls.Add(heatpanel);
+        }
+
+        private Panel CreateHeatPanel()
+        {
+            Panel heatpanel = new Panel();
+            heatpanel.Size = new Size(heatPanelSizeX, heatPanelSizeY);
+            heatpanel.Left = 0;
+            heatpanel.Top = graphpanel.Height;
+            return heatpanel;
+        }
+
+        private void AddHeatChart(Panel heatpanel)
+        {
             Chart heatchart = new Chart();
-            heatchart.Size = new Size(524,355);
+            heatchart.Size = new Size(heatSizeX, heatSizeY);
             heatchart.Left = 0;
-            heatchart.Top = panel3.Height;
+            heatchart.Top = 50;
             heatchart.Legends.Add(new Legend("Heat"));
-            panel3.Controls.Add(heatchart);
+            heatpanel.Controls.Add(heatchart);
+        }
+
+        private void AddButtons(Panel heatpanel, bool fromCurrent = false)
+        {
+            int buttonX = 100;
+            int buttonY = 50;
+
+            Button cancel = new Button();
+            cancel.Size = new Size(buttonX, buttonY);
+            cancel.Text = "Cancel";
+            cancel.Left = heatSizeX - buttonX;
+            cancel.Top = 0;
+            heatpanel.Controls.Add(cancel);
+
+            if (fromCurrent)
+            {
+                Button save = new Button();
+                save.Size = new Size(buttonX, buttonY);
+                save.Text = "Save";
+                save.Left = heatSizeX - buttonX;
+                save.Top = heatSizeY + buttonY;
+                heatpanel.Controls.Add(save);
+            }
         }
 
         private void ResizePanel()
         {
-            panel3.Size = new Size(panel3.Width, panel3.Height + 400);
+            graphpanel.Size = new Size(graphpanel.Width, graphpanel.Height + 400);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -122,21 +182,25 @@ namespace Arduin
             InitializeMobility();
             InitializeGraphSettings();
             EnableScrolling();
+            projectName.Text = Backend.Model.Settings.projectName;
         }
 
         private void EnableScrolling()
         {
-            panel3.AutoScroll = false;
-            panel3.VerticalScroll.Enabled = false;
-            panel3.VerticalScroll.Visible = false;
-            panel3.VerticalScroll.Maximum = 0;
-            panel3.AutoScroll = true;
+            graphpanel.AutoScroll = false;
+            graphpanel.VerticalScroll.Enabled = false;
+            graphpanel.VerticalScroll.Visible = false;
+            graphpanel.VerticalScroll.Maximum = 0;
+            graphpanel.AutoScroll = true;
         }
 
         private void InitializeSettings()
         {
-            numericUpDown1.Value = (decimal)Backend.Model.Settings.repeatSeconds;
-            numericUpDown2.Value = Backend.Model.Settings.sampling;
+            numericseconds.Value = (decimal)Backend.Model.Settings.repeatSeconds;
+            numericsampling.Value = Backend.Model.Settings.sampling;
+            numericcount.Value = Backend.Model.Settings.repeatCycles;
+            numericgate.Value = Backend.Model.Settings.gate;
+            repeatcountcheckbox.Checked = Backend.Model.Settings.applyRepeatSeconds;
         }
 
         private void InitializeMobility()
@@ -177,7 +241,8 @@ namespace Arduin
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            this.Text = textBox1.Text;
+            Backend.Model.Settings.projectName = projectName.Text;
+            this.Text = Backend.Model.Settings.projectName;
         }
     }
 }

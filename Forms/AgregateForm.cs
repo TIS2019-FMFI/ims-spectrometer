@@ -26,7 +26,9 @@ namespace Arduin
 
         private void button2_Click(object sender, EventArgs e)
         {
-            //method for current data
+            Form1 form1 = new Form1();
+            Close();
+            form1.CreateHeatFromCurrent();
         }
     }
 }

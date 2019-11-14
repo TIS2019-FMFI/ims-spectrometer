@@ -30,27 +30,29 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.numericseconds = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.numericsampling = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
+            this.repeatcountcheckbox = new System.Windows.Forms.CheckBox();
+            this.numericcount = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
-            this.numericUpDown8 = new System.Windows.Forms.NumericUpDown();
+            this.numericgate = new System.Windows.Forms.NumericUpDown();
             this.button3 = new System.Windows.Forms.Button();
             this.label13 = new System.Windows.Forms.Label();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.numericUpDown7 = new System.Windows.Forms.NumericUpDown();
             this.label9 = new System.Windows.Forms.Label();
             this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
@@ -63,19 +65,18 @@
             this.button5 = new System.Windows.Forms.Button();
             this.BasicSettings = new System.Windows.Forms.GroupBox();
             this.Mobility = new System.Windows.Forms.GroupBox();
-            this.panel3 = new System.Windows.Forms.Panel();
+            this.graphpanel = new System.Windows.Forms.Panel();
+            this.savegraphbutton = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.button4 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
+            this.button4 = new System.Windows.Forms.Button();
+            this.projectName = new System.Windows.Forms.TextBox();
+            ((System.ComponentModel.ISupportInitialize)(this.numericseconds)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericsampling)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericcount)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericgate)).BeginInit();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
@@ -84,7 +85,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.BasicSettings.SuspendLayout();
             this.Mobility.SuspendLayout();
-            this.panel3.SuspendLayout();
+            this.graphpanel.SuspendLayout();
             this.panel4.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -119,28 +120,28 @@
             this.label2.Text = "Repeat (s)";
             this.label2.MouseHover += new System.EventHandler(this.label2_MouseHover);
             // 
-            // numericUpDown1
+            // numericseconds
             // 
-            this.numericUpDown1.Increment = new decimal(new int[] {
+            this.numericseconds.Increment = new decimal(new int[] {
             5,
             0,
             0,
             131072});
-            this.numericUpDown1.Location = new System.Drawing.Point(137, 17);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
+            this.numericseconds.Location = new System.Drawing.Point(137, 17);
+            this.numericseconds.Maximum = new decimal(new int[] {
             60,
             0,
             0,
             0});
-            this.numericUpDown1.Minimum = new decimal(new int[] {
+            this.numericseconds.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(91, 23);
-            this.numericUpDown1.TabIndex = 3;
-            this.numericUpDown1.Value = new decimal(new int[] {
+            this.numericseconds.Name = "numericseconds";
+            this.numericseconds.Size = new System.Drawing.Size(91, 23);
+            this.numericseconds.TabIndex = 3;
+            this.numericseconds.Value = new decimal(new int[] {
             1,
             0,
             0,
@@ -156,28 +157,28 @@
             this.label3.Text = "Sampling (μs)";
             this.label3.MouseHover += new System.EventHandler(this.label3_MouseHover);
             // 
-            // numericUpDown2
+            // numericsampling
             // 
-            this.numericUpDown2.Increment = new decimal(new int[] {
+            this.numericsampling.Increment = new decimal(new int[] {
             5,
             0,
             0,
             65536});
-            this.numericUpDown2.Location = new System.Drawing.Point(136, 86);
-            this.numericUpDown2.Maximum = new decimal(new int[] {
+            this.numericsampling.Location = new System.Drawing.Point(136, 86);
+            this.numericsampling.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
-            this.numericUpDown2.Minimum = new decimal(new int[] {
+            this.numericsampling.Minimum = new decimal(new int[] {
             5,
             0,
             0,
             65536});
-            this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(91, 23);
-            this.numericUpDown2.TabIndex = 5;
-            this.numericUpDown2.Value = new decimal(new int[] {
+            this.numericsampling.Name = "numericsampling";
+            this.numericsampling.Size = new System.Drawing.Size(91, 23);
+            this.numericsampling.TabIndex = 5;
+            this.numericsampling.Value = new decimal(new int[] {
             5,
             0,
             0,
@@ -205,18 +206,18 @@
             // 
             this.panel1.AutoSize = true;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.checkBox1);
-            this.panel1.Controls.Add(this.numericUpDown3);
+            this.panel1.Controls.Add(this.repeatcountcheckbox);
+            this.panel1.Controls.Add(this.numericcount);
             this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.numericUpDown8);
+            this.panel1.Controls.Add(this.numericgate);
             this.panel1.Controls.Add(this.button3);
-            this.panel1.Controls.Add(this.numericUpDown2);
+            this.panel1.Controls.Add(this.numericsampling);
             this.panel1.Controls.Add(this.label13);
             this.panel1.Controls.Add(this.textBox4);
             this.panel1.Controls.Add(this.label15);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.numericUpDown1);
+            this.panel1.Controls.Add(this.numericseconds);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Location = new System.Drawing.Point(0, 22);
@@ -224,23 +225,33 @@
             this.panel1.Size = new System.Drawing.Size(235, 304);
             this.panel1.TabIndex = 11;
             // 
-            // numericUpDown3
+            // repeatcountcheckbox
             // 
-            this.numericUpDown3.Location = new System.Drawing.Point(136, 51);
-            this.numericUpDown3.Maximum = new decimal(new int[] {
+            this.repeatcountcheckbox.AutoSize = true;
+            this.repeatcountcheckbox.Location = new System.Drawing.Point(19, 157);
+            this.repeatcountcheckbox.Name = "repeatcountcheckbox";
+            this.repeatcountcheckbox.Size = new System.Drawing.Size(114, 21);
+            this.repeatcountcheckbox.TabIndex = 14;
+            this.repeatcountcheckbox.Text = "Repeat Count";
+            this.repeatcountcheckbox.UseVisualStyleBackColor = true;
+            // 
+            // numericcount
+            // 
+            this.numericcount.Location = new System.Drawing.Point(136, 51);
+            this.numericcount.Maximum = new decimal(new int[] {
             3000,
             0,
             0,
             0});
-            this.numericUpDown3.Minimum = new decimal(new int[] {
+            this.numericcount.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.numericUpDown3.Name = "numericUpDown3";
-            this.numericUpDown3.Size = new System.Drawing.Size(91, 23);
-            this.numericUpDown3.TabIndex = 13;
-            this.numericUpDown3.Value = new decimal(new int[] {
+            this.numericcount.Name = "numericcount";
+            this.numericcount.Size = new System.Drawing.Size(91, 23);
+            this.numericcount.TabIndex = 13;
+            this.numericcount.Value = new decimal(new int[] {
             1,
             0,
             0,
@@ -256,23 +267,23 @@
             this.label5.Text = "Repeat (Count)";
             this.label5.MouseHover += new System.EventHandler(this.label5_MouseHover);
             // 
-            // numericUpDown8
+            // numericgate
             // 
-            this.numericUpDown8.Location = new System.Drawing.Point(136, 121);
-            this.numericUpDown8.Maximum = new decimal(new int[] {
+            this.numericgate.Location = new System.Drawing.Point(136, 121);
+            this.numericgate.Maximum = new decimal(new int[] {
             20,
             0,
             0,
             0});
-            this.numericUpDown8.Minimum = new decimal(new int[] {
+            this.numericgate.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.numericUpDown8.Name = "numericUpDown8";
-            this.numericUpDown8.Size = new System.Drawing.Size(91, 23);
-            this.numericUpDown8.TabIndex = 11;
-            this.numericUpDown8.Value = new decimal(new int[] {
+            this.numericgate.Name = "numericgate";
+            this.numericgate.Size = new System.Drawing.Size(91, 23);
+            this.numericgate.TabIndex = 11;
+            this.numericgate.Value = new decimal(new int[] {
             1,
             0,
             0,
@@ -329,6 +340,17 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(235, 194);
             this.panel2.TabIndex = 15;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(19, 163);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(113, 21);
+            this.checkBox2.TabIndex = 9;
+            this.checkBox2.Text = "Apply mobility";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
             // numericUpDown7
             // 
@@ -420,18 +442,18 @@
             // 
             // chart1
             // 
-            chartArea3.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea3);
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
             this.chart1.Cursor = System.Windows.Forms.Cursors.Cross;
-            legend3.Name = "Legend1";
-            this.chart1.Legends.Add(legend3);
+            legend2.Name = "Legend1";
+            this.chart1.Legends.Add(legend2);
             this.chart1.Location = new System.Drawing.Point(0, 0);
             this.chart1.Name = "chart1";
-            series3.ChartArea = "ChartArea1";
-            series3.Legend = "Legend1";
-            series3.Name = "Series1";
-            this.chart1.Series.Add(series3);
-            this.chart1.Size = new System.Drawing.Size(1200, 723);
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.chart1.Series.Add(series2);
+            this.chart1.Size = new System.Drawing.Size(1060, 637);
             this.chart1.TabIndex = 25;
             this.chart1.Text = "chart1";
             // 
@@ -443,9 +465,9 @@
             this.button5.FlatAppearance.BorderSize = 0;
             this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button5.Image = ((System.Drawing.Image)(resources.GetObject("button5.Image")));
-            this.button5.Location = new System.Drawing.Point(0, 729);
+            this.button5.Location = new System.Drawing.Point(0, 675);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(1200, 45);
+            this.button5.Size = new System.Drawing.Size(1060, 45);
             this.button5.TabIndex = 26;
             this.button5.UseVisualStyleBackColor = false;
             this.button5.Click += new System.EventHandler(this.button5_Click);
@@ -472,15 +494,27 @@
             this.Mobility.TabStop = false;
             this.Mobility.Text = "Mobility";
             // 
-            // panel3
+            // graphpanel
             // 
-            this.panel3.AutoScroll = true;
-            this.panel3.Controls.Add(this.chart1);
-            this.panel3.Controls.Add(this.button5);
-            this.panel3.Location = new System.Drawing.Point(278, 23);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1200, 774);
-            this.panel3.TabIndex = 33;
+            this.graphpanel.AutoScroll = true;
+            this.graphpanel.Controls.Add(this.savegraphbutton);
+            this.graphpanel.Controls.Add(this.chart1);
+            this.graphpanel.Controls.Add(this.button5);
+            this.graphpanel.Location = new System.Drawing.Point(278, 9);
+            this.graphpanel.Name = "graphpanel";
+            this.graphpanel.Size = new System.Drawing.Size(1060, 720);
+            this.graphpanel.TabIndex = 33;
+            // 
+            // savegraphbutton
+            // 
+            this.savegraphbutton.BackColor = System.Drawing.Color.LimeGreen;
+            this.savegraphbutton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.savegraphbutton.Location = new System.Drawing.Point(907, 637);
+            this.savegraphbutton.Name = "savegraphbutton";
+            this.savegraphbutton.Size = new System.Drawing.Size(153, 32);
+            this.savegraphbutton.TabIndex = 27;
+            this.savegraphbutton.Text = "Save Graph";
+            this.savegraphbutton.UseVisualStyleBackColor = false;
             // 
             // panel4
             // 
@@ -488,7 +522,7 @@
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel4.Controls.Add(this.button6);
             this.panel4.Controls.Add(this.button4);
-            this.panel4.Controls.Add(this.textBox1);
+            this.panel4.Controls.Add(this.projectName);
             this.panel4.Controls.Add(this.BasicSettings);
             this.panel4.Controls.Add(this.Mobility);
             this.panel4.Controls.Add(this.button1);
@@ -497,48 +531,8 @@
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Margin = new System.Windows.Forms.Padding(5);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(260, 801);
+            this.panel4.Size = new System.Drawing.Size(260, 729);
             this.panel4.TabIndex = 34;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.textBox1.Location = new System.Drawing.Point(12, 8);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(235, 23);
-            this.textBox1.TabIndex = 33;
-            this.textBox1.Text = "Project name";
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(19, 157);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(114, 21);
-            this.checkBox1.TabIndex = 14;
-            this.checkBox1.Text = "Repeat Count";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(19, 163);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(113, 21);
-            this.checkBox2.TabIndex = 9;
-            this.checkBox2.Text = "Apply mobility";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(12, 593);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(113, 38);
-            this.button4.TabIndex = 35;
-            this.button4.Text = "Save config";
-            this.button4.UseVisualStyleBackColor = true;
             // 
             // button6
             // 
@@ -549,28 +543,47 @@
             this.button6.Text = "Load config";
             this.button6.UseVisualStyleBackColor = true;
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(12, 593);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(113, 38);
+            this.button4.TabIndex = 35;
+            this.button4.Text = "Save config";
+            this.button4.UseVisualStyleBackColor = true;
+            // 
+            // projectName
+            // 
+            this.projectName.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.projectName.Location = new System.Drawing.Point(12, 8);
+            this.projectName.Name = "projectName";
+            this.projectName.Size = new System.Drawing.Size(235, 23);
+            this.projectName.TabIndex = 33;
+            this.projectName.Text = "Project name";
+            this.projectName.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.Linen;
-            this.ClientSize = new System.Drawing.Size(1496, 801);
+            this.ClientSize = new System.Drawing.Size(1350, 729);
             this.Controls.Add(this.panel4);
-            this.Controls.Add(this.panel3);
+            this.Controls.Add(this.graphpanel);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(1366, 768);
             this.Name = "Form1";
             this.Text = "Doplnit";
             this.Load += new System.EventHandler(this.Form1_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericseconds)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericsampling)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericcount)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericgate)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).EndInit();
@@ -581,7 +594,7 @@
             this.BasicSettings.ResumeLayout(false);
             this.BasicSettings.PerformLayout();
             this.Mobility.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
+            this.graphpanel.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.ResumeLayout(false);
@@ -594,9 +607,9 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.NumericUpDown numericseconds;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.NumericUpDown numericUpDown2;
+        private System.Windows.Forms.NumericUpDown numericsampling;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panel1;
@@ -617,16 +630,17 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.GroupBox BasicSettings;
         private System.Windows.Forms.GroupBox Mobility;
-        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel graphpanel;
         private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.NumericUpDown numericUpDown8;
+        private System.Windows.Forms.TextBox projectName;
+        private System.Windows.Forms.NumericUpDown numericgate;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.NumericUpDown numericUpDown3;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.NumericUpDown numericcount;
+        private System.Windows.Forms.CheckBox repeatcountcheckbox;
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button savegraphbutton;
     }
 }
 
