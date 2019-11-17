@@ -2,7 +2,6 @@
 numberOfMeasurements = 50
 sampling = 5
 gate = 4
-appliedMobility = false
 X(ms), Y1
 0.003, 4.822
 0.008, 4.064
