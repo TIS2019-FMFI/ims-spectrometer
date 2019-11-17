@@ -15,6 +15,7 @@ namespace Arduin
     public partial class Form1 : Form
     {
         private bool isStarted = false;
+        private bool heatIsStarted = false;
 
         // Velkost intezitneho grafu X, Y
         private int heatSizeX = 524;
@@ -23,6 +24,8 @@ namespace Arduin
         // Velkost panelu kde su vsetky komponenty intensity grafu
         private int heatPanelSizeX = 1060;
         private int heatPanelSizeY = 455; // 380
+
+        List<Panel> allPanels = new List<Panel>();
 
         public Form1()
         {
@@ -86,7 +89,7 @@ namespace Arduin
 
         private void DecideAction()
         {
-            AgregateForm myMessageBoxh = new AgregateForm();
+            AgregateForm myMessageBoxh = new AgregateForm(this);
             myMessageBoxh.ShowDialog();
         }
 
@@ -114,10 +117,8 @@ namespace Arduin
             Panel heatCurrentPanel = CreateHeatPanel();
             AddHeatChart(heatCurrentPanel);
             AddButtons(heatCurrentPanel, true);
-            Debug.WriteLine(graphpanel.Size);
             graphpanel.Controls.Add(heatCurrentPanel);
-            CreateHeatMap();
-            Debug.WriteLine(graphpanel.Size);
+            allPanels.Add(heatCurrentPanel);
         }
 
         private void CreateHeatMap()
@@ -127,6 +128,7 @@ namespace Arduin
             AddHeatChart(heatpanel);
             AddButtons(heatpanel);
             graphpanel.Controls.Add(heatpanel);
+            allPanels.Add(heatpanel);
         }
 
         private Panel CreateHeatPanel()
@@ -153,22 +155,84 @@ namespace Arduin
             int buttonX = 100;
             int buttonY = 50;
 
+            AddCancelButton(heatpanel, buttonX, buttonY);
+
+            if (fromCurrent)
+            {
+                SaveButton(heatpanel, buttonX, buttonY);
+                StartStopButton(heatpanel, buttonX, buttonY);
+            }
+        }
+
+        private void AddCancelButton(Panel heatpanel, int buttonX, int buttonY)
+        {
             Button cancel = new Button();
             cancel.Size = new Size(buttonX, buttonY);
             cancel.Text = "Cancel";
             cancel.Left = heatSizeX - buttonX;
             cancel.Top = 0;
-            heatpanel.Controls.Add(cancel);
 
-            if (fromCurrent)
+            cancel.Click += (s, e) =>
             {
-                Button save = new Button();
-                save.Size = new Size(buttonX, buttonY);
-                save.Text = "Save";
-                save.Left = heatSizeX - buttonX;
-                save.Top = heatSizeY + buttonY;
-                heatpanel.Controls.Add(save);
+                // este dorobim neskor
+                //allPanels.Remove(heatpanel);
+                heatpanel.Dispose();
+                //PanelReorder(heatpanel);
+            };
+
+            heatpanel.Controls.Add(cancel);
+        }
+
+        private void PanelReorder(Panel pan)
+        {
+            foreach (Panel i in allPanels)
+            {
+                graphpanel.Controls.Remove(i);
             }
+            allPanels.Remove(pan);
+
+            foreach (Panel i in allPanels)
+            {
+                i.Left = 0;
+                i.Top = graphpanel.Height;
+                graphpanel.Controls.Add(i);
+            }
+        }
+
+        private void SaveButton(Panel heatpanel, int buttonX, int buttonY)
+        {
+            Button save = new Button();
+            save.Size = new Size(buttonX, buttonY);
+            save.Text = "Save";
+            save.Left = heatSizeX - buttonX;
+            save.Top = heatSizeY + buttonY;
+            heatpanel.Controls.Add(save);
+        }
+
+        private void StartStopButton(Panel heatpanel, int buttonX, int buttonY)
+        {
+            Button startstop = new Button();
+            startstop.Size = new Size(buttonX, buttonY);
+            startstop.Left = heatSizeX - 2 * buttonX;
+            startstop.Top = heatSizeY + buttonY;
+            startstop.Text = "Stop";
+            startstop.Click += (s, e) =>
+            {
+                heatIsStarted = !heatIsStarted;
+                if (!heatIsStarted)
+                {
+                    startstop.Text = "Stop";
+                    // spusti vykreslovanie
+
+                }
+                else
+                {
+                    startstop.Text = "Start";
+                    // zastavi vyreslovanie
+                }
+            };
+
+            heatpanel.Controls.Add(startstop);
         }
 
         private void ResizePanel()
