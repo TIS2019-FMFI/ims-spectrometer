@@ -12,21 +12,24 @@ namespace Arduin
 {
     public partial class AgregateForm : Form
     {
-        public AgregateForm()
+        private Form1 form1;
+        public AgregateForm(Form1 form)
         {
+            form1 = form;
             InitializeComponent();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Form1 form = new Form1();
             Close();
-            form.OpenHeatMap();
+            form1.OpenHeatMap();
         }
 
         private void button2_Click(object sender, EventArgs e)
-        {
-            //method for current data
+        { 
+            Close();
+            form1.CreateHeatFromCurrent();
         }
+
     }
 }

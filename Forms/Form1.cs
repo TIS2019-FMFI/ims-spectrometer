@@ -14,8 +14,18 @@ namespace Arduin
 {
     public partial class Form1 : Form
     {
-        private bool heatisVisible = false;
         private bool isStarted = false;
+        private bool heatIsStarted = false;
+
+        // Velkost intezitneho grafu X, Y
+        private int heatSizeX = 524;
+        private int heatSizeY = 355;
+
+        // Velkost panelu kde su vsetky komponenty intensity grafu
+        private int heatPanelSizeX = 1060;
+        private int heatPanelSizeY = 455; // 380
+
+        List<Panel> allPanels = new List<Panel>();
 
         public Form1()
         {
@@ -43,7 +53,7 @@ namespace Arduin
         private void label5_MouseHover(object sender, EventArgs e)
         {
             toolTip1.ToolTipTitle = "Hint";
-            toolTip1.SetToolTip(label5, "Precision of measurement");
+            toolTip1.SetToolTip(label5, "Repeat 'Count' times");
         }
 
         private void label6_MouseHover(object sender, EventArgs e)
@@ -73,12 +83,13 @@ namespace Arduin
         private void button5_Click(object sender, EventArgs e)
         {
             //CreateHeatMap();
+            //CreateHeatFromCurrent();
             DecideAction();
         }
 
         private void DecideAction()
         {
-            AgregateForm myMessageBoxh = new AgregateForm();
+            AgregateForm myMessageBoxh = new AgregateForm(this);
             myMessageBoxh.ShowDialog();
         }
 
@@ -100,20 +111,133 @@ namespace Arduin
             }
         }
 
+        //nejde dorabam
+        public void CreateHeatFromCurrent()
+        {
+            Panel heatCurrentPanel = CreateHeatPanel();
+            AddHeatChart(heatCurrentPanel);
+            AddButtons(heatCurrentPanel, true);
+            graphpanel.Controls.Add(heatCurrentPanel);
+            allPanels.Add(heatCurrentPanel);
+        }
+
         private void CreateHeatMap()
         {
-            //ResizePanel();
+            Panel heatpanel = CreateHeatPanel();
+
+            AddHeatChart(heatpanel);
+            AddButtons(heatpanel);
+            graphpanel.Controls.Add(heatpanel);
+            allPanels.Add(heatpanel);
+        }
+
+        private Panel CreateHeatPanel()
+        {
+            Panel heatpanel = new Panel();
+            heatpanel.Size = new Size(heatPanelSizeX, heatPanelSizeY);
+            heatpanel.Left = 0;
+            heatpanel.Top = graphpanel.Height;
+            return heatpanel;
+        }
+
+        private void AddHeatChart(Panel heatpanel)
+        {
             Chart heatchart = new Chart();
-            heatchart.Size = new Size(524,355);
+            heatchart.Size = new Size(heatSizeX, heatSizeY);
             heatchart.Left = 0;
-            heatchart.Top = panel3.Height;
+            heatchart.Top = 50;
             heatchart.Legends.Add(new Legend("Heat"));
-            panel3.Controls.Add(heatchart);
+            heatpanel.Controls.Add(heatchart);
+        }
+
+        private void AddButtons(Panel heatpanel, bool fromCurrent = false)
+        {
+            int buttonX = 100;
+            int buttonY = 50;
+
+            AddCancelButton(heatpanel, buttonX, buttonY);
+
+            if (fromCurrent)
+            {
+                SaveButton(heatpanel, buttonX, buttonY);
+                StartStopButton(heatpanel, buttonX, buttonY);
+            }
+        }
+
+        private void AddCancelButton(Panel heatpanel, int buttonX, int buttonY)
+        {
+            Button cancel = new Button();
+            cancel.Size = new Size(buttonX, buttonY);
+            cancel.Text = "Cancel";
+            cancel.Left = heatSizeX - buttonX;
+            cancel.Top = 0;
+
+            cancel.Click += (s, e) =>
+            {
+                // este dorobim neskor
+                //allPanels.Remove(heatpanel);
+                heatpanel.Dispose();
+                //PanelReorder(heatpanel);
+            };
+
+            heatpanel.Controls.Add(cancel);
+        }
+
+        private void PanelReorder(Panel pan)
+        {
+            foreach (Panel i in allPanels)
+            {
+                graphpanel.Controls.Remove(i);
+            }
+            allPanels.Remove(pan);
+
+            foreach (Panel i in allPanels)
+            {
+                i.Left = 0;
+                i.Top = graphpanel.Height;
+                graphpanel.Controls.Add(i);
+            }
+        }
+
+        private void SaveButton(Panel heatpanel, int buttonX, int buttonY)
+        {
+            Button save = new Button();
+            save.Size = new Size(buttonX, buttonY);
+            save.Text = "Save";
+            save.Left = heatSizeX - buttonX;
+            save.Top = heatSizeY + buttonY;
+            heatpanel.Controls.Add(save);
+        }
+
+        private void StartStopButton(Panel heatpanel, int buttonX, int buttonY)
+        {
+            Button startstop = new Button();
+            startstop.Size = new Size(buttonX, buttonY);
+            startstop.Left = heatSizeX - 2 * buttonX;
+            startstop.Top = heatSizeY + buttonY;
+            startstop.Text = "Stop";
+            startstop.Click += (s, e) =>
+            {
+                heatIsStarted = !heatIsStarted;
+                if (!heatIsStarted)
+                {
+                    startstop.Text = "Stop";
+                    // spusti vykreslovanie
+
+                }
+                else
+                {
+                    startstop.Text = "Start";
+                    // zastavi vyreslovanie
+                }
+            };
+
+            heatpanel.Controls.Add(startstop);
         }
 
         private void ResizePanel()
         {
-            panel3.Size = new Size(panel3.Width, panel3.Height + 400);
+            graphpanel.Size = new Size(graphpanel.Width, graphpanel.Height + 400);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -122,35 +246,25 @@ namespace Arduin
             InitializeMobility();
             InitializeGraphSettings();
             EnableScrolling();
+            projectName.Text = Backend.Model.Settings.projectName;
         }
 
         private void EnableScrolling()
         {
-            panel3.AutoScroll = false;
-            panel3.VerticalScroll.Enabled = false;
-            panel3.VerticalScroll.Visible = false;
-            panel3.VerticalScroll.Maximum = 0;
-            panel3.AutoScroll = true;
+            graphpanel.AutoScroll = false;
+            graphpanel.VerticalScroll.Enabled = false;
+            graphpanel.VerticalScroll.Visible = false;
+            graphpanel.VerticalScroll.Maximum = 0;
+            graphpanel.AutoScroll = true;
         }
 
         private void InitializeSettings()
         {
-            numericUpDown1.Value = (decimal)Backend.Model.Settings.repeatSeconds;
-            numericUpDown2.Value = Backend.Model.Settings.sampling;
-            numericUpDown3.Value = Backend.Model.Settings.repeatCycles;
-            ComboBoxIntialize();
-        }
-
-        private void ComboBoxIntialize()
-        {
-            object[] ItemObject = new object[10];
-            int index = Backend.Model.Settings.gate;
-            for (int i = 0; i < 10; i++)
-            {
-                ItemObject[i] = "Width " + i + " pulse";
-            }
-            comboBox1.Items.AddRange(ItemObject);
-            comboBox1.SelectedIndex = index;
+            numericseconds.Value = (decimal)Backend.Model.Settings.repeatSeconds;
+            numericsampling.Value = Backend.Model.Settings.sampling;
+            numericcount.Value = Backend.Model.Settings.repeatCycles;
+            numericgate.Value = Backend.Model.Settings.gate;
+            repeatcountcheckbox.Checked = Backend.Model.Settings.applyRepeatSeconds;
         }
 
         private void InitializeMobility()
@@ -182,6 +296,17 @@ namespace Arduin
                 //tak ako je nazvany image v resources
                 button1.Image = Properties.Resources.Play;
             }
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            // aplikovat mobilitu
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            Backend.Model.Settings.projectName = projectName.Text;
+            this.Text = Backend.Model.Settings.projectName;
         }
     }
 }
