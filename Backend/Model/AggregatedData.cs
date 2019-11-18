@@ -27,7 +27,7 @@ namespace Arduin.Backend.Model
         /**
         *  container for average measurements
         */
-        public double[] aggregatedData { get; private set; } = new double[8001];
+        public int[] aggregatedData { get; set; }
 
 
 

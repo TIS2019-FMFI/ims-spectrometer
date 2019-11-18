@@ -33,7 +33,7 @@ namespace Arduin.Backend{
          * open serial connection to arduino on available COM port
          */
         public bool start(){
-            serial.BaudRate = 2000000;
+            serial.BaudRate = 2000000; // 2000000
             serial.PortName = portFromName();
             
             try {
@@ -52,24 +52,32 @@ namespace Arduin.Backend{
          * reading data from arduino, one measurement cycle will last maximum 20 000 microseconds
          */
         public Measurement getMeasurementFromArduino() {
-            Measurement oneMeasurementCycle = new Measurement();
+            
             string line = "";
             int position = 0;
+            int[] buffer = new int[Measurement.BUFFER_SIZE];
 
             while (serial.IsOpen) {
-                line = serial.ReadLine();
-                Console.WriteLine(line); // later DELETE 
-
+                line = serial.ReadLine().Trim(); // delete whitespace
+                
                 if (line.Equals("START")) {
-                    oneMeasurementCycle = new Measurement();
+                    buffer = new int[Measurement.BUFFER_SIZE];
                     position = 0;
+                    Console.WriteLine("Start measurement");
                 } else if (line.Equals("END")) {
+                    Console.WriteLine("End measurement");
+
+                    Measurement oneMeasurementCycle = new Measurement();
+                    oneMeasurementCycle.measurement = new int[position];
+
+                    Array.Copy(buffer, oneMeasurementCycle.measurement, position);
+
                     return oneMeasurementCycle;
                 } else {
                     try {
-                        oneMeasurementCycle.measurement[position++] = Convert.ToDouble(line);
+                        buffer[position++] = Convert.ToInt16(line);
                     } catch (Exception ex) {
-                        Console.WriteLine("Error occured converting data from serial port do double : " + ex.Message);
+                        Console.WriteLine("Error occurred converting " + line + " from serial port do double : " + ex.Message);
                     }
                 }
 
