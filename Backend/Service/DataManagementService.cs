@@ -31,7 +31,7 @@ namespace Arduin.Backend{
          * call this method as : https://www.youtube.com/watch?v=C5VhaxQWcpE from UI
          * this method may take around 1 second to execute, must be called async
          */
-        private async Task<List<Measurement>> getOneLifeCycleOfArduinoData(){
+        public async Task<List<Measurement>> getOneLifeCycleOfArduinoData(){
             List<Measurement> measurements = new List<Measurement>();
 
             if (Settings.applyRepeatSeconds) {
@@ -68,13 +68,31 @@ namespace Arduin.Backend{
             // save how many measurements will be aggregated
             aggregatedData.numberOfMeasurements = measurements.Count;
 
-            // perform data aggregation
-           for (int i=0; i < measurements.First().measurement.Length; i++) {
-                foreach(Measurement data in measurements) {
-                    aggregatedData.aggregatedData[i] += data.measurement[i];
+
+            int[] sum = new int[Measurement.BUFFER_SIZE];
+            int maximumSize = 0;
+
+            // sum of all measurement in each position,
+           foreach(Measurement measurement in measurements) {
+                int measurementSize = measurement.measurement.Length;
+
+                if(maximumSize < measurementSize) {
+                    maximumSize = measurementSize;
                 }
-                aggregatedData.aggregatedData[i] /= aggregatedData.numberOfMeasurements;
+
+                for (int i = 0; i < measurementSize; i++) {
+                    sum[i] += measurement.measurement[i];
+                }
             }
+
+            // perform data average
+            for (int i = 0; i < maximumSize; i++) {
+                sum[i] /= aggregatedData.numberOfMeasurements;
+            }
+
+            // copy values from averaged sum into returning object
+            aggregatedData.aggregatedData = new int[maximumSize];
+            Array.Copy(sum, aggregatedData.aggregatedData, maximumSize);
 
             return aggregatedData;
         }

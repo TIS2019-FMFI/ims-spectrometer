@@ -1,33 +1,33 @@
 // shared variables for all cores
 //#include <Arduino.h>
 StartOfInitialised_LMURam_Variables
- static uint8_t gate = 2;  // positive number of POINTS to keep the gate for ions open 
- static uint8_t  sampling = 5; // mikroseconds , spece between POINTS (positive number)
+ static uint8_t gate = 16;  // positive number of POINTS to keep the gate for ions open 
+ static uint8_t  sampling = 1; // mikroseconds , spece between POINTS (positive number)
 EndOfInitialised_LMURam_Variables
 
 // unused core 0 , but must be declared
-void setup() {}
-void loop() {}
-
-
-
-
-// CPU1 Initialised Data 
-StartOfInitialised_CPU2_Variables
-  String incoming = ""; 
-EndOfInitialised_CPU2_Variables
-
-void setup2() {
-  SerialASC.begin(2000000);
+void setup() {
+  SerialASC.begin(2000000); // 9600
 }
 
-// CORE 0 only read user input -  expected income: "15 12" .. 15 = gate, 12 = sampling
-void loop2() {
+void loop() {
   if (SerialASC.available() > 0){
+    String incoming = ""; 
     incoming = SerialASC.readString();
     gate = incoming.substring(0 , incoming.indexOf(' ')).toInt();
     sampling = incoming.substring(incoming.indexOf(' '), incoming.length() - 1).toInt();
-  }
+  }  
+}
+
+
+
+
+
+void setup2() {  }
+
+// CORE 2 sends data to UI 
+void loop2() {
+  sendDataToUI();
 }
 
 
@@ -64,8 +64,6 @@ void loop1() {
   }else{
     spectrometerCommunicationPOINTS();
   }
-  
-  sendDataToUI();
 }
 
 
