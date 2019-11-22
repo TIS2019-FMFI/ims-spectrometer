@@ -27,7 +27,7 @@ namespace Arduin.Backend
 
         private const string SETTINGS_PATH = "Data\\Configuration\\";  // path where settings will be save 
 
-        private const string AGGREGATED_DATA_PATH = "Data\\ggregated_Data\\";  // path where aggregated data will be saved
+        private const string AGGREGATED_DATA_PATH = "Data\\Agregated_Data\\";  // path where aggregated data will be saved
 
         private const string INTENSITY_PATH = "Data\\Intensity_Data\\";  // path where intensity graph will be saved 
 
@@ -40,7 +40,7 @@ namespace Arduin.Backend
         /**
          * will save all setting and Mobility
          */
-        public bool saveSettings() {
+        public bool saveSettingsAndMobility() {
             try {
                 this.createFolderIfNotExists(AppDomain.CurrentDomain.BaseDirectory + SETTINGS_PATH);
                 string fileName = AppDomain.CurrentDomain.BaseDirectory + SETTINGS_PATH + Settings.projectName + "_" + DateTime.Now.ToString("dd/MM/yyyy") + ".txt";
@@ -64,21 +64,13 @@ namespace Arduin.Backend
             return true;
         }
 
-        /**
-         * will load settings and mobility
-         */
-        public bool loadSettings(String projectName) {
+     
+        public bool loadSettingsAndMobility(String projectName) {
             string[] lines;
             var list = new List<string>();
-            FileStream fileStream = null;
-            try {
-                 fileStream = new FileStream(AppDomain.CurrentDomain.BaseDirectory + SETTINGS_PATH + projectName + ".txt", FileMode.Open, FileAccess.Read);
-            }catch(Exception e) {
-                throw new FileNotFoundException("Could not find file : " + projectName + " got exception : " + e.Message);
-            }
 
             try {
-                using (var streamReader = new StreamReader(fileStream, Encoding.UTF8)) {
+                using (var streamReader = tryToOpenFile(projectName)) {
                     string line;
                     while ((line = streamReader.ReadLine()) != null) {
                         list.Add(line.Split(':')[1]);
@@ -105,39 +97,152 @@ namespace Arduin.Backend
 
 
 
-        /**
-         * - everything will be save in path : AGGREGATED_DATA_PATH
-         * - name of the file will be in format : Settings.projectName_currentTimestamp
-         * - X represents time or mobility base on (appliedMobility is true or false)
-         * - Y column represents all data in  AggregatedData.aggregatedData
-         * - in Header of the file save everithing what is in AggregatedData - numberOfMeasurements , sampling , gate
-         */
+        
         public bool saveAggregatedData(AggregatedData aggregatedData){
-            return false;
+            try {
+                this.createFolderIfNotExists(AppDomain.CurrentDomain.BaseDirectory + AGGREGATED_DATA_PATH);
+                string fileName = AppDomain.CurrentDomain.BaseDirectory + AGGREGATED_DATA_PATH + Settings.projectName + "_" + DateTime.Now.ToString("dd/MM/yyyy") + ".csv";
+                using (StreamWriter sw = File.CreateText(fileName)) {
+                    sw.WriteLine("#HEADER");
+                    sw.WriteLine("numberOfMeasurements :" + aggregatedData.numberOfMeasurements);
+                    sw.WriteLine("sampling :" + aggregatedData.sampling);
+                    sw.WriteLine("gate :" + aggregatedData.gate);
+
+   
+                    double sampling = 0;
+                    sw.WriteLine("X(ms); Y1");
+                    for (int i = 0; i <  aggregatedData.aggregatedData.Length; i++) {
+                        sw.WriteLine(String.Format("{0:0.000}", sampling) + ";" + aggregatedData.aggregatedData[i]);
+
+                        sampling += ((double) aggregatedData.sampling / 1000);
+                    }
+
+
+                    sw.Close();
+                }
+            } catch (Exception e) {
+                throw new Exception("Could not save AggregatedData, exception : " + e.Message);
+            }
+            return true;
         }
 
 
-
-        /**
-         * for each AggregatedData in the list will be save as a new column.
-         * First column X represents time
-         * each Y in column represents an aggregated data, so if Intensity data contains
-         * 50 aggregated data, there will be Y1, Y2....Y50 in csv file
-         * name of the file will be in format : Settings.projectName_currentTimestamp
-         */
         public bool saveIntensityData(IntensityData intensityData) {
-            // check sample - intensity_data_sample
-            return false;
+            int numberofElements = intensityData.intensityData.Count;
+            if (numberofElements == 0) {
+                throw new Exception("Could not save IntensityData, does not contains any data ");
+            }
+            try {
+                this.createFolderIfNotExists(AppDomain.CurrentDomain.BaseDirectory + INTENSITY_PATH);
+                string fileName = AppDomain.CurrentDomain.BaseDirectory + INTENSITY_PATH + Settings.projectName + "_" + DateTime.Now.ToString("dd/MM/yyyy") + ".csv";
+                using (StreamWriter sw = File.CreateText(fileName)) {
+                    AggregatedData firstAggregatedData = intensityData.intensityData.First();
+                    sw.WriteLine("#HEADER");
+                    sw.WriteLine("numberOfAggregatedData  :" + numberofElements);
+                    sw.WriteLine("lengthOfOneAggregatedData  :" + firstAggregatedData.aggregatedData.Length);
+                    sw.WriteLine("numberOfMeasurements :" + firstAggregatedData.numberOfMeasurements);
+                    sw.WriteLine("sampling :" + firstAggregatedData.sampling);
+                    sw.WriteLine("gate :" + firstAggregatedData.gate);
+
+                    // create header for csv
+                    string header = "t(ms);";
+                    for(int i = 1; i <= numberofElements; i++) {
+                        header += "Y" + i + ";";
+                    }
+                    header = header.Remove(header.Length - 1); // remove last comma
+                    sw.WriteLine(header);
+
+                    // append data into csv
+                    double sampling = 0;
+                    string line = "";
+                    for (int i = 0; i < firstAggregatedData.aggregatedData.Length; i++) {
+                        line = String.Format("{0:0.000}", sampling);
+                        for (int j = 0; j < numberofElements; j++) {
+                            line += ";" + intensityData.intensityData[j].aggregatedData[i] ;
+                        }
+                        sw.WriteLine(line);
+                        sampling += ((double)firstAggregatedData.sampling / 1000);
+                    }
+
+                    sw.Close();
+                }
+            } catch (Exception e) {
+                throw new Exception("Could not save IntensityData, exception : " + e.Message);
+            }
+            return true;
         }
 
 
-        /**
-         * specificPath - should be defined by user
-         */
-        public IntensityData loadIntensityData(string specificPath){
-            IntensityData intensityData = new IntensityData();
-            // TODO !!!!!
+        private StreamReader tryToOpenFile(string projectName) {
+            FileStream fileStream = null;
+            try {
+                fileStream = new FileStream(AppDomain.CurrentDomain.BaseDirectory + INTENSITY_PATH + projectName, FileMode.Open, FileAccess.Read);
+            } catch (Exception e) {
+                throw new FileNotFoundException("Could not find file : " + projectName + " got exception : " + e.Message);
+            }
+            return new StreamReader(fileStream, Encoding.UTF8);
+        }
 
+        public IntensityData loadIntensityData(string projectName) {
+            IntensityData intensityData = new IntensityData();
+
+            try {
+                using (var streamReader = tryToOpenFile(projectName)) {
+                    string line = "";
+                    int countline = 0;
+                    int sampling = 0;
+                    int gate = 0;
+                    int numberOfMeasurements = 0;
+                    int lengthOfOneMeasuremet = 0;
+                    int numberOfAggregatedData = 0;
+                    List<string[]> saveMeasurements = new List<string[]>();
+                    
+                    while ((line = streamReader.ReadLine()) != null) {
+                        if (countline == 1) {
+                            numberOfAggregatedData = Int32.Parse(line.Split(':')[1]);
+                        } else if (countline == 2) {
+                            lengthOfOneMeasuremet = Int32.Parse(line.Split(':')[1]);
+                        } else if (countline == 3) {
+                            numberOfMeasurements = Int32.Parse(line.Split(':')[1]);
+                        } else if (countline == 4) {
+                            sampling = Int32.Parse(line.Split(':')[1]);
+                        } else if (countline == 5) {
+                            gate = Int32.Parse(line.Split(':')[1]);
+                        } else if (countline == 0 || countline == 6) {
+                            countline++;
+                            continue;
+                        } else {
+                            saveMeasurements.Add(line.Split(';'));
+                        }
+                        
+                        countline++;
+                    }
+
+                    // create instance of aggregated data into intensity data
+                    for (int i = 0; i < numberOfAggregatedData; i++) {
+                         AggregatedData aggregated = new AggregatedData();
+                         aggregated.sampling = sampling;
+                         aggregated.gate = gate;
+                         aggregated.numberOfMeasurements = numberOfMeasurements;
+                         aggregated.aggregatedData = new int[lengthOfOneMeasuremet];
+
+                         intensityData.intensityData.Add(aggregated);
+                     }
+
+                     // save data from csv into list of aggregated data
+                     int positionCounter = 0;
+                     foreach(string[] measurement in saveMeasurements){
+                         for(int i = 0; i < numberOfAggregatedData; i++) {
+                             intensityData.intensityData[i].aggregatedData[positionCounter] = Int32.Parse(measurement[i + 1]);
+                         }
+                         positionCounter++;
+                     }
+                }
+
+
+            } catch (Exception e) {
+                throw new FileLoadException("Could not parse file content into IntensityData, got error : " + e.Message);
+            }
 
 
             return intensityData;

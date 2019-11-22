@@ -16,12 +16,12 @@ namespace Arduin.Backend.Model
         /**
          * sampling from current measurement - will be display on Aggregated or mirror graph
          */
-        public int sampling { get; private set; } = Settings.sampling;
+        public int sampling { get;  set; } = Settings.sampling;
 
         /**
          * gate from current measurement - - will be display on Aggregated or mirror graph
          */
-        public int gate { get; private set; } = Settings.gate;
+        public int gate { get;  set; } = Settings.gate;
 
 
         /**
