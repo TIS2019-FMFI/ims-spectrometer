@@ -169,8 +169,7 @@ namespace Arduin
             Button cancel = new Button();
             cancel.Size = new Size(buttonX, buttonY);
             cancel.Text = "Cancel";
-            cancel.Left = heatSizeX - buttonX;
-            cancel.Top = 0;
+            cancel.Left = heatSizeX - buttonX;          cancel.Top = 0;
 
             cancel.Click += (s, e) =>
             {
@@ -233,11 +232,6 @@ namespace Arduin
             };
 
             heatpanel.Controls.Add(startstop);
-        }
-
-        private void ResizePanel()
-        {
-            graphpanel.Size = new Size(graphpanel.Width, graphpanel.Height + 400);
         }
 
         private void Form1_Load(object sender, EventArgs e)

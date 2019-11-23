@@ -30,9 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -48,7 +48,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.numericgate = new System.Windows.Forms.NumericUpDown();
             this.button3 = new System.Windows.Forms.Button();
-            this.label13 = new System.Windows.Forms.Label();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -92,7 +91,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 659);
+            this.label1.Location = new System.Drawing.Point(12, 630);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(28, 17);
             this.label1.TabIndex = 0;
@@ -103,7 +102,7 @@
             this.button1.FlatAppearance.BorderSize = 0;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.Location = new System.Drawing.Point(203, 645);
+            this.button1.Location = new System.Drawing.Point(203, 616);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(44, 45);
             this.button1.TabIndex = 1;
@@ -212,7 +211,6 @@
             this.panel1.Controls.Add(this.numericgate);
             this.panel1.Controls.Add(this.button3);
             this.panel1.Controls.Add(this.numericsampling);
-            this.panel1.Controls.Add(this.label13);
             this.panel1.Controls.Add(this.textBox4);
             this.panel1.Controls.Add(this.label15);
             this.panel1.Controls.Add(this.pictureBox1);
@@ -222,7 +220,7 @@
             this.panel1.Controls.Add(this.label3);
             this.panel1.Location = new System.Drawing.Point(0, 22);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(235, 304);
+            this.panel1.Size = new System.Drawing.Size(235, 275);
             this.panel1.TabIndex = 11;
             // 
             // repeatcountcheckbox
@@ -291,25 +289,16 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(169, 269);
+            this.button3.Location = new System.Drawing.Point(157, 244);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(56, 26);
+            this.button3.Size = new System.Drawing.Size(71, 26);
             this.button3.TabIndex = 10;
-            this.button3.Text = "Apply";
+            this.button3.Text = "Rescale";
             this.button3.UseVisualStyleBackColor = true;
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(167, 244);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(59, 17);
-            this.label13.TabIndex = 2;
-            this.label13.Text = "Rescale";
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(19, 269);
+            this.textBox4.Location = new System.Drawing.Point(68, 244);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(45, 23);
             this.textBox4.TabIndex = 8;
@@ -369,9 +358,9 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(16, 126);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(18, 17);
+            this.label9.Size = new System.Drawing.Size(48, 17);
             this.label9.TabIndex = 7;
-            this.label9.Text = "U";
+            this.label9.Text = "U (kV)";
             this.label9.MouseHover += new System.EventHandler(this.label9_MouseHover);
             // 
             // numericUpDown6
@@ -391,9 +380,9 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(16, 90);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(17, 17);
+            this.label8.Size = new System.Drawing.Size(40, 17);
             this.label8.TabIndex = 5;
-            this.label8.Text = "T";
+            this.label8.Text = "T (K)";
             this.label8.MouseHover += new System.EventHandler(this.label8_MouseHover);
             // 
             // numericUpDown5
@@ -413,9 +402,9 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(17, 51);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(16, 17);
+            this.label7.Size = new System.Drawing.Size(62, 17);
             this.label7.TabIndex = 3;
-            this.label7.Text = "p";
+            this.label7.Text = "p (mbar)";
             this.label7.MouseHover += new System.EventHandler(this.label7_MouseHover);
             // 
             // numericUpDown4
@@ -435,24 +424,24 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(17, 14);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(16, 17);
+            this.label6.Size = new System.Drawing.Size(48, 17);
             this.label6.TabIndex = 1;
-            this.label6.Text = "L";
+            this.label6.Text = "L (cm)";
             this.label6.MouseHover += new System.EventHandler(this.label6_MouseHover);
             // 
             // chart1
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
             this.chart1.Cursor = System.Windows.Forms.Cursors.Cross;
-            legend2.Name = "Legend1";
-            this.chart1.Legends.Add(legend2);
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(0, 0);
             this.chart1.Name = "chart1";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chart1.Series.Add(series2);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(1060, 637);
             this.chart1.TabIndex = 25;
             this.chart1.Text = "chart1";
@@ -477,7 +466,7 @@
             this.BasicSettings.Controls.Add(this.panel1);
             this.BasicSettings.Location = new System.Drawing.Point(12, 37);
             this.BasicSettings.Name = "BasicSettings";
-            this.BasicSettings.Size = new System.Drawing.Size(235, 327);
+            this.BasicSettings.Size = new System.Drawing.Size(235, 298);
             this.BasicSettings.TabIndex = 29;
             this.BasicSettings.TabStop = false;
             this.BasicSettings.Text = "Basic Settings";
@@ -487,7 +476,7 @@
             this.Mobility.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.Mobility.Controls.Add(this.panel2);
             this.Mobility.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Mobility.Location = new System.Drawing.Point(12, 370);
+            this.Mobility.Location = new System.Drawing.Point(12, 341);
             this.Mobility.Name = "Mobility";
             this.Mobility.Size = new System.Drawing.Size(235, 217);
             this.Mobility.TabIndex = 30;
@@ -536,7 +525,7 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(134, 593);
+            this.button6.Location = new System.Drawing.Point(134, 564);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(113, 38);
             this.button6.TabIndex = 36;
@@ -545,7 +534,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(12, 593);
+            this.button4.Location = new System.Drawing.Point(12, 564);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(113, 38);
             this.button4.TabIndex = 35;
@@ -625,7 +614,6 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label label13;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.GroupBox BasicSettings;
