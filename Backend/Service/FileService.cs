@@ -43,7 +43,7 @@ namespace Arduin.Backend
         public bool saveSettingsAndMobility() {
             try {
                 this.createFolderIfNotExists(AppDomain.CurrentDomain.BaseDirectory + SETTINGS_PATH);
-                string fileName = AppDomain.CurrentDomain.BaseDirectory + SETTINGS_PATH + Settings.projectName + "_" + DateTime.Now.ToString("dd/MM/yyyy") + ".txt";
+                string fileName = AppDomain.CurrentDomain.BaseDirectory + SETTINGS_PATH + Settings.projectName + "_" + DateTime.Now.ToString("dd/MM/yyyy") + ".csv";
                 using (StreamWriter sw = File.CreateText(fileName)) {
                     // save settings
                     sw.WriteLine("repeatSeconds :" + Settings.repeatSeconds);
@@ -70,7 +70,7 @@ namespace Arduin.Backend
             var list = new List<string>();
 
             try {
-                using (var streamReader = tryToOpenFile(projectName)) {
+                using (var streamReader = tryToOpenFile(projectName, SETTINGS_PATH)) {
                     string line;
                     while ((line = streamReader.ReadLine()) != null) {
                         list.Add(line.Split(':')[1]);
@@ -173,10 +173,10 @@ namespace Arduin.Backend
         }
 
 
-        private StreamReader tryToOpenFile(string projectName) {
+        private StreamReader tryToOpenFile(string projectName , string path) {
             FileStream fileStream = null;
             try {
-                fileStream = new FileStream(AppDomain.CurrentDomain.BaseDirectory + INTENSITY_PATH + projectName, FileMode.Open, FileAccess.Read);
+                fileStream = new FileStream(AppDomain.CurrentDomain.BaseDirectory + path + projectName + ".csv", FileMode.Open, FileAccess.Read);
             } catch (Exception e) {
                 throw new FileNotFoundException("Could not find file : " + projectName + " got exception : " + e.Message);
             }
@@ -187,7 +187,7 @@ namespace Arduin.Backend
             IntensityData intensityData = new IntensityData();
 
             try {
-                using (var streamReader = tryToOpenFile(projectName)) {
+                using (var streamReader = tryToOpenFile(projectName, INTENSITY_PATH)) {
                     string line = "";
                     int countline = 0;
                     int sampling = 0;
