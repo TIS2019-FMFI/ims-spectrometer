@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29409.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arduin", "Arduin.csproj", "{DE675CBA-B16C-4669-92DB-F6F548C7B7E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArduinTest", "..\ArduinTest\ArduinTest.csproj", "{28A6D98E-A585-4EA1-8989-5B7B676A224C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArduinTest", "..\applicationTest\ArduinTest.csproj", "{28A6D98E-A585-4EA1-8989-5B7B676A224C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
