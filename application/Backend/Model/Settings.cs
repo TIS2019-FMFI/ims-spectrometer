@@ -50,7 +50,7 @@ namespace Arduin.Backend.Model{
         /**
          * Name of the project defined by User
          */
-        public static string projectName { get; set; } = "undefined";
+        public static string projectName { get; set; } = "Project_name";
 
     }
 

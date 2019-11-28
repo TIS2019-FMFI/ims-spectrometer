@@ -30,9 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -67,8 +67,8 @@
             this.graphpanel = new System.Windows.Forms.Panel();
             this.savegraphbutton = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.button6 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.LoadConfigButton = new System.Windows.Forms.Button();
+            this.SaveConfigButton = new System.Windows.Forms.Button();
             this.projectName = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericseconds)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericsampling)).BeginInit();
@@ -431,17 +431,17 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
             this.chart1.Cursor = System.Windows.Forms.Cursors.Cross;
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
+            legend2.Name = "Legend1";
+            this.chart1.Legends.Add(legend2);
             this.chart1.Location = new System.Drawing.Point(0, 0);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.chart1.Series.Add(series2);
             this.chart1.Size = new System.Drawing.Size(1060, 637);
             this.chart1.TabIndex = 25;
             this.chart1.Text = "chart1";
@@ -504,13 +504,14 @@
             this.savegraphbutton.TabIndex = 27;
             this.savegraphbutton.Text = "Save Graph";
             this.savegraphbutton.UseVisualStyleBackColor = false;
+            this.savegraphbutton.Click += new System.EventHandler(this.savegraphbutton_Click);
             // 
             // panel4
             // 
             this.panel4.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel4.Controls.Add(this.button6);
-            this.panel4.Controls.Add(this.button4);
+            this.panel4.Controls.Add(this.LoadConfigButton);
+            this.panel4.Controls.Add(this.SaveConfigButton);
             this.panel4.Controls.Add(this.projectName);
             this.panel4.Controls.Add(this.BasicSettings);
             this.panel4.Controls.Add(this.Mobility);
@@ -523,23 +524,25 @@
             this.panel4.Size = new System.Drawing.Size(260, 729);
             this.panel4.TabIndex = 34;
             // 
-            // button6
+            // LoadConfigButton
             // 
-            this.button6.Location = new System.Drawing.Point(134, 564);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(113, 38);
-            this.button6.TabIndex = 36;
-            this.button6.Text = "Load config";
-            this.button6.UseVisualStyleBackColor = true;
+            this.LoadConfigButton.Location = new System.Drawing.Point(134, 564);
+            this.LoadConfigButton.Name = "LoadConfigButton";
+            this.LoadConfigButton.Size = new System.Drawing.Size(113, 38);
+            this.LoadConfigButton.TabIndex = 36;
+            this.LoadConfigButton.Text = "Load config";
+            this.LoadConfigButton.UseVisualStyleBackColor = true;
+            this.LoadConfigButton.Click += new System.EventHandler(this.LoadConfigButton_Click);
             // 
-            // button4
+            // SaveConfigButton
             // 
-            this.button4.Location = new System.Drawing.Point(12, 564);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(113, 38);
-            this.button4.TabIndex = 35;
-            this.button4.Text = "Save config";
-            this.button4.UseVisualStyleBackColor = true;
+            this.SaveConfigButton.Location = new System.Drawing.Point(12, 564);
+            this.SaveConfigButton.Name = "SaveConfigButton";
+            this.SaveConfigButton.Size = new System.Drawing.Size(113, 38);
+            this.SaveConfigButton.TabIndex = 35;
+            this.SaveConfigButton.Text = "Save config";
+            this.SaveConfigButton.UseVisualStyleBackColor = true;
+            this.SaveConfigButton.Click += new System.EventHandler(this.SaveConfigButton_Click);
             // 
             // projectName
             // 
@@ -626,8 +629,8 @@
         private System.Windows.Forms.NumericUpDown numericcount;
         private System.Windows.Forms.CheckBox repeatcountcheckbox;
         private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button LoadConfigButton;
+        private System.Windows.Forms.Button SaveConfigButton;
         private System.Windows.Forms.Button savegraphbutton;
     }
 }

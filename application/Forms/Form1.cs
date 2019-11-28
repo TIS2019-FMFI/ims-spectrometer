@@ -9,6 +9,10 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
+using LiveCharts;
+using LiveCharts.Wpf;
+using LiveCharts.Defaults;
+using System.Windows.Media;
 
 namespace Arduin
 {
@@ -142,6 +146,7 @@ namespace Arduin
 
         private void AddHeatChart(Panel heatpanel)
         {
+
             Chart heatchart = new Chart();
             heatchart.Size = new Size(heatSizeX, heatSizeY);
             heatchart.Left = 0;
@@ -173,10 +178,7 @@ namespace Arduin
 
             cancel.Click += (s, e) =>
             {
-                // este dorobim neskor
-                //allPanels.Remove(heatpanel);
-                heatpanel.Dispose();
-                //PanelReorder(heatpanel);
+                PanelReorder(heatpanel);
             };
 
             heatpanel.Controls.Add(cancel);
@@ -190,11 +192,13 @@ namespace Arduin
             }
             allPanels.Remove(pan);
 
+            int k = 0;
             foreach (Panel i in allPanels)
             {
                 i.Left = 0;
-                i.Top = graphpanel.Height;
+                i.Top = graphpanel.Height + k * heatPanelSizeY + k * 45;
                 graphpanel.Controls.Add(i);
+                k++;
             }
         }
 
@@ -283,12 +287,14 @@ namespace Arduin
                 // start
                 //tak ako je nazvany image v resources
                 button1.Image = Properties.Resources.Stop;
+
             }
             else
             {
                 //stop
                 //tak ako je nazvany image v resources
                 button1.Image = Properties.Resources.Play;
+
             }
         }
 
@@ -301,6 +307,21 @@ namespace Arduin
         {
             Backend.Model.Settings.projectName = projectName.Text;
             this.Text = Backend.Model.Settings.projectName;
+        }
+
+        private void savegraphbutton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LoadConfigButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SaveConfigButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
