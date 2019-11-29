@@ -2,7 +2,7 @@
 //#include <Arduino.h>
 StartOfInitialised_LMURam_Variables
  static uint8_t gate = 16;  // positive number of POINTS to keep the gate for ions open 
- static uint8_t  sampling = 1; // mikroseconds , spece between POINTS (positive number)
+ static uint8_t  sampling = 5; // mikroseconds , spece between POINTS (positive number)
 EndOfInitialised_LMURam_Variables
 
 // unused core 0 , but must be declared
@@ -10,28 +10,46 @@ void setup() {
   SerialASC.begin(2000000); // 9600
 }
 
-void loop() {
-  if (SerialASC.available() > 0){
-    String incoming = ""; 
-    incoming = SerialASC.readString();
-    gate = incoming.substring(0 , incoming.indexOf(' ')).toInt();
-    sampling = incoming.substring(incoming.indexOf(' '), incoming.length() - 1).toInt();
-  }  
-}
+void loop() {}
 
 
-
-
+StartOfInitialised_CPU2_Variables
+  String gateString = "";
+  String samplingString = "";
+  bool space = false;
+  char incoming = ' ';
+EndOfInitialised_CPU2_Variables
 
 void setup2() {  }
 
 // CORE 2 sends data to UI 
 void loop2() {
+  // incomming data format : <GATE SAMPLING+Q> : 12 55Q
+  while (SerialASC.available() > 0){
+    incoming = SerialASC.read();
+    
+    if(incoming == 'Q'){
+      gate = gateString.toInt();
+      sampling = samplingString.toInt();
+      space = false;
+      gateString = "";
+      samplingString = "";
+      break;
+    }
+    
+    if(incoming == ' '){
+      space = true;
+    }else{
+      if(!space){
+        gateString += incoming;
+      }else{
+        samplingString += incoming;
+      }
+    }
+  } 
+     
   sendDataToUI();
 }
-
-
-
 
 
 
@@ -119,7 +137,7 @@ int spectrometerMeasurement(int lastMicroseconds,  int gateCycleOpen, int px){
 }
 
 void sendDataToUI(){
-  SerialASC.println("START");
+ SerialASC.println("START");
 
   for (int i = 0; i < POINTS; i++){
     // no measurement, not neccessary to send to GUI

@@ -1,4 +1,4 @@
-Skip to content
+﻿Skip to content
 Search or jump to…
 
 Pull requests
@@ -386,3 +386,7 @@ API
 Training
 Blog
 About
+
+application/bin/*
+
+applicationTest/bin/*
