@@ -8,11 +8,13 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
+//using System.Windows.Forms.DataVisualization.Charting;
 using LiveCharts;
 using LiveCharts.Wpf;
 using LiveCharts.Defaults;
 using System.Windows.Media;
+using Arduin.Backend;
+using Arduin.Backend.Model;
 
 namespace Arduin
 {
@@ -147,12 +149,12 @@ namespace Arduin
         private void AddHeatChart(Panel heatpanel)
         {
 
-            Chart heatchart = new Chart();
+            /*Chart heatchart = new Chart();
             heatchart.Size = new Size(heatSizeX, heatSizeY);
             heatchart.Left = 0;
             heatchart.Top = 50;
             heatchart.Legends.Add(new Legend("Heat"));
-            heatpanel.Controls.Add(heatchart);
+            heatpanel.Controls.Add(heatchart);*/
         }
 
         private void AddButtons(Panel heatpanel, bool fromCurrent = false)
@@ -247,6 +249,40 @@ namespace Arduin
             projectName.Text = Backend.Model.Settings.projectName;
         }
 
+        private async void DrawGraph()
+        {
+            AggregatedData aggregatedData = await DataManagementService.Instance.getAggregatedData();
+            cartesianChartMain.Series = new SeriesCollection
+            {
+                new LineSeries
+                {
+                    Title = "Main Graph",
+                    Values = new ChartValues<int>(aggregatedData.aggregatedData)
+                }
+            };
+
+            cartesianChartMain.AxisX.Add(new Axis
+            {
+                Title = "Doplnit X-os",
+                LabelFormatter = value => value.ToString(),
+                Separator = new Separator { Step = 1 }/*,
+                MinValue = aggregatedData.aggregatedData[0],
+                MaxValue = aggregatedData.aggregatedData[0]*/
+
+            }
+            );
+
+            cartesianChartMain.AxisY.Add(new Axis
+            {
+                Title = "Doplnit Y-os",
+                LabelFormatter = value => value.ToString(),
+                Separator = new Separator { Step = 1 }
+            });
+
+            Debug.WriteLine("hajzel");
+        }
+
+
         private void EnableScrolling()
         {
             graphpanel.AutoScroll = false;
@@ -287,6 +323,11 @@ namespace Arduin
                 // start
                 //tak ako je nazvany image v resources
                 button1.Image = Properties.Resources.Stop;
+                while (isStarted)
+                {
+                    DrawGraph();
+                    System.Threading.Thread.Sleep(1000);
+                }
 
             }
             else
