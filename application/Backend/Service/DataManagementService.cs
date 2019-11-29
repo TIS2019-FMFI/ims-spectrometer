@@ -68,7 +68,6 @@ namespace Arduin.Backend{
             // save how many measurements will be aggregated
             aggregatedData.numberOfMeasurements = measurements.Count;
 
-
             int[] sum = new int[Measurement.BUFFER_SIZE];
             int maximumSize = 0;
 

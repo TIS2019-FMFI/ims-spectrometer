@@ -70,7 +70,7 @@ namespace ArduinTest {
                 aggregatedTest.aggregatedData[7] = 6;
                 aggregatedTest.aggregatedData[8] = 5;
 
-                string output = Settings.projectName + "_" + DateTime.Now.ToString("dd/MM/yyyy");
+                string output = Settings.projectName + "_" + DateTime.Now.ToString("dd/MM/yyyy") + ".csv";
 
                 Assert.AreEqual(FileService.Instance.saveAggregatedData(aggregatedTest), output);
             }

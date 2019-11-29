@@ -33,6 +33,9 @@ namespace Arduin.Backend{
          * open serial connection to arduino on available COM port
          */
         public bool start(){
+            if (serial.IsOpen) {
+                return serial.IsOpen;
+            }
             serial.BaudRate = 2000000; // 2000000
             serial.PortName = portFromName();
             
@@ -63,9 +66,9 @@ namespace Arduin.Backend{
                 if (line.Equals("START")) {
                     buffer = new int[Measurement.BUFFER_SIZE];
                     position = 0;
-                    Console.WriteLine("Start measurement");
+                  //  Console.WriteLine("Start measurement");
                 } else if (line.Equals("END")) {
-                    Console.WriteLine("End measurement");
+                  //  Console.WriteLine("End measurement");
 
                     Measurement oneMeasurementCycle = new Measurement();
                     oneMeasurementCycle.measurement = new int[position];
@@ -77,7 +80,7 @@ namespace Arduin.Backend{
                     try {
                         buffer[position++] = Convert.ToInt16(line);
                     } catch (Exception ex) {
-                        Console.WriteLine("Error occurred converting " + line + " from serial port do double : " + ex.Message);
+                        Console.WriteLine("Error occurred converting : " + line + " from serial port do double : " + ex.Message);
                     }
                 }
 
@@ -93,7 +96,7 @@ namespace Arduin.Backend{
          */
         public void sendSettingsToArduino(){
             if (serial.IsOpen)
-                serial.Write(Settings.gate + " " + Settings.sampling); // + Environment.NewLine
+                serial.Write(Settings.gate + " " + Settings.sampling + "Q"); // + Environment.NewLine
         }
 
         private string portFromName(string name = "Infineon DAS JDS COM"){
