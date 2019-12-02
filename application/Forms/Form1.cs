@@ -251,13 +251,17 @@ namespace Arduin
 
         private async void DrawGraph()
         {
-            AggregatedData aggregatedData = await DataManagementService.Instance.getAggregatedData();
+            cartesianChartMain.AxisX.Clear();
+            cartesianChartMain.AxisY.Clear();
+            //AggregatedData aggregatedData = await DataManagementService.Instance.getAggregatedData(); // odkomentovat
+            int[] aggregatedData = { 1, 1, 1, 1, 2, 3, 5, 8, 13, 18, 25, 18, 13, 8, 5, 3, 1, 1, 1, 1 ,2,3,4,5,4,3,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,5,8,15,22,15,8,5,1,1,1}; // zakomentovat
             cartesianChartMain.Series = new SeriesCollection
             {
                 new LineSeries
                 {
                     Title = "Main Graph",
-                    Values = new ChartValues<int>(aggregatedData.aggregatedData)
+                    //Values = new ChartValues<int>(aggregatedData.aggregatedData) // odkomentovat
+                    Values = new ChartValues<int>(aggregatedData)  /// zakomentovat
                 }
             };
 
@@ -278,8 +282,6 @@ namespace Arduin
                 LabelFormatter = value => value.ToString(),
                 Separator = new Separator { Step = 1 }
             });
-
-            Debug.WriteLine("hajzel");
         }
 
 
@@ -322,22 +324,23 @@ namespace Arduin
             if (isStarted) {
                 // start
                 //tak ako je nazvany image v resources
-                button1.Image = Properties.Resources.Stop;
-                while (isStarted)
+                button1.Image = Resources.Stop;
+                /*while (isStarted)
                 {
                     DrawGraph();
-                    System.Threading.Thread.Sleep(1000);
-                }
+                }*/
+                DrawGraph();
 
             }
             else
             {
                 //stop
                 //tak ako je nazvany image v resources
-                button1.Image = Properties.Resources.Play;
+                button1.Image = Resources.Play;
 
             }
         }
+
 
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {

@@ -61,13 +61,13 @@
             this.BasicSettings = new System.Windows.Forms.GroupBox();
             this.Mobility = new System.Windows.Forms.GroupBox();
             this.graphpanel = new System.Windows.Forms.Panel();
+            this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
+            this.cartesianChartMain = new LiveCharts.Wpf.CartesianChart();
             this.savegraphbutton = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
             this.LoadConfigButton = new System.Windows.Forms.Button();
             this.SaveConfigButton = new System.Windows.Forms.Button();
             this.projectName = new System.Windows.Forms.TextBox();
-            this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
-            this.cartesianChartMain = new LiveCharts.Wpf.CartesianChart();
             ((System.ComponentModel.ISupportInitialize)(this.numericseconds)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericsampling)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -474,6 +474,16 @@
             this.graphpanel.Size = new System.Drawing.Size(1060, 720);
             this.graphpanel.TabIndex = 33;
             // 
+            // elementHost1
+            // 
+            this.elementHost1.Cursor = System.Windows.Forms.Cursors.Cross;
+            this.elementHost1.Location = new System.Drawing.Point(0, 0);
+            this.elementHost1.Name = "elementHost1";
+            this.elementHost1.Size = new System.Drawing.Size(1060, 637);
+            this.elementHost1.TabIndex = 35;
+            this.elementHost1.Text = "elementHost1";
+            this.elementHost1.Child = this.cartesianChartMain;
+            // 
             // savegraphbutton
             // 
             this.savegraphbutton.BackColor = System.Drawing.Color.LimeGreen;
@@ -533,15 +543,6 @@
             this.projectName.TabIndex = 33;
             this.projectName.Text = "Project name";
             this.projectName.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            // 
-            // elementHost1
-            // 
-            this.elementHost1.Location = new System.Drawing.Point(0, 0);
-            this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(1060, 637);
-            this.elementHost1.TabIndex = 35;
-            this.elementHost1.Text = "elementHost1";
-            this.elementHost1.Child = this.cartesianChartMain;
             // 
             // Form1
             // 
