@@ -253,7 +253,7 @@ namespace Arduin
         {
             cartesianChartMain.AxisX.Clear();
             cartesianChartMain.AxisY.Clear();
-            //AggregatedData aggregatedData = await DataManagementService.Instance.getAggregatedData(); // odkomentovat
+            //AggregatedData aggregatedData = await DataManagementService.Instance.getAggregatedData(); //  odkomentovat
             int[] aggregatedData = { 1, 1, 1, 1, 2, 3, 5, 8, 13, 18, 25, 18, 13, 8, 5, 3, 1, 1, 1, 1 ,2,3,4,5,4,3,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,5,8,15,22,15,8,5,1,1,1}; // zakomentovat
             cartesianChartMain.Series = new SeriesCollection
             {
