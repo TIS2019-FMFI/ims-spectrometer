@@ -8,7 +8,13 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
+//using System.Windows.Forms.DataVisualization.Charting;
+using LiveCharts;
+using LiveCharts.Wpf;
+using LiveCharts.Defaults;
+using System.Windows.Media;
+using Arduin.Backend;
+using Arduin.Backend.Model;
 
 namespace Arduin
 {
@@ -142,12 +148,13 @@ namespace Arduin
 
         private void AddHeatChart(Panel heatpanel)
         {
-            Chart heatchart = new Chart();
+
+            /*Chart heatchart = new Chart();
             heatchart.Size = new Size(heatSizeX, heatSizeY);
             heatchart.Left = 0;
             heatchart.Top = 50;
             heatchart.Legends.Add(new Legend("Heat"));
-            heatpanel.Controls.Add(heatchart);
+            heatpanel.Controls.Add(heatchart);*/
         }
 
         private void AddButtons(Panel heatpanel, bool fromCurrent = false)
@@ -173,10 +180,7 @@ namespace Arduin
 
             cancel.Click += (s, e) =>
             {
-                // este dorobim neskor
-                //allPanels.Remove(heatpanel);
-                heatpanel.Dispose();
-                //PanelReorder(heatpanel);
+                PanelReorder(heatpanel);
             };
 
             heatpanel.Controls.Add(cancel);
@@ -190,11 +194,13 @@ namespace Arduin
             }
             allPanels.Remove(pan);
 
+            int k = 0;
             foreach (Panel i in allPanels)
             {
                 i.Left = 0;
-                i.Top = graphpanel.Height;
+                i.Top = graphpanel.Height + k * heatPanelSizeY + k * 45;
                 graphpanel.Controls.Add(i);
+                k++;
             }
         }
 
@@ -243,6 +249,42 @@ namespace Arduin
             projectName.Text = Backend.Model.Settings.projectName;
         }
 
+        private async void DrawGraph()
+        {
+            cartesianChartMain.AxisX.Clear();
+            cartesianChartMain.AxisY.Clear();
+            //AggregatedData aggregatedData = await DataManagementService.Instance.getAggregatedData(); //  odkomentovat 
+            int[] aggregatedData = { 1, 1, 1, 1, 2, 3, 5, 8, 13, 18, 25, 18, 13, 8, 5, 3, 1, 1, 1, 1 ,2,3,4,5,4,3,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,5,8,15,22,15,8,5,1,1,1}; // zakomentovat
+            cartesianChartMain.Series = new SeriesCollection
+            {
+                new LineSeries
+                {
+                    Title = "Main Graph",
+                    //Values = new ChartValues<int>(aggregatedData.aggregatedData) // odkomentovat
+                    Values = new ChartValues<int>(aggregatedData)  /// zakomentovat
+                }
+            };
+
+            cartesianChartMain.AxisX.Add(new Axis
+            {
+                Title = "Doplnit X-os",
+                LabelFormatter = value => value.ToString(),
+                Separator = new Separator { Step = 1 }/*,
+                MinValue = aggregatedData.aggregatedData[0],
+                MaxValue = aggregatedData.aggregatedData[0]*/
+
+            }
+            );
+
+            cartesianChartMain.AxisY.Add(new Axis
+            {
+                Title = "Doplnit Y-os",
+                LabelFormatter = value => value.ToString(),
+                Separator = new Separator { Step = 1 }
+            });
+        }
+
+
         private void EnableScrolling()
         {
             graphpanel.AutoScroll = false;
@@ -282,15 +324,23 @@ namespace Arduin
             if (isStarted) {
                 // start
                 //tak ako je nazvany image v resources
-                button1.Image = Properties.Resources.Stop;
+                button1.Image = Resources.Stop;
+                /*while (isStarted)
+                {
+                    DrawGraph();
+                }*/
+                DrawGraph();
+
             }
             else
             {
                 //stop
                 //tak ako je nazvany image v resources
-                button1.Image = Properties.Resources.Play;
+                button1.Image = Resources.Play;
+
             }
         }
+
 
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
@@ -301,6 +351,21 @@ namespace Arduin
         {
             Backend.Model.Settings.projectName = projectName.Text;
             this.Text = Backend.Model.Settings.projectName;
+        }
+
+        private void savegraphbutton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LoadConfigButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SaveConfigButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
