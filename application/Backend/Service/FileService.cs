@@ -41,10 +41,10 @@ namespace Arduin.Backend
          * will save all setting and Mobility and return name of created file
          */
         public string saveSettingsAndMobility() {
-            string fileName = Settings.projectName + "_" + DateTime.Now.ToString("dd/MM/yyyy");
+            string fileName = Settings.projectName + "_" + DateTime.Now.ToString("dd/MM/yyyy") + ".csv";
             try {
                 this.createFolderIfNotExists(AppDomain.CurrentDomain.BaseDirectory + SETTINGS_PATH);
-                using (StreamWriter sw = File.CreateText(AppDomain.CurrentDomain.BaseDirectory + SETTINGS_PATH + fileName + ".csv")) {
+                using (StreamWriter sw = File.CreateText(AppDomain.CurrentDomain.BaseDirectory + SETTINGS_PATH + fileName)) {
                     // save settings
                     sw.WriteLine("projectName :" + Settings.projectName);
                     sw.WriteLine("repeatSeconds :" + Settings.repeatSeconds);
@@ -101,10 +101,10 @@ namespace Arduin.Backend
 
         
         public string saveAggregatedData(AggregatedData aggregatedData){
-            string fileName = Settings.projectName + "_" + DateTime.Now.ToString("dd/MM/yyyy");
+            string fileName = Settings.projectName + "_" + DateTime.Now.ToString("dd/MM/yyyy") + ".csv";
             try {
                 this.createFolderIfNotExists(AppDomain.CurrentDomain.BaseDirectory + AGGREGATED_DATA_PATH);
-                using (StreamWriter sw = File.CreateText(AppDomain.CurrentDomain.BaseDirectory + AGGREGATED_DATA_PATH + fileName  + ".csv")) {
+                using (StreamWriter sw = File.CreateText(AppDomain.CurrentDomain.BaseDirectory + AGGREGATED_DATA_PATH + fileName)) {
                     sw.WriteLine("#HEADER");
                     sw.WriteLine("numberOfMeasurements :" + aggregatedData.numberOfMeasurements);
                     sw.WriteLine("sampling :" + aggregatedData.sampling);
@@ -134,10 +134,10 @@ namespace Arduin.Backend
             if (numberofElements == 0) {
                 throw new Exception("Could not save IntensityData, does not contains any data ");
             }
-            string fileName = Settings.projectName + "_" + DateTime.Now.ToString("dd/MM/yyyy");
+            string fileName = Settings.projectName + "_" + DateTime.Now.ToString("dd/MM/yyyy") + ".csv";
             try {
                 this.createFolderIfNotExists(AppDomain.CurrentDomain.BaseDirectory + INTENSITY_PATH);
-                using (StreamWriter sw = File.CreateText(AppDomain.CurrentDomain.BaseDirectory + INTENSITY_PATH + fileName + ".csv")) {
+                using (StreamWriter sw = File.CreateText(AppDomain.CurrentDomain.BaseDirectory + INTENSITY_PATH + fileName)) {
                     AggregatedData firstAggregatedData = intensityData.intensityData.First();
                     sw.WriteLine("#HEADER");
                     sw.WriteLine("numberOfAggregatedData  :" + numberofElements);
@@ -178,7 +178,7 @@ namespace Arduin.Backend
         private StreamReader tryToOpenFile(string projectName , string path) {
             FileStream fileStream = null;
             try {
-                fileStream = new FileStream(AppDomain.CurrentDomain.BaseDirectory + path + projectName + ".csv", FileMode.Open, FileAccess.Read);
+                fileStream = new FileStream(AppDomain.CurrentDomain.BaseDirectory + path + projectName, FileMode.Open, FileAccess.Read);
             } catch (Exception e) {
                 throw new FileNotFoundException("Could not find file : " + projectName + " got exception : " + e.Message);
             }
