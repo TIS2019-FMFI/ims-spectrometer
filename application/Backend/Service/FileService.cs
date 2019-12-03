@@ -25,11 +25,11 @@ namespace Arduin.Backend
             }
         }
 
-        private const string SETTINGS_PATH = "Data\\Configuration\\";  // path where settings will be save 
+        public const string SETTINGS_PATH = "Data\\Configuration\\";  // path where settings will be save 
 
-        private const string AGGREGATED_DATA_PATH = "Data\\Agregated_Data\\";  // path where aggregated data will be saved
+        public const string AGGREGATED_DATA_PATH = "Data\\Agregated_Data\\";  // path where aggregated data will be saved
 
-        private const string INTENSITY_PATH = "Data\\Intensity_Data\\";  // path where intensity graph will be saved 
+        public const string INTENSITY_PATH = "Data\\Intensity_Data\\";  // path where intensity graph will be saved 
 
         private void createFolderIfNotExists(string path) {
             if (!System.IO.Directory.Exists(path)) {
@@ -41,7 +41,7 @@ namespace Arduin.Backend
          * will save all setting and Mobility and return name of created file
          */
         public string saveSettingsAndMobility() {
-            string fileName = Settings.projectName + "_" + DateTime.Now.ToString("dd/MM/yyyy") + ".csv";
+            string fileName = Settings.projectName + "_" + new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds() + ".csv";
             try {
                 this.createFolderIfNotExists(AppDomain.CurrentDomain.BaseDirectory + SETTINGS_PATH);
                 using (StreamWriter sw = File.CreateText(AppDomain.CurrentDomain.BaseDirectory + SETTINGS_PATH + fileName)) {
@@ -71,7 +71,7 @@ namespace Arduin.Backend
             var list = new List<string>();
 
             try {
-                using (var streamReader = tryToOpenFile(projectName, SETTINGS_PATH)) {
+                using (var streamReader = tryToOpenFile(projectName)) {
                     string line;
                     while ((line = streamReader.ReadLine()) != null) {
                         list.Add(line.Split(':')[1]);
@@ -101,7 +101,7 @@ namespace Arduin.Backend
 
         
         public string saveAggregatedData(AggregatedData aggregatedData){
-            string fileName = Settings.projectName + "_" + DateTime.Now.ToString("dd/MM/yyyy") + ".csv";
+            string fileName = Settings.projectName + "_" + new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds() + ".csv";
             try {
                 this.createFolderIfNotExists(AppDomain.CurrentDomain.BaseDirectory + AGGREGATED_DATA_PATH);
                 using (StreamWriter sw = File.CreateText(AppDomain.CurrentDomain.BaseDirectory + AGGREGATED_DATA_PATH + fileName)) {
@@ -134,7 +134,7 @@ namespace Arduin.Backend
             if (numberofElements == 0) {
                 throw new Exception("Could not save IntensityData, does not contains any data ");
             }
-            string fileName = Settings.projectName + "_" + DateTime.Now.ToString("dd/MM/yyyy") + ".csv";
+            string fileName = Settings.projectName + "_" + new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds() + ".csv";
             try {
                 this.createFolderIfNotExists(AppDomain.CurrentDomain.BaseDirectory + INTENSITY_PATH);
                 using (StreamWriter sw = File.CreateText(AppDomain.CurrentDomain.BaseDirectory + INTENSITY_PATH + fileName)) {
@@ -175,21 +175,21 @@ namespace Arduin.Backend
         }
 
 
-        private StreamReader tryToOpenFile(string projectName , string path) {
+        private StreamReader tryToOpenFile(string projectPath) {
             FileStream fileStream = null;
             try {
-                fileStream = new FileStream(AppDomain.CurrentDomain.BaseDirectory + path + projectName, FileMode.Open, FileAccess.Read);
+                fileStream = new FileStream(projectPath, FileMode.Open, FileAccess.Read);
             } catch (Exception e) {
-                throw new FileNotFoundException("Could not find file : " + projectName + " got exception : " + e.Message);
+                throw new FileNotFoundException("Could not find file : " + projectPath + " got exception : " + e.Message);
             }
             return new StreamReader(fileStream, Encoding.UTF8);
         }
 
-        public IntensityData loadIntensityData(string projectName) {
+        public IntensityData loadIntensityData(string projectPath) {
             IntensityData intensityData = new IntensityData();
 
             try {
-                using (var streamReader = tryToOpenFile(projectName, INTENSITY_PATH)) {
+                using (var streamReader = tryToOpenFile(projectPath)) {
                     string line = "";
                     int countline = 0;
                     int sampling = 0;
@@ -249,7 +249,5 @@ namespace Arduin.Backend
 
             return intensityData;
         }
-
-
     }
 }
