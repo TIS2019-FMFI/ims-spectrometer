@@ -39,7 +39,7 @@ namespace ArduinTest {
                 Settings.sampling = 0;
 
                 // load settings back
-                FileService.Instance.loadSettingsAndMobility(output);
+                FileService.Instance.loadSettingsAndMobility(AppDomain.CurrentDomain.BaseDirectory + FileService.SETTINGS_PATH +  output);
 
                 // test of new loaded are equal to saved 
                 Assert.AreEqual(Mobility.T, t);
@@ -70,9 +70,7 @@ namespace ArduinTest {
                 aggregatedTest.aggregatedData[7] = 6;
                 aggregatedTest.aggregatedData[8] = 5;
 
-                string output = Settings.projectName + "_" + DateTime.Now.ToString("dd/MM/yyyy") + ".csv";
-
-                Assert.AreEqual(FileService.Instance.saveAggregatedData(aggregatedTest), output);
+                FileService.Instance.saveAggregatedData(aggregatedTest);
             }
 
 
@@ -81,7 +79,7 @@ namespace ArduinTest {
                 IntensityData currentIntensityData = constructIntensityData();
 
                 String output = FileService.Instance.saveIntensityData(currentIntensityData);
-                IntensityData loadedIntensityData = FileService.Instance.loadIntensityData(output);
+                IntensityData loadedIntensityData = FileService.Instance.loadIntensityData(AppDomain.CurrentDomain.BaseDirectory + FileService.INTENSITY_PATH + output);
 
                 Assert.AreEqual(loadedIntensityData.intensityData.Count, currentIntensityData.intensityData.Count);
                 Assert.AreEqual(loadedIntensityData.intensityData[0].aggregatedData.Length, currentIntensityData.intensityData[0].aggregatedData.Length);
