@@ -68,6 +68,7 @@
             this.LoadConfigButton = new System.Windows.Forms.Button();
             this.SaveConfigButton = new System.Windows.Forms.Button();
             this.projectName = new System.Windows.Forms.TextBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.numericseconds)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericsampling)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -428,6 +429,7 @@
             // 
             // button5
             // 
+            this.button5.AutoSize = true;
             this.button5.BackColor = System.Drawing.Color.Linen;
             this.button5.Cursor = System.Windows.Forms.Cursors.Default;
             this.button5.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -436,7 +438,7 @@
             this.button5.Image = ((System.Drawing.Image)(resources.GetObject("button5.Image")));
             this.button5.Location = new System.Drawing.Point(0, 675);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(1060, 45);
+            this.button5.Size = new System.Drawing.Size(1063, 45);
             this.button5.TabIndex = 26;
             this.button5.UseVisualStyleBackColor = false;
             this.button5.Click += new System.EventHandler(this.button5_Click);
@@ -465,17 +467,22 @@
             // 
             // graphpanel
             // 
-            this.graphpanel.AutoScroll = true;
+            this.graphpanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.graphpanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.graphpanel.Controls.Add(this.elementHost1);
             this.graphpanel.Controls.Add(this.savegraphbutton);
             this.graphpanel.Controls.Add(this.button5);
             this.graphpanel.Location = new System.Drawing.Point(278, 9);
             this.graphpanel.Name = "graphpanel";
-            this.graphpanel.Size = new System.Drawing.Size(1060, 720);
+            this.graphpanel.Size = new System.Drawing.Size(1063, 720);
             this.graphpanel.TabIndex = 33;
             // 
             // elementHost1
             // 
+            this.elementHost1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.elementHost1.Cursor = System.Windows.Forms.Cursors.Cross;
             this.elementHost1.Location = new System.Drawing.Point(0, 0);
             this.elementHost1.Name = "elementHost1";
@@ -544,11 +551,14 @@
             this.projectName.Text = "Project name";
             this.projectName.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
             this.BackColor = System.Drawing.Color.Linen;
             this.ClientSize = new System.Drawing.Size(1350, 729);
             this.Controls.Add(this.panel4);
@@ -576,6 +586,7 @@
             this.BasicSettings.PerformLayout();
             this.Mobility.ResumeLayout(false);
             this.graphpanel.ResumeLayout(false);
+            this.graphpanel.PerformLayout();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.ResumeLayout(false);
@@ -622,6 +633,7 @@
         private System.Windows.Forms.Button savegraphbutton;
         private System.Windows.Forms.Integration.ElementHost elementHost1;
         private LiveCharts.Wpf.CartesianChart cartesianChartMain;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 
