@@ -42,8 +42,8 @@ namespace Arduin.Backend{
             try {
                 serial.Open();
             } catch (Exception ex) {
-                Console.WriteLine("Error opening my port: {0}", ex.Message);
-            }
+                throw new ApplicationException("Error opening my port: " + ex.Message);
+            } 
 
             Task.Delay(100).Wait(); //allow Arduino reset 
             
