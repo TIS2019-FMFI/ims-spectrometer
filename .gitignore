@@ -388,5 +388,5 @@ Blog
 About
 
 application/bin/*
-
 applicationTest/bin/*
+application/Program.cs
