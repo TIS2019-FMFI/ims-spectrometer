@@ -240,13 +240,9 @@ namespace Arduin.Backend
                          positionCounter++;
                      }
                 }
-
-
             } catch (Exception e) {
                 throw new FileLoadException("Could not parse file content into IntensityData, got error : " + e.Message);
             }
-
-
             return intensityData;
         }
     }

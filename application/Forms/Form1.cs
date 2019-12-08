@@ -32,6 +32,8 @@ namespace Arduin
         private int heatPanelSizeY = 455; // 380
 
         List<Tuple<Panel, IntensityData>> allPanels = new List<Tuple<Panel, IntensityData>>();
+        //vytvorit jeden live graf!!!
+        Tuple<Panel, IntensityData> livePanel;
 
         public Form1()
         {
@@ -89,7 +91,7 @@ namespace Arduin
         private void button5_Click(object sender, EventArgs e)
         {
             //CreateHeatMap();
-            //CreateHeatFromCurrent();
+            CreateHeatFromCurrent();
             DecideAction();
         }
 
@@ -105,16 +107,9 @@ namespace Arduin
             ofd.Filter = "csv|*.csv";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                //Andrej
-                // |
-                // v
-                Backend.Model.IntensityData idata = constructIntensityData();//new Backend.Model.IntensityData();
-                Console.WriteLine("aaaaaaaaa");
-                Console.WriteLine(ofd.FileName);
-                Debug.WriteLine(ofd.FileName);
-                //idata = Backend.FileService.Instance.loadIntensityData(ofd.FileName);
+                Backend.Model.IntensityData idata = new Backend.Model.IntensityData();
+                idata = Backend.FileService.Instance.loadIntensityData(ofd.FileName);
                 CreateHeatFromFile(idata);
-                //vytvor graf zo suboru
             } else
             {
                 DialogResult dr = MessageBox.Show("Please choose a file", "File not found", MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning);
@@ -126,40 +121,76 @@ namespace Arduin
         }
 
         //nejde dorabam
-        public void CreateHeatFromCurrent() // live heat graf
+        public void CreateHeatFromCurrent() // live heat graf - brať data z hlavného grafu!!(agregated data)
         {
             Panel heatCurrentPanel = CreateHeatPanel();
             IntensityData idata = new IntensityData();
-            AddHeatChartFromCurrent(heatCurrentPanel, idata);
-            AddButtons(heatCurrentPanel, true);
-            graphpanel.Controls.Add(heatCurrentPanel);
-            allPanels.Add(new Tuple<Panel, IntensityData>(heatCurrentPanel, idata));
-        }
-        private async void AddHeatChartFromCurrent(Panel heatpanel, IntensityData idata){
+            //AddHeatChartFromCurrent(heatCurrentPanel, idata);
+          
             LiveCharts.WinForms.CartesianChart heatchart;
             heatchart = new LiveCharts.WinForms.CartesianChart();
             heatchart.Size = new Size(heatSizeX, heatSizeY);
             heatchart.Left = 0;
             heatchart.Top = 50;
+            heatCurrentPanel.Controls.Add(heatchart);
 
+            AddButtons(heatCurrentPanel, true);
+            graphpanel.Controls.Add(heatCurrentPanel);
+            livePanel = new Tuple<Panel, IntensityData>(heatCurrentPanel, idata);
+            
+        }
+
+        private async void AddHeatChartFromCurrent(IntensityData idata){
+            //livePanel.Item1 = heatpanel
+            //livePanel.Item2 = idata
             //tvorba grafu
-            /*ChartValues<HeatPoint> values = new ChartValues<HeatPoint>();
-            for (int i = 0; i < idata.intensityData.Count(); i++) {
-                Backend.Model.AggregatedData agregateddata = idata.intensityData[i];
-                for (int j = 0; j < idata.intensityData.Count(); j++) {
-                       values.Add(new HeatPoint(agregateddata.sampling*(j+1), i, agregateddata.aggregatedData[j]));
+            ChartValues<HeatPoint> values = new ChartValues<HeatPoint>();
+            for (int i = 0; i < livePanel.Item2.intensityData.Count(); i++) {
+                Backend.Model.AggregatedData agregateddata = livePanel.Item2.intensityData[i];
+                for (int j = 0; j < agregateddata.aggregatedData.Count(); j++) {
+                       values.Add(new HeatPoint(j, i, agregateddata.aggregatedData[j]));
                 }
             }
-            heatchart.Series = new HeatSeries
+            heatchart.Series.Add(new HeatSeries
             {
-                
-            };
-            */
+                Values = values,
+                //DataLabels = true, //cisla na jednotlivych polickach grafu
+                GradientStopCollection = new GradientStopCollection
+                {
+                    new GradientStop(System.Windows.Media.Color.FromRgb(51, 51, 255), 0), //from 0.65 to 0.75
+                    new GradientStop(System.Windows.Media.Color.FromRgb(51, 255, 51), 0.20), // from 0 to 0.5
+                    new GradientStop(System.Windows.Media.Color.FromRgb(153, 255, 51), .40), //from 0.5 to 0.65                   
+                    new GradientStop(System.Windows.Media.Color.FromRgb(255, 153, 51), .60), //from 0.75 to 0.85
+                    new GradientStop(System.Windows.Media.Color.FromRgb(255, 0, 0), .80) //from 0.85 to 1(max value)
+               }
+            });
+
+            heatchart.AxisX.Add(new LiveCharts.Wpf.Axis //preco sa nezobrazuje?? *
+            {
+                Title = "x-values",
+                LabelFormatter = value => value.ToString(),
+                Separator = new Separator {Step = 1},
+                Foreground = System.Windows.Media.Brushes.White,
+                MinValue = 0,//idata.intensityData[0].sampling,
+                MaxValue =  idata.intensityData[0].aggregatedData.Count(),                
+            });
+            heatchart.AxisY.Add(new LiveCharts.Wpf.Axis
+            {
+                Title = "y-values",
+                Foreground = System.Windows.Media.Brushes.White,
+                Labels = new[]
+                {
+                    "Y1",
+                    "Y2",
+                    "Y3",
+                    "Y4",
+                },
+            });
+
             heatpanel.Controls.Add(heatchart);
+        }
 
-        } 
-
-       private void CreateHeatFromFile(Backend.Model.IntensityData idata)
+        private void CreateHeatFromFile(Backend.Model.IntensityData idata)
         {
             Panel heatpanel = CreateHeatPanel();
             AddHeatChartFromFile(heatpanel, idata);
