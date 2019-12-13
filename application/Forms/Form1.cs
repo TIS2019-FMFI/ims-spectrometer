@@ -17,6 +17,8 @@ using Arduin.Backend;
 using Arduin.Backend.Model;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
+using System.ServiceModel;
 
 namespace Arduin
 {
@@ -33,7 +35,7 @@ namespace Arduin
         private int heatPanelSizeX = 1060;
         private int heatPanelSizeY = 455; // 380
 
-        private int[] aggData;
+        private AggregatedData aggData;
 
         List<Panel> allPanels = new List<Panel>();
 
@@ -253,7 +255,7 @@ namespace Arduin
             projectName.Text = Backend.Model.Settings.projectName;
         }
 
-        private int[] AggData
+        private AggregatedData AggData
         {
             set { aggData = value; }
             get { return aggData; }
@@ -264,18 +266,18 @@ namespace Arduin
             Debug.WriteLine("idem");
             cartesianChartMain.AxisX.Clear();
             cartesianChartMain.AxisY.Clear();
-            //AggregatedData aggregatedData = await DataManagementService.Instance.getAggregatedData(); //  odkomentovat 
-            //AggData = aggregatedData.aggregatedData; // odkomentovat
-            int[] aggregatedData = { 1, 1, 1, 1, 2, 3, 5, 8, 13, 18, 25, 18, 13, 8, 5, 3, 1, 1, 1, 1 ,2,3,4,5,4,3,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,5,8,15,22,15,8,5,1,1,1}; // zakomentovat
-            AggData = aggregatedData;
-            //Array.ForEach(AggData, Console.WriteLine);
+            AggregatedData aggregatedData = await DataManagementService.Instance.getAggregatedData(); //  odkomentovat 
+            AggData = aggregatedData; // odkomentovat
+                                      //int[] aggregatedData = { 1, 1, 1, 1, 2, 3, 5, 8, 13, 18, 25, 18, 13, 8, 5, 3, 1, 1, 1, 1 ,2,3,4,5,4,3,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,5,8,15,22,15,8,5,1,1,1}; // zakomentovat
+                                      //AggData = aggregatedData;
+                                      //Array.ForEach(AggData, Console.WriteLine);
             cartesianChartMain.Series = new SeriesCollection
             {
                 new LineSeries
                 {
                     Title = "Main Graph",
-                    //Values = new ChartValues<int>(aggregatedData.aggregatedData) // odkomentovat
-                    Values = new ChartValues<int>(aggregatedData)  /// zakomentovat
+                    Values = new ChartValues<int>(aggregatedData.aggregatedData) // odkomentovat
+                    //Values = new ChartValues<int>(aggregatedData)  /// zakomentovat
                 }
             };
 
@@ -296,9 +298,14 @@ namespace Arduin
                 LabelFormatter = value => value.ToString(),
                 Separator = new Separator { Step = 1 }
             });
+
             Debug.WriteLine("koniec");
         }
 
+        public void SetIsStarted()
+        {
+            isStarted = !isStarted;
+        }
 
         private void EnableScrolling()
         {
@@ -333,21 +340,32 @@ namespace Arduin
             textBox4.Text = ymax.ToString();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
             isStarted = !isStarted;
+            //await DrawGraph();
+            while (isStarted)
+            {
+                 try
+                 {
+                     await DrawGraph();
+                 }
+                 catch (Exception err)
+                 {
+                     MessageBox.Show("Connection not found");
+                    isStarted = !isStarted;
+                 }
+                //await DrawGraph();
+            }
 
             if (isStarted) {
                 // start
                 //tak ako je nazvany image v resources
                 button1.Image = Resources.Stop;
                 //await DrawGraph();
-                /*System.Timers.Timer timer = new System.Timers.Timer(1000);
-                timer.Elapsed += async (senderrr, el) => await DrawGraph();
-                timer.Start();*/
-                timer1.Interval = 2000;
+                /*timer1.Interval = 2000;
                 timer1.Tick += async (s,er) => await DrawGraph();
-                timer1.Start();
+                timer1.Start();*/
             }
             else
             {

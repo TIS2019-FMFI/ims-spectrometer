@@ -86,6 +86,7 @@ namespace Arduin.Backend{
 
             }
             Console.WriteLine("No serial connection, could not read data");
+            throw new Exception("No connection");
             return null;
 
         }
