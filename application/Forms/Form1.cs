@@ -15,6 +15,10 @@ using LiveCharts.Defaults;
 using System.Windows.Media;
 using Arduin.Backend;
 using Arduin.Backend.Model;
+using System.Threading;
+using System.Threading.Tasks;
+using System.IO;
+using System.ServiceModel;
 
 namespace Arduin
 {
@@ -30,6 +34,8 @@ namespace Arduin
         // Velkost panelu kde su vsetky komponenty intensity grafu
         private int heatPanelSizeX = 1060;
         private int heatPanelSizeY = 455; // 380
+
+        private AggregatedData aggData;
 
         List<Panel> allPanels = new List<Panel>();
 
@@ -249,19 +255,29 @@ namespace Arduin
             projectName.Text = Backend.Model.Settings.projectName;
         }
 
-        private async void DrawGraph()
+        private AggregatedData AggData
         {
+            set { aggData = value; }
+            get { return aggData; }
+        }
+
+        private async Task DrawGraph()
+        {
+            Debug.WriteLine("idem");
             cartesianChartMain.AxisX.Clear();
             cartesianChartMain.AxisY.Clear();
-            //AggregatedData aggregatedData = await DataManagementService.Instance.getAggregatedData(); //  odkomentovat 
-            int[] aggregatedData = { 1, 1, 1, 1, 2, 3, 5, 8, 13, 18, 25, 18, 13, 8, 5, 3, 1, 1, 1, 1 ,2,3,4,5,4,3,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,5,8,15,22,15,8,5,1,1,1}; // zakomentovat
+            AggregatedData aggregatedData = await DataManagementService.Instance.getAggregatedData(); //  odkomentovat 
+            AggData = aggregatedData; // odkomentovat
+                                      //int[] aggregatedData = { 1, 1, 1, 1, 2, 3, 5, 8, 13, 18, 25, 18, 13, 8, 5, 3, 1, 1, 1, 1 ,2,3,4,5,4,3,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,5,8,15,22,15,8,5,1,1,1}; // zakomentovat
+                                      //AggData = aggregatedData;
+                                      //Array.ForEach(AggData, Console.WriteLine);
             cartesianChartMain.Series = new SeriesCollection
             {
                 new LineSeries
                 {
                     Title = "Main Graph",
-                    //Values = new ChartValues<int>(aggregatedData.aggregatedData) // odkomentovat
-                    Values = new ChartValues<int>(aggregatedData)  /// zakomentovat
+                    Values = new ChartValues<int>(aggregatedData.aggregatedData) // odkomentovat
+                    //Values = new ChartValues<int>(aggregatedData)  /// zakomentovat
                 }
             };
 
@@ -270,8 +286,8 @@ namespace Arduin
                 Title = "Doplnit X-os",
                 LabelFormatter = value => value.ToString(),
                 Separator = new Separator { Step = 1 }/*,
-                MinValue = aggregatedData.aggregatedData[0],
-                MaxValue = aggregatedData.aggregatedData[0]*/
+                MinValue = aggregatedData.Min(),
+                MaxValue = aggregatedData.Max()*/
 
             }
             );
@@ -282,8 +298,14 @@ namespace Arduin
                 LabelFormatter = value => value.ToString(),
                 Separator = new Separator { Step = 1 }
             });
+
+            Debug.WriteLine("koniec");
         }
 
+        public void SetIsStarted()
+        {
+            isStarted = !isStarted;
+        }
 
         private void EnableScrolling()
         {
@@ -318,26 +340,39 @@ namespace Arduin
             textBox4.Text = ymax.ToString();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
             isStarted = !isStarted;
+            //await DrawGraph();
+            while (isStarted)
+            {
+                 try
+                 {
+                     await DrawGraph();
+                 }
+                 catch (Exception err)
+                 {
+                     MessageBox.Show("Connection not found");
+                    isStarted = !isStarted;
+                 }
+                //await DrawGraph();
+            }
+
             if (isStarted) {
                 // start
                 //tak ako je nazvany image v resources
                 button1.Image = Resources.Stop;
-                /*while (isStarted)
-                {
-                    DrawGraph();
-                }*/
-                DrawGraph();
-
+                //await DrawGraph();
+                /*timer1.Interval = 2000;
+                timer1.Tick += async (s,er) => await DrawGraph();
+                timer1.Start();*/
             }
             else
             {
                 //stop
                 //tak ako je nazvany image v resources
                 button1.Image = Resources.Play;
-
+                timer1.Stop();
             }
         }
 
