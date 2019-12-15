@@ -375,11 +375,19 @@ namespace Arduin
                 return;
             }
 
+            int oldSampling = Settings.sampling;
+            int oldGate = Settings.gate;
+
             Settings.repeatSeconds = float.Parse(numericseconds.Text);
             Settings.repeatCycles = Convert.ToInt32(numericcount.Text);
             Settings.sampling = Convert.ToInt32(numericsampling.Text);
             Settings.gate = Convert.ToInt32(numericgate.Text);
             Settings.applyRepeatCount = Convert.ToBoolean(repeatcountcheckbox.Checked);
+
+            // do not send data into arduino if gate or sampling was not changed
+            if(oldSampling == Settings.sampling && oldGate == Settings.gate) {
+                return;
+            }
 
             try {
                 ArduinoConnectionService.Instance.sendSettingsToArduino();
