@@ -34,7 +34,7 @@ namespace Arduin.Backend{
         public async Task<List<Measurement>> getOneLifeCycleOfArduinoData(){
             List<Measurement> measurements = new List<Measurement>();
 
-            if (Settings.applyRepeatSeconds) {
+            if (Settings.applyRepeatCount) {
                 // get measurement from serial connection for specific seconds
                 DateTime start = DateTime.Now;
                 while (DateTime.Now.Subtract(start).Seconds <= Settings.repeatSeconds) {

@@ -49,7 +49,7 @@ namespace Arduin.Backend
                     sw.WriteLine("projectName :" + Settings.projectName);
                     sw.WriteLine("repeatSeconds :" + Settings.repeatSeconds);
                     sw.WriteLine("repeatCycles :" + Settings.repeatCycles);
-                    sw.WriteLine("applyRepeatSeconds :" + Settings.applyRepeatSeconds);
+                    sw.WriteLine("applyRepeatSeconds :" + Settings.applyRepeatCount);
                     sw.WriteLine("sampling :" + Settings.sampling);
                     sw.WriteLine("gate :" + Settings.gate);
                     // save mobility
@@ -82,7 +82,7 @@ namespace Arduin.Backend
                 Settings.projectName = lines[0];
                 Settings.repeatSeconds = float.Parse(lines[1]);
                 Settings.repeatCycles = Int32.Parse(lines[2]);
-                Settings.applyRepeatSeconds = bool.Parse(lines[3]);
+                Settings.applyRepeatCount = bool.Parse(lines[3]);
                 Settings.sampling = Int32.Parse(lines[4]);
                 Settings.gate = Int32.Parse(lines[5]);
 

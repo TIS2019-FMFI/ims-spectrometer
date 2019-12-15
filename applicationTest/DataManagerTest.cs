@@ -76,7 +76,7 @@ namespace ArduinTest {
             ArduinoConnectionService.Instance.start();
 
             List<Measurement> measurements1 = await DataManagementService.Instance.getOneLifeCycleOfArduinoData();
-            Settings.applyRepeatSeconds = false;
+            Settings.applyRepeatCount = false;
             Settings.repeatCycles = 100;
             List<Measurement> measurements2 = await DataManagementService.Instance.getOneLifeCycleOfArduinoData();
             Assert.IsTrue(measurements2.Count == Settings.repeatCycles);

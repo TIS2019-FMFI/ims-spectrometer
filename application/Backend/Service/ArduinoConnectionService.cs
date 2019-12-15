@@ -96,8 +96,11 @@ namespace Arduin.Backend{
          * will send gate and sampling to arduino in format "gate sampling"
          */
         public void sendSettingsToArduino(){
-            if (serial.IsOpen)
+            if (serial.IsOpen) {
                 serial.Write(Settings.gate + " " + Settings.sampling + "Q"); // + Environment.NewLine
+                return;
+            }
+            throw new ApplicationException("No connection , can not send settings to Arduino");
         }
 
         private string portFromName(string name = "Infineon DAS JDS COM"){
