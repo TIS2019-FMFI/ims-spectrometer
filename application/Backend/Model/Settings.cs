@@ -32,7 +32,7 @@ namespace Arduin.Backend.Model{
          * if applyRepeatSeconds == false -> repeatCycles
          * this value should be a check box in UI
          */
-        public static bool applyRepeatSeconds { get; set; } = true;
+        public static bool applyRepeatCount { get; set; } = false;
 
 
         /**
