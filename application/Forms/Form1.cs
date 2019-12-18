@@ -32,13 +32,14 @@ namespace Arduin
         private int heatSizeX = 524;
         private int heatSizeY = 355;
 
-        // Velkost panelu kde su vsetky komponenty intensity grafu
         private int heatPanelSizeX = 1060;
-        private int heatPanelSizeY = 455; // 380
+        private int heatPanelSizeY = 455;
 
         private AggregatedData aggData;
+        List<Tuple<Panel, IntensityData>> allPanels = new List<Tuple<Panel, IntensityData>>();
+        Tuple<Panel, IntensityData> livePanel;
+        LiveCharts.WinForms.CartesianChart liveheatchart;
 
-        List<Panel> allPanels = new List<Panel>();
 
         public Form1() {
             InitializeComponent();
@@ -98,9 +99,11 @@ namespace Arduin
         public void OpenHeatMap() {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "csv|*.csv";
-            if (ofd.ShowDialog() == DialogResult.OK) {
-                Backend.Model.AggregatedData ad = new Backend.Model.AggregatedData();
-                CreateHeatMap();
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                Backend.Model.IntensityData idata = Backend.FileService.Instance.loadIntensityData(ofd.FileName);
+                CreateHeatFromFile(idata);
             } else {
                 DialogResult dr = MessageBox.Show("Please choose a file", "File not found", MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning);
                 if (dr == DialogResult.Retry) {
@@ -109,22 +112,122 @@ namespace Arduin
             }
         }
 
-        //nejde dorabam
-        public void CreateHeatFromCurrent() {
+        public void CreateHeatFromCurrent()
+        {
             Panel heatCurrentPanel = CreateHeatPanel();
-            AddHeatChart(heatCurrentPanel);
+            IntensityData idata = new IntensityData();
+          
+            liveheatchart = new LiveCharts.WinForms.CartesianChart();
+            liveheatchart.Size = new Size(heatSizeX, heatSizeY);
+            liveheatchart.Left = 0;
+            liveheatchart.Top = 50;
+            heatCurrentPanel.Controls.Add(liveheatchart);
+
             AddButtons(heatCurrentPanel, true);
             graphpanel.Controls.Add(heatCurrentPanel);
-            allPanels.Add(heatCurrentPanel);
+            livePanel = new Tuple<Panel, IntensityData>(heatCurrentPanel, idata);            
         }
 
-        private void CreateHeatMap() {
-            Panel heatpanel = CreateHeatPanel();
+        private async void AddHeatChartFromCurrent(AggregatedData adata){
+            livePanel.Item2.intensityData.Add(adata);
+            if (liveheatchart.Series.ElementAt(0) != null){
+                ChartValues<HeatPoint> values = new ChartValues<HeatPoint>();
+                for (int j = 0; j < adata.aggregatedData.Count(); j++) {
+                       liveheatchart.Series.ElementAt(0).Values.Add(new HeatPoint(j, livePanel.Item2.intensityData.Count(), adata.aggregatedData[j]));
+                }
+                liveheatchart.Series.Add(new HeatSeries
+                {
+                    Values = values,
+                    //DataLabels = true, cisla na jednotlivych polickach grafu
+                    GradientStopCollection = new GradientStopCollection
+                    {
+                        new GradientStop(System.Windows.Media.Color.FromRgb(51, 51, 255), 0), //from 0.65 to 0.75
+                        new GradientStop(System.Windows.Media.Color.FromRgb(51, 255, 51), 0.20), // from 0 to 0.5
+                        new GradientStop(System.Windows.Media.Color.FromRgb(153, 255, 51), .40), //from 0.5 to 0.65                   
+                        new GradientStop(System.Windows.Media.Color.FromRgb(255, 153, 51), .60), //from 0.75 to 0.85
+                        new GradientStop(System.Windows.Media.Color.FromRgb(255, 0, 0), .80) //from 0.85 to 1(max value)
+                }
+                });
+                liveheatchart.AxisX.Add(new LiveCharts.Wpf.Axis
+                {
+                    Title = "x-values",
+                    LabelFormatter = value => value.ToString(),
+                    Separator = new Separator {Step = 1},
+                    Foreground = System.Windows.Media.Brushes.White,
+                    MinValue = 0,
+                    MaxValue = liveheatchart.Series.ElementAt(0).Values.Count, 
+                });
+                liveheatchart.AxisY.Add(new LiveCharts.Wpf.Axis
+                {
+                    Title = "y-values",
+                    Foreground = System.Windows.Media.Brushes.White,
+                    LabelFormatter = value => value.ToString(),
+                });
+            }
+            else{
+                for (int j = 0; j < adata.aggregatedData.Count(); j++) {
+                       liveheatchart.Series.ElementAt(0).Values.Add(new HeatPoint(j, livePanel.Item2.intensityData.Count(), adata.aggregatedData[j]));
+                }
+            }
+        }
 
-            AddHeatChart(heatpanel);
+
+        private void CreateHeatFromFile(Backend.Model.IntensityData idata)
+        {
+            Panel heatpanel = CreateHeatPanel();
+            AddHeatChartFromFile(heatpanel, idata);
             AddButtons(heatpanel);
             graphpanel.Controls.Add(heatpanel);
-            allPanels.Add(heatpanel);
+            allPanels.Add(new Tuple<Panel, IntensityData>(heatpanel, idata));
+        }
+        
+        private void AddHeatChartFromFile(Panel heatpanel, IntensityData idata)
+        {
+            LiveCharts.WinForms.CartesianChart heatchart;
+            heatchart = new LiveCharts.WinForms.CartesianChart();
+            heatchart.Size = new Size(heatSizeX, heatSizeY);
+            heatchart.Left = 0;
+            heatchart.Top = 50;
+
+            ChartValues<HeatPoint> values = new ChartValues<HeatPoint>();
+            for (int i = 0; i < idata.intensityData.Count(); i++) {
+                Backend.Model.AggregatedData agregateddata = idata.intensityData[i];
+                for (int j = 0; j < agregateddata.aggregatedData.Count(); j++) {
+                       values.Add(new HeatPoint(j, i, agregateddata.aggregatedData[j]));
+                }
+            }
+
+            heatchart.Series.Add(new HeatSeries
+            {
+                Values = values,
+                GradientStopCollection = new GradientStopCollection
+                {
+                    new GradientStop(System.Windows.Media.Color.FromRgb(51, 51, 255), 0), //from 0.65 to 0.75
+                    new GradientStop(System.Windows.Media.Color.FromRgb(51, 255, 51), 0.20), // from 0 to 0.5
+                    new GradientStop(System.Windows.Media.Color.FromRgb(153, 255, 51), .40), //from 0.5 to 0.65                   
+                    new GradientStop(System.Windows.Media.Color.FromRgb(255, 153, 51), .60), //from 0.75 to 0.85
+                    new GradientStop(System.Windows.Media.Color.FromRgb(255, 0, 0), .80) //from 0.85 to 1(max value)
+               }
+            });
+
+            heatchart.AxisX.Add(new LiveCharts.Wpf.Axis //preco sa nezobrazuje?? *
+            {
+                Title = "x-values",
+                LabelFormatter = value => value.ToString(),
+                Separator = new Separator {Step = 1},
+                Foreground = System.Windows.Media.Brushes.White,
+                MinValue = 1,
+                MaxValue =  idata.intensityData[0].aggregatedData.Count(),                
+            });
+            heatchart.AxisY.Add(new LiveCharts.Wpf.Axis
+            {
+                Title = "y-values",
+                Foreground = System.Windows.Media.Brushes.White,
+                LabelFormatter = value => value.ToString(),
+                Separator = new Separator {Step = 1},
+            });
+
+            heatpanel.Controls.Add(heatchart);
         }
 
         private Panel CreateHeatPanel() {
@@ -135,15 +238,7 @@ namespace Arduin
             return heatpanel;
         }
 
-        private void AddHeatChart(Panel heatpanel) {
 
-            /*Chart heatchart = new Chart();
-            heatchart.Size = new Size(heatSizeX, heatSizeY);
-            heatchart.Left = 0;
-            heatchart.Top = 50;
-            heatchart.Legends.Add(new Legend("Heat"));
-            heatpanel.Controls.Add(heatchart);*/
-        }
 
         private void AddButtons(Panel heatpanel, bool fromCurrent = false) {
             int buttonX = 100;
@@ -162,6 +257,7 @@ namespace Arduin
             cancel.Size = new Size(buttonX, buttonY);
             cancel.Text = "Cancel";
             cancel.Left = heatSizeX - buttonX; cancel.Top = 0;
+
 
             cancel.Click += (s, e) => {
                 PanelReorder(heatpanel);
@@ -322,10 +418,6 @@ namespace Arduin
             }
         }
 
-
-        private void checkBox2_CheckedChanged(object sender, EventArgs e) {
-            // aplikovat mobilitu
-        }
 
         private void textBox1_TextChanged(object sender, EventArgs e) {
             Backend.Model.Settings.projectName = projectName.Text;
