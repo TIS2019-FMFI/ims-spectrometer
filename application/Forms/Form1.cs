@@ -36,10 +36,10 @@ namespace Arduin
         private int heatPanelSizeY = 455;
 
         private AggregatedData aggData;
-        List<Tuple<Panel, IntensityData>> allPanels = new List<Tuple<Panel, IntensityData>>();
+  
         Tuple<Panel, IntensityData> livePanel;
         LiveCharts.WinForms.CartesianChart liveheatchart;
-
+        List<Tuple<Panel, IntensityData>> allPanelsIntensityData = new List<Tuple<Panel, IntensityData>>();
 
         public Form1() {
             InitializeComponent();
@@ -121,6 +121,10 @@ namespace Arduin
             liveheatchart.Size = new Size(heatSizeX, heatSizeY);
             liveheatchart.Left = 0;
             liveheatchart.Top = 50;
+            liveheatchart.DisableAnimations = true;
+            liveheatchart.Hoverable = false;
+            liveheatchart.DataTooltip = null;
+
             heatCurrentPanel.Controls.Add(liveheatchart);
 
             AddButtons(heatCurrentPanel, true);
@@ -148,21 +152,6 @@ namespace Arduin
                         new GradientStop(System.Windows.Media.Color.FromRgb(255, 0, 0), .80) //from 0.85 to 1(max value)
                 }
                 });
-                liveheatchart.AxisX.Add(new LiveCharts.Wpf.Axis
-                {
-                    Title = "x-values",
-                    LabelFormatter = value => value.ToString(),
-                    Separator = new Separator {Step = 1},
-                    Foreground = System.Windows.Media.Brushes.White,
-                    MinValue = 0,
-                    MaxValue = liveheatchart.Series.ElementAt(0).Values.Count, 
-                });
-                liveheatchart.AxisY.Add(new LiveCharts.Wpf.Axis
-                {
-                    Title = "y-values",
-                    Foreground = System.Windows.Media.Brushes.White,
-                    LabelFormatter = value => value.ToString(),
-                });
             }
             else{
                 for (int j = 0; j < adata.aggregatedData.Count(); j++) {
@@ -178,7 +167,7 @@ namespace Arduin
             AddHeatChartFromFile(heatpanel, idata);
             AddButtons(heatpanel);
             graphpanel.Controls.Add(heatpanel);
-            allPanels.Add(new Tuple<Panel, IntensityData>(heatpanel, idata));
+            allPanelsIntensityData.Add(new Tuple<Panel, IntensityData>(heatpanel, idata));
         }
         
         private void AddHeatChartFromFile(Panel heatpanel, IntensityData idata)
@@ -188,6 +177,9 @@ namespace Arduin
             heatchart.Size = new Size(heatSizeX, heatSizeY);
             heatchart.Left = 0;
             heatchart.Top = 50;
+            heatchart.DisableAnimations = true;
+            heatchart.Hoverable = false;
+            heatchart.DataTooltip = null;
 
             ChartValues<HeatPoint> values = new ChartValues<HeatPoint>();
             for (int i = 0; i < idata.intensityData.Count(); i++) {
@@ -209,24 +201,6 @@ namespace Arduin
                     new GradientStop(System.Windows.Media.Color.FromRgb(255, 0, 0), .80) //from 0.85 to 1(max value)
                }
             });
-
-            heatchart.AxisX.Add(new LiveCharts.Wpf.Axis //preco sa nezobrazuje?? *
-            {
-                Title = "x-values",
-                LabelFormatter = value => value.ToString(),
-                Separator = new Separator {Step = 1},
-                Foreground = System.Windows.Media.Brushes.White,
-                MinValue = 1,
-                MaxValue =  idata.intensityData[0].aggregatedData.Count(),                
-            });
-            heatchart.AxisY.Add(new LiveCharts.Wpf.Axis
-            {
-                Title = "y-values",
-                Foreground = System.Windows.Media.Brushes.White,
-                LabelFormatter = value => value.ToString(),
-                Separator = new Separator {Step = 1},
-            });
-
             heatpanel.Controls.Add(heatchart);
         }
 
@@ -267,16 +241,22 @@ namespace Arduin
         }
 
         private void PanelReorder(Panel pan) {
-            foreach (Panel i in allPanels) {
-                graphpanel.Controls.Remove(i);
+            foreach (Tuple<Panel, IntensityData> i in allPanelsIntensityData) {
+                graphpanel.Controls.Remove(i.Item1);
             }
-            allPanels.Remove(pan);
+   
+            foreach (Tuple<Panel, IntensityData> i in allPanelsIntensityData) {
+                if (pan.Equals(i.Item1)) {
+                    allPanelsIntensityData.Remove(i);
+                    break;
+                }
+            }
 
             int k = 0;
-            foreach (Panel i in allPanels) {
-                i.Left = 0;
-                i.Top = graphpanel.Height + k * heatPanelSizeY + k * 45;
-                graphpanel.Controls.Add(i);
+            foreach (Tuple<Panel, IntensityData> i in allPanelsIntensityData) {
+                i.Item1.Left = 0;
+                i.Item1.Top = graphpanel.Height + k * heatPanelSizeY + k * 45;
+                graphpanel.Controls.Add(i.Item1);
                 k++;
             }
         }
