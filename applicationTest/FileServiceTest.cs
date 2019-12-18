@@ -15,7 +15,7 @@ namespace ArduinTest {
                 int sampling = Settings.sampling;
                 float repeatSeconds = Settings.repeatSeconds;
                 int repeatCycles = Settings.repeatCycles;
-                bool applyRepeatSeconds = Settings.applyRepeatSeconds;
+                bool applyRepeatSeconds = Settings.applyRepeatCount;
                 string projectName = Settings.projectName;
 
                 double l = Mobility.L;
@@ -31,7 +31,7 @@ namespace ArduinTest {
                 Mobility.U = 0;
                 Mobility.p = 0;
                 Mobility.L = 0;
-                Settings.applyRepeatSeconds = false;
+                Settings.applyRepeatCount = false;
                 Settings.gate = 0;
                 Settings.projectName = "abc";
                 Settings.repeatCycles = 0;
@@ -48,7 +48,7 @@ namespace ArduinTest {
                 Assert.AreEqual(Mobility.L, l);
                 Assert.AreEqual(Settings.projectName, projectName);
                 Assert.AreEqual(Settings.gate, gate);
-                Assert.AreEqual(Settings.applyRepeatSeconds, applyRepeatSeconds);
+                Assert.AreEqual(Settings.applyRepeatCount, applyRepeatSeconds);
                 Assert.AreEqual(Settings.repeatCycles, repeatCycles);
                 Assert.AreEqual(Settings.repeatSeconds, repeatSeconds);
                 Assert.AreEqual(Settings.sampling, sampling);

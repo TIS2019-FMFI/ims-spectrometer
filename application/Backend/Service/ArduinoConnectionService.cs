@@ -42,8 +42,8 @@ namespace Arduin.Backend{
             try {
                 serial.Open();
             } catch (Exception ex) {
-                Console.WriteLine("Error opening my port: {0}", ex.Message);
-            }
+                throw new ApplicationException("Error opening my port: " + ex.Message);
+            } 
 
             Task.Delay(100).Wait(); //allow Arduino reset 
             
@@ -86,6 +86,7 @@ namespace Arduin.Backend{
 
             }
             Console.WriteLine("No serial connection, could not read data");
+            throw new Exception("No connection");
             return null;
 
         }
@@ -95,8 +96,11 @@ namespace Arduin.Backend{
          * will send gate and sampling to arduino in format "gate sampling"
          */
         public void sendSettingsToArduino(){
-            if (serial.IsOpen)
+            if (serial.IsOpen) {
                 serial.Write(Settings.gate + " " + Settings.sampling + "Q"); // + Environment.NewLine
+                return;
+            }
+            throw new ApplicationException("No connection , can not send settings to Arduino");
         }
 
         private string portFromName(string name = "Infineon DAS JDS COM"){
