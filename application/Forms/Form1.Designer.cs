@@ -331,14 +331,10 @@
             // 
             // checkBox2
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(19, 163);
+            this.checkBox2.Location = new System.Drawing.Point(200, 164);
             this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(134, 24);
-            this.checkBox2.TabIndex = 9;
-            this.checkBox2.Text = "Apply mobility";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            this.checkBox2.Size = new System.Drawing.Size(30, 24);
+            this.checkBox2.TabIndex = 0;
             // 
             // numericUpDown7
             // 
@@ -517,7 +513,7 @@
             this.elementHost1.Name = "elementHost1";
             this.elementHost1.Size = new System.Drawing.Size(1060, 637);
             this.elementHost1.TabIndex = 35;
-            this.elementHost1.Text = "elementHost1";
+            this.elementHost1.Text = "W";
             this.elementHost1.Child = this.cartesianChartMain;
             // 
             // savegraphbutton
