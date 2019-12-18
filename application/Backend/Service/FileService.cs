@@ -215,8 +215,7 @@ namespace Arduin.Backend
                             continue;
                         } else {
                             saveMeasurements.Add(line.Split(';'));
-                        }
-                        
+                        }                        
                         countline++;
                     }
 
