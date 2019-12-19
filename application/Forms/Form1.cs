@@ -18,6 +18,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
 using System.ServiceModel;
+using System.Windows.Threading;
 
 namespace Arduin
 {
@@ -43,6 +44,9 @@ namespace Arduin
 
         public Form1() {
             InitializeComponent();
+
+            // start arduino if stopped
+            ArduinoConnectionService.Instance.start();
         }
 
         private void label2_MouseHover(object sender, EventArgs e) {
@@ -299,41 +303,53 @@ namespace Arduin
             projectName.Text = Backend.Model.Settings.projectName;
         }
 
-        private async Task DrawGraph() {
-            Debug.WriteLine("idem");
-            cartesianChartMain.AxisX.Clear();
-            cartesianChartMain.AxisY.Clear();
-            this.aggData = await DataManagementService.Instance.getAggregatedData(); //  odkomentovat 
-                                                                                     //int[] aggregatedData = { 1, 1, 1, 1, 2, 3, 5, 8, 13, 18, 25, 18, 13, 8, 5, 3, 1, 1, 1, 1 ,2,3,4,5,4,3,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,5,8,15,22,15,8,5,1,1,1}; // zakomentovat
-                                                                                     //AggData = aggregatedData;
-                                                                                     //Array.ForEach(AggData, Console.WriteLine);
-            cartesianChartMain.Series = new SeriesCollection
-            {
-                new LineSeries
-                {
-                    Title = "Main Graph",
-                    Values = new ChartValues<int>(this.aggData.aggregatedData) // odkomentovat
-                    //Values = new ChartValues<int>(aggregatedData)  /// zakomentovat
+        internal async void DrawGraph() {
+            while (isStarted) {
+                try {
+                    await Task.Run(() => Thread.Sleep(2000));
+                    cartesianChartMain.AxisY.Clear();
+                    cartesianChartMain.AxisX.Clear();
+                    // test enable / disable 
+                    cartesianChartMain.DisableAnimations = true;
+                    cartesianChartMain.Hoverable = false;
+                    cartesianChartMain.DataTooltip = null;
+
+                    this.aggData = new AggregatedData();
+                    //     this.aggData = await DataManagementService.Instance.getAggregatedData(); //  odkomentovat 
+                    int[] aggregatedData = { 1, 1, 1, 1, 2, 3, 5, 8, 13, 18, 25, 18, 13, 8, 5, 3, 1, 1, 1, 1, 2, 3, 4, 5, 4, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 5, 8, 15, 22, 15, 8, 5, 1, 1, 1 }; // zakomentovat
+                    this.aggData.aggregatedData = aggregatedData;
+                    //AggData = aggregatedData;
+                    //Array.ForEach(AggData, Console.WriteLine);
+                    cartesianChartMain.Series = new SeriesCollection
+                    {
+                    new LineSeries
+                    {
+                        Title = "Main Graph",
+                        Values = new ChartValues<int>(this.aggData.aggregatedData) // odkomentovat
+                        //Values = new ChartValues<int>(aggregatedData)  /// zakomentovat
+                    }
+                };
+
+                    cartesianChartMain.AxisX.Add(new Axis {
+                        Title = "Doplnit X-os",
+                        LabelFormatter = value => value.ToString(),
+                        Separator = new Separator { Step = 1 }/*,
+                    MinValue = aggregatedData.Min(),
+                    MaxValue = aggregatedData.Max()*/
+
+                    }
+                    );
+
+                    cartesianChartMain.AxisY.Add(new Axis {
+                        Title = "Doplnit Y-os",
+                        LabelFormatter = value => value.ToString(),
+                        Separator = new Separator { Step = 1 }
+                    });
+                } catch (Exception err) {
+                    MessageBox.Show("Connection not found : " + err.Message);
+                    isStarted = !isStarted;
                 }
-            };
-
-            cartesianChartMain.AxisX.Add(new Axis {
-                Title = "Doplnit X-os",
-                LabelFormatter = value => value.ToString(),
-                Separator = new Separator { Step = 1 }/*,
-                MinValue = aggregatedData.Min(),
-                MaxValue = aggregatedData.Max()*/
-
             }
-            );
-
-            cartesianChartMain.AxisY.Add(new Axis {
-                Title = "Doplnit Y-os",
-                LabelFormatter = value => value.ToString(),
-                Separator = new Separator { Step = 1 }
-            });
-
-            Debug.WriteLine("koniec");
         }
 
         public void SetIsStarted() {
@@ -369,18 +385,27 @@ namespace Arduin
             textBox4.Text = ymax.ToString();
         }
 
-        private async void button1_Click(object sender, EventArgs e) {
+        private  async void button1_Click(object sender, EventArgs e) {
             isStarted = !isStarted;
-            //await DrawGraph();
-            while (isStarted) {
-                try {
-                    await DrawGraph();
-                } catch (Exception err) {
-                    MessageBox.Show("Connection not found : " + err.Message);
-                    isStarted = !isStarted;
-                }
-                //await DrawGraph();
-            }
+            // await DrawGraph();
+            /* while (isStarted) {
+                 try {
+                     await DrawGraph();
+                     int milliseconds = 1000;
+                     Thread.Sleep(milliseconds);
+                     //  timer1.Interval = 500;
+                     //  timer1.Tick += async (s, er) => await DrawGraph();
+                     //  timer1.Start();
+                 } catch (Exception err) {
+                     MessageBox.Show("Connection not found : " + err.Message);
+                     isStarted = !isStarted;
+                 }
+                 //await DrawGraph();
+             }*/
+
+
+
+            this.DrawGraph();
 
             if (isStarted) {
                 // start

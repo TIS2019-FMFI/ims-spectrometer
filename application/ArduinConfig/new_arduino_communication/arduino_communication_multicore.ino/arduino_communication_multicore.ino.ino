@@ -1,7 +1,7 @@
 // shared variables for all cores
 //#include <Arduino.h>
 StartOfInitialised_LMURam_Variables
- static uint8_t gate = 16;  // positive number of POINTS to keep the gate for ions open 
+ static uint8_t gate = 2;  // positive number of POINTS to keep the gate for ions open 
  static uint8_t  sampling = 5; // mikroseconds , spece between POINTS (positive number)
 EndOfInitialised_LMURam_Variables
 
