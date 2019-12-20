@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Arduin.Backend.Model;
 using System.Threading;
+using System.Diagnostics;
 
 namespace Arduin.Backend{
     // SINGLETON , use as DataManagementService.instance.XXXX !!!
@@ -35,16 +36,17 @@ namespace Arduin.Backend{
             List<Measurement> measurements = new List<Measurement>();
 
             if (Settings.applyRepeatCount) {
-                // get measurement from serial connection for specific seconds
-                DateTime start = DateTime.Now;
-                while (DateTime.Now.Subtract(start).Seconds <= Settings.repeatSeconds) {
-                    measurements.Add(ArduinoConnectionService.Instance.getMeasurementFromArduino());
-                }
-
-            } else {
                 // get measurement from serial connection Settings.repeatCycles TIMES
                 measurements.AddRange(System.Linq.Enumerable.Range(0, Settings.repeatCycles)
                     .Select(_ => ArduinoConnectionService.Instance.getMeasurementFromArduino()).ToList());
+            } else {
+                // get measurement from serial connection for specific seconds
+                Stopwatch s = new Stopwatch();
+                s.Start();
+                while (s.Elapsed <= TimeSpan.FromSeconds(Settings.repeatSeconds)) {
+                    measurements.Add(ArduinoConnectionService.Instance.getMeasurementFromArduino());
+                }
+                s.Stop();
             }
 
             return measurements;

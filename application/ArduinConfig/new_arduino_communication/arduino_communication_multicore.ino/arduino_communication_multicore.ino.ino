@@ -14,10 +14,10 @@ void loop() {}
 
 
 StartOfInitialised_CPU2_Variables
-  String gateString = "";
+ /* String gateString = "";
   String samplingString = "";
   bool space = false;
-  char incoming = ' ';
+  char incoming = ' ';*/
 EndOfInitialised_CPU2_Variables
 
 void setup2() {  }
@@ -25,7 +25,7 @@ void setup2() {  }
 // CORE 2 sends data to UI 
 void loop2() {
   // incomming data format : <GATE SAMPLING+Q> : 12 55Q
-  while (SerialASC.available() > 0){
+  /*while (SerialASC.available() > 0){
     incoming = SerialASC.read();
     
     if(incoming == 'Q'){
@@ -46,8 +46,8 @@ void loop2() {
         samplingString += incoming;
       }
     }
-  } 
-     
+  } */
+  delayMicroseconds(8000);   
   sendDataToUI();
 }
 
@@ -62,6 +62,10 @@ StartOfInitialised_CPU1_Variables
   const int PIN_TO_SPECTROMETER = 13; // pin which allow ions to transfer into specrometer
   const int MAX_TIME = 20480; // 20 480 mikroseconds, maximum one measurement
   const int POINTS = 8000; // maximum 4096 measurements
+  String gateString = "";
+  String samplingString = "";
+  bool space = false;
+  char incoming = ' ';
 EndOfInitialised_CPU1_Variables
 
 
@@ -75,6 +79,33 @@ void setup1() {
 // 2.) measure data from spectrometer
 // 3.) send all data to UI
 void loop1() {
+  while (SerialASC.available() > 0){
+    incoming = (char) SerialASC.read();
+    if(incoming == '"'){
+      continue;
+    }
+    
+    if(incoming == 'Q'){
+      gate = gateString.toInt();
+      sampling = samplingString.toInt();
+      //SerialASC.println("string =  " + gateString + "  " + samplingString);
+      //SerialASC.println("converted =  " + String(gate, DEC) + "  " + String(sampling, DEC));
+      space = false;
+      gateString = "";
+      samplingString = "";
+      break;
+    }
+    
+    if(incoming == ' '){
+      space = true;
+    }else{
+      if(!space){
+        gateString += incoming;
+      }else{
+        samplingString +=  incoming;
+      }
+    }
+  } 
   
   // time exceed 20 480us, so less then 4096 will be mesaured, based on time
   if( sampling * (POINTS + 1)  > MAX_TIME){
@@ -90,7 +121,7 @@ void loop1() {
  *  maximum 4096 POINTS and send to GUI */
 void spectrometerCommunicationPOINTS(){
   int gateCycleOpen = 0; // how much time to open gate for ions
-  int lastMicroseconds = 0; // temporary variable for calculation
+  double lastMicroseconds = 0; // temporary variable for calculation
   
   for (int i = 0; i < POINTS; i++){
     lastMicroseconds = spectrometerMeasurement(lastMicroseconds, gateCycleOpen, i);
@@ -104,9 +135,9 @@ void spectrometerCommunicationPOINTS(){
  *  so measure maximum 20 000 microsends (i. e. 2000 POINTS
  *  and send it to GUI. */
 void spectrometerCommunicationMicroseconds(){
-  int currentMicroseconds = micros();  // current time
+  double currentMicroseconds = micros();  // current time
   int gateCycleOpen = 0; // how much time to open gate for ions
-  int lastMicroseconds = 0; // already passed time
+  double lastMicroseconds = 0; // already passed time
   int px = 0;
   
   do{
@@ -120,8 +151,8 @@ void spectrometerCommunicationMicroseconds(){
 }
 
 // wait sampling time, open gate for ions and return current time
-int spectrometerMeasurement(int lastMicroseconds,  int gateCycleOpen, int px){
-  int passedMicroseconds = 0;
+double spectrometerMeasurement(double lastMicroseconds,  int gateCycleOpen, int px){
+  double passedMicroseconds = 0;
   do {
       passedMicroseconds = micros();
     } while (passedMicroseconds - lastMicroseconds < sampling);

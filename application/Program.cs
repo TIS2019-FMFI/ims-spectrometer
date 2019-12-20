@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Arduin.Backend;
 using Arduin.Backend.Model;
+using System.Diagnostics;
 namespace Arduin
 {
     static class Program {
@@ -16,6 +17,16 @@ namespace Arduin
              Application.EnableVisualStyles();
              Application.SetCompatibleTextRenderingDefault(false);
              Application.Run(new Form1());
+
+          /*  ArduinoConnectionService.Instance.start();
+            while (ArduinoConnectionService.Instance.serial.IsOpen) {
+                Measurement m = ArduinoConnectionService.Instance.getMeasurementFromArduino();
+                Debug.WriteLine("daata = " + m.measurement.Length);
+
+                Settings.sampling += 1;
+                ArduinoConnectionService.Instance.sendSettingsToArduino();
+                Task.Delay(100).Wait();
+            }*/
         }
     }
 }
