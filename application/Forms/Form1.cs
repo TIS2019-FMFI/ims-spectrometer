@@ -18,15 +18,18 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
 using System.ServiceModel;
+using System.Windows.Threading;
 
 namespace Arduin
 {
     public partial class Form1 : Form {
         private bool isStarted = false;
-        private bool heatIsStarted = false;
+        private volatile bool heatIsStarted = false; // thread sharing attribute
 
         // true if loading settings and mobility from file, prevents value overwriting
         private bool ignoreInsertedValues = false;
+
+        private bool applyMobility = false;
 
         // Velkost intezitneho grafu X, Y
         private int heatSizeX = 524;
@@ -43,6 +46,14 @@ namespace Arduin
 
         public Form1() {
             InitializeComponent();
+
+            // start arduino if stopped
+            try {
+                ArduinoConnectionService.Instance.start();
+            } catch (Exception error) {
+                MessageBox.Show("Erorr occured : " + error.Message);
+            }
+
         }
 
         private void label2_MouseHover(object sender, EventArgs e) {
@@ -86,12 +97,6 @@ namespace Arduin
         }
 
         private void button5_Click(object sender, EventArgs e) {
-            //CreateHeatMap();
-            //CreateHeatFromCurrent();
-            DecideAction();
-        }
-
-        private void DecideAction() {
             AgregateForm myMessageBoxh = new AgregateForm(this);
             myMessageBoxh.ShowDialog();
         }
@@ -129,36 +134,11 @@ namespace Arduin
 
             AddButtons(heatCurrentPanel, true);
             graphpanel.Controls.Add(heatCurrentPanel);
-            livePanel = new Tuple<Panel, IntensityData>(heatCurrentPanel, idata);            
+            livePanel = new Tuple<Panel, IntensityData>(heatCurrentPanel, idata);
+            this.heatIsStarted = true;
         }
 
-        private async void AddHeatChartFromCurrent(AggregatedData adata){
-            livePanel.Item2.intensityData.Add(adata);
-            if (liveheatchart.Series.ElementAt(0) != null){
-                ChartValues<HeatPoint> values = new ChartValues<HeatPoint>();
-                for (int j = 0; j < adata.aggregatedData.Count(); j++) {
-                       liveheatchart.Series.ElementAt(0).Values.Add(new HeatPoint(j, livePanel.Item2.intensityData.Count(), adata.aggregatedData[j]));
-                }
-                liveheatchart.Series.Add(new HeatSeries
-                {
-                    Values = values,
-                    //DataLabels = true, cisla na jednotlivych polickach grafu
-                    GradientStopCollection = new GradientStopCollection
-                    {
-                        new GradientStop(System.Windows.Media.Color.FromRgb(51, 51, 255), 0), //from 0.65 to 0.75
-                        new GradientStop(System.Windows.Media.Color.FromRgb(51, 255, 51), 0.20), // from 0 to 0.5
-                        new GradientStop(System.Windows.Media.Color.FromRgb(153, 255, 51), .40), //from 0.5 to 0.65                   
-                        new GradientStop(System.Windows.Media.Color.FromRgb(255, 153, 51), .60), //from 0.75 to 0.85
-                        new GradientStop(System.Windows.Media.Color.FromRgb(255, 0, 0), .80) //from 0.85 to 1(max value)
-                }
-                });
-            }
-            else{
-                for (int j = 0; j < adata.aggregatedData.Count(); j++) {
-                       liveheatchart.Series.ElementAt(0).Values.Add(new HeatPoint(j, livePanel.Item2.intensityData.Count(), adata.aggregatedData[j]));
-                }
-            }
-        }
+       
 
 
         private void CreateHeatFromFile(Backend.Model.IntensityData idata)
@@ -170,39 +150,7 @@ namespace Arduin
             allPanelsIntensityData.Add(new Tuple<Panel, IntensityData>(heatpanel, idata));
         }
         
-        private void AddHeatChartFromFile(Panel heatpanel, IntensityData idata)
-        {
-            LiveCharts.WinForms.CartesianChart heatchart;
-            heatchart = new LiveCharts.WinForms.CartesianChart();
-            heatchart.Size = new Size(heatSizeX, heatSizeY);
-            heatchart.Left = 0;
-            heatchart.Top = 50;
-            heatchart.DisableAnimations = true;
-            heatchart.Hoverable = false;
-            heatchart.DataTooltip = null;
-
-            ChartValues<HeatPoint> values = new ChartValues<HeatPoint>();
-            for (int i = 0; i < idata.intensityData.Count(); i++) {
-                Backend.Model.AggregatedData agregateddata = idata.intensityData[i];
-                for (int j = 0; j < agregateddata.aggregatedData.Count(); j++) {
-                       values.Add(new HeatPoint(j, i, agregateddata.aggregatedData[j]));
-                }
-            }
-
-            heatchart.Series.Add(new HeatSeries
-            {
-                Values = values,
-                GradientStopCollection = new GradientStopCollection
-                {
-                    new GradientStop(System.Windows.Media.Color.FromRgb(51, 51, 255), 0), //from 0.65 to 0.75
-                    new GradientStop(System.Windows.Media.Color.FromRgb(51, 255, 51), 0.20), // from 0 to 0.5
-                    new GradientStop(System.Windows.Media.Color.FromRgb(153, 255, 51), .40), //from 0.5 to 0.65                   
-                    new GradientStop(System.Windows.Media.Color.FromRgb(255, 153, 51), .60), //from 0.75 to 0.85
-                    new GradientStop(System.Windows.Media.Color.FromRgb(255, 0, 0), .80) //from 0.85 to 1(max value)
-               }
-            });
-            heatpanel.Controls.Add(heatchart);
-        }
+      
 
         private Panel CreateHeatPanel() {
             Panel heatpanel = new Panel();
@@ -298,42 +246,103 @@ namespace Arduin
             EnableScrolling();
             projectName.Text = Backend.Model.Settings.projectName;
         }
+        private void AddHeatChartFromFile(Panel heatpanel, IntensityData idata) {
+            LiveCharts.WinForms.CartesianChart heatchart;
+            heatchart = new LiveCharts.WinForms.CartesianChart();
+            heatchart.Size = new Size(heatSizeX, heatSizeY);
+            heatchart.Left = 0;
+            heatchart.Top = 50;
+            heatchart.DisableAnimations = true;
+            heatchart.Hoverable = false;
+            heatchart.DataTooltip = null;
 
-        private async Task DrawGraph() {
-            Debug.WriteLine("idem");
-            cartesianChartMain.AxisX.Clear();
-            cartesianChartMain.AxisY.Clear();
-            this.aggData = await DataManagementService.Instance.getAggregatedData(); //  odkomentovat 
-                                                                                     //int[] aggregatedData = { 1, 1, 1, 1, 2, 3, 5, 8, 13, 18, 25, 18, 13, 8, 5, 3, 1, 1, 1, 1 ,2,3,4,5,4,3,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,5,8,15,22,15,8,5,1,1,1}; // zakomentovat
-                                                                                     //AggData = aggregatedData;
-                                                                                     //Array.ForEach(AggData, Console.WriteLine);
-            cartesianChartMain.Series = new SeriesCollection
-            {
-                new LineSeries
-                {
-                    Title = "Main Graph",
-                    Values = new ChartValues<int>(this.aggData.aggregatedData) // odkomentovat
-                    //Values = new ChartValues<int>(aggregatedData)  /// zakomentovat
+            ChartValues<HeatPoint> values = new ChartValues<HeatPoint>();
+            List<HeatPoint> buffer = new List<HeatPoint>();
+
+            for (int i = 0; i < idata.intensityData.Count(); i++) {
+                Backend.Model.AggregatedData agregateddata = idata.intensityData[i];
+                for (int j = 0; j < agregateddata.aggregatedData.Count(); j++) {
+                    buffer.Add(new HeatPoint(j, i, agregateddata.aggregatedData[j]));
                 }
-            };
-
-            cartesianChartMain.AxisX.Add(new Axis {
-                Title = "Doplnit X-os",
-                LabelFormatter = value => value.ToString(),
-                Separator = new Separator { Step = 1 }/*,
-                MinValue = aggregatedData.Min(),
-                MaxValue = aggregatedData.Max()*/
-
             }
-            );
+            values.AddRange(buffer);
 
-            cartesianChartMain.AxisY.Add(new Axis {
-                Title = "Doplnit Y-os",
-                LabelFormatter = value => value.ToString(),
-                Separator = new Separator { Step = 1 }
+            heatchart.Series.Add(new HeatSeries {
+                Values = values,
+                GradientStopCollection = new GradientStopCollection {
+                    new GradientStop(System.Windows.Media.Color.FromRgb(51, 51, 255), 0), //from 0.65 to 0.75
+                    new GradientStop(System.Windows.Media.Color.FromRgb(51, 255, 51), 0.20), // from 0 to 0.5
+                    new GradientStop(System.Windows.Media.Color.FromRgb(153, 255, 51), .40), //from 0.5 to 0.65                   
+                    new GradientStop(System.Windows.Media.Color.FromRgb(255, 153, 51), .60), //from 0.75 to 0.85
+                    new GradientStop(System.Windows.Media.Color.FromRgb(255, 0, 0), .80) //from 0.85 to 1(max value)
+               }
             });
+            heatpanel.Controls.Add(heatchart);
+        }
 
-            Debug.WriteLine("koniec");
+        internal void AddHeatChartFromCurrent() {
+            AggregatedData lastInserted = this.livePanel.Item2.intensityData[this.livePanel.Item2.intensityData.Count -1];
+  
+            ChartValues<HeatPoint> values = new ChartValues<HeatPoint>();
+            for (int j = 0; j < lastInserted.aggregatedData.Count(); j++) {
+               values.Add(new HeatPoint(j, livePanel.Item2.intensityData.Count(), lastInserted.aggregatedData[j]));
+            }
+
+            liveheatchart.Series.Add(new HeatSeries {
+                Values = values,
+                GradientStopCollection = new GradientStopCollection {
+                        new GradientStop(System.Windows.Media.Color.FromRgb(51, 51, 255), 0), //from 0.65 to 0.75
+                        new GradientStop(System.Windows.Media.Color.FromRgb(51, 255, 51), 0.20), // from 0 to 0.5
+                        new GradientStop(System.Windows.Media.Color.FromRgb(153, 255, 51), .40), //from 0.5 to 0.65                   
+                        new GradientStop(System.Windows.Media.Color.FromRgb(255, 153, 51), .60), //from 0.75 to 0.85
+                        new GradientStop(System.Windows.Media.Color.FromRgb(255, 0, 0), .80) //from 0.85 to 1(max value)
+                    }
+            });
+        }
+
+        internal async void DrawGraph() {
+            while (isStarted) {
+                    try {
+                    cartesianChartMain.AxisY.Clear();
+                    cartesianChartMain.AxisX.Clear();
+
+                    // disalbe animation for faster rendering
+                    cartesianChartMain.DisableAnimations = true;
+                    cartesianChartMain.Hoverable = false;
+                    cartesianChartMain.DataTooltip = null;
+
+                    // MAIN CHART
+                    // test -------------------------------------
+                    Random rnd = new Random();
+                    this.aggData = new AggregatedData();
+                    int[] aggregatedData = new int[500];
+                    for (int i = 0; i < 500; i++) {
+                        aggregatedData[i] = (i > 250 && i < 300) ? rnd.Next(100, 180) : rnd.Next(52);
+                    }
+                    this.aggData.aggregatedData = aggregatedData;
+                    await Task.Run(() => Thread.Sleep(1000));
+                    // ----------------------------------------
+                    // this.aggData =  await Task.Run(() =>  DataManagementService.Instance.getAggregatedData());
+
+
+                    // HEAT MAP  - if user pressed rending heap map
+                    if (heatIsStarted) {
+                        this.livePanel.Item2.intensityData.Add(this.aggData);
+                        this.AddHeatChartFromCurrent();
+                    }
+
+
+                    cartesianChartMain.Series = new SeriesCollection {new LineSeries {
+                        Title = "Main Graph",
+                        PointGeometrySize = 0,
+                        Values = new ChartValues<int>(this.aggData.aggregatedData)
+                    }};
+
+                } catch (Exception err) {
+                    MessageBox.Show("Connection not found : " + err.Message);
+                    isStarted = !isStarted;
+                }
+            }
         }
 
         public void SetIsStarted() {
@@ -369,30 +378,14 @@ namespace Arduin
             textBox4.Text = ymax.ToString();
         }
 
-        private async void button1_Click(object sender, EventArgs e) {
+        private  void button1_Click(object sender, EventArgs e) {
             isStarted = !isStarted;
-            //await DrawGraph();
-            while (isStarted) {
-                try {
-                    await DrawGraph();
-                } catch (Exception err) {
-                    MessageBox.Show("Connection not found : " + err.Message);
-                    isStarted = !isStarted;
-                }
-                //await DrawGraph();
-            }
+
+            this.DrawGraph();
 
             if (isStarted) {
-                // start
-                //tak ako je nazvany image v resources
                 button1.Image = Arduin.Properties.Resources.Stop;
-                //await DrawGraph();
-                /*timer1.Interval = 2000;
-                timer1.Tick += async (s,er) => await DrawGraph();
-                timer1.Start();*/
             } else {
-                //stop
-                //tak ako je nazvany image v resources
                 button1.Image = Arduin.Properties.Resources.Play;
                 timer1.Stop();
             }
@@ -480,5 +473,8 @@ namespace Arduin
             Backend.Model.Mobility.U = Convert.ToDouble(numericUpDown7.Text);
         }
 
+        private void checkBox2_CheckedChanged(object sender, EventArgs e) {
+            this.applyMobility = Convert.ToBoolean(moblityCheckBox.Checked);
+        }
     }
 }

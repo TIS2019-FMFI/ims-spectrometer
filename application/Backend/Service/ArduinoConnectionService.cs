@@ -36,10 +36,10 @@ namespace Arduin.Backend{
             if (serial.IsOpen) {
                 return serial.IsOpen;
             }
-            serial.BaudRate = 2000000; // 2000000
-            serial.PortName = portFromName();
-            
+
             try {
+                serial.BaudRate = 2000000; // 2000000
+                serial.PortName = portFromName();
                 serial.Open();
             } catch (Exception ex) {
                 throw new ApplicationException("Error opening my port: " + ex.Message);
@@ -80,6 +80,7 @@ namespace Arduin.Backend{
                     try {
                         buffer[position++] = Convert.ToInt16(line);
                     } catch (Exception ex) {
+                        position = 0;
                         Console.WriteLine("Error occurred converting : " + line + " from serial port do double : " + ex.Message);
                     }
                 }
@@ -87,8 +88,6 @@ namespace Arduin.Backend{
             }
             Console.WriteLine("No serial connection, could not read data");
             throw new Exception("No connection");
-            return null;
-
         }
 
 
@@ -97,7 +96,8 @@ namespace Arduin.Backend{
          */
         public void sendSettingsToArduino(){
             if (serial.IsOpen) {
-                serial.Write(Settings.gate + " " + Settings.sampling + "Q"); // + Environment.NewLine
+                String send = Settings.gate + " " + Settings.sampling + "Q";
+                serial.WriteLine(send); // + Environment.NewLine
                 return;
             }
             throw new ApplicationException("No connection , can not send settings to Arduino");

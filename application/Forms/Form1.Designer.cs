@@ -48,7 +48,7 @@
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.moblityCheckBox = new System.Windows.Forms.CheckBox();
             this.numericUpDown7 = new System.Windows.Forms.NumericUpDown();
             this.label9 = new System.Windows.Forms.Label();
             this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
@@ -315,7 +315,7 @@
             // 
             this.panel2.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.checkBox2);
+            this.panel2.Controls.Add(this.moblityCheckBox);
             this.panel2.Controls.Add(this.numericUpDown7);
             this.panel2.Controls.Add(this.label9);
             this.panel2.Controls.Add(this.numericUpDown6);
@@ -329,12 +329,13 @@
             this.panel2.Size = new System.Drawing.Size(235, 194);
             this.panel2.TabIndex = 15;
             // 
-            // checkBox2
+            // moblityCheckBox
             // 
-            this.checkBox2.Location = new System.Drawing.Point(200, 164);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(30, 24);
-            this.checkBox2.TabIndex = 0;
+            this.moblityCheckBox.Location = new System.Drawing.Point(200, 164);
+            this.moblityCheckBox.Name = "moblityCheckBox";
+            this.moblityCheckBox.Size = new System.Drawing.Size(30, 24);
+            this.moblityCheckBox.TabIndex = 0;
+            this.moblityCheckBox.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
             // numericUpDown7
             // 
@@ -652,7 +653,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown numericcount;
         private System.Windows.Forms.CheckBox repeatcountcheckbox;
-        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox moblityCheckBox;
         private System.Windows.Forms.Button LoadConfigButton;
         private System.Windows.Forms.Button SaveConfigButton;
         private System.Windows.Forms.Button savegraphbutton;
