@@ -138,9 +138,6 @@ namespace Arduin
             this.heatIsStarted = true;
         }
 
-       
-
-
         private void CreateHeatFromFile(Backend.Model.IntensityData idata)
         {
             Panel heatpanel = CreateHeatPanel();
@@ -150,8 +147,6 @@ namespace Arduin
             allPanelsIntensityData.Add(new Tuple<Panel, IntensityData>(heatpanel, idata));
         }
         
-      
-
         private Panel CreateHeatPanel() {
             Panel heatpanel = new Panel();
             heatpanel.Size = new Size(heatPanelSizeX, heatPanelSizeY);
@@ -159,8 +154,6 @@ namespace Arduin
             heatpanel.Top = graphpanel.Height;
             return heatpanel;
         }
-
-
 
         private void AddButtons(Panel heatpanel, bool fromCurrent = false) {
             int buttonX = 100;
@@ -246,6 +239,7 @@ namespace Arduin
             EnableScrolling();
             projectName.Text = Backend.Model.Settings.projectName;
         }
+
         private void AddHeatChartFromFile(Panel heatpanel, IntensityData idata) {
             LiveCharts.WinForms.CartesianChart heatchart;
             heatchart = new LiveCharts.WinForms.CartesianChart();
@@ -282,22 +276,27 @@ namespace Arduin
 
         internal void AddHeatChartFromCurrent() {
             AggregatedData lastInserted = this.livePanel.Item2.intensityData[this.livePanel.Item2.intensityData.Count -1];
-  
-            ChartValues<HeatPoint> values = new ChartValues<HeatPoint>();
-            for (int j = 0; j < lastInserted.aggregatedData.Count(); j++) {
-               values.Add(new HeatPoint(j, livePanel.Item2.intensityData.Count(), lastInserted.aggregatedData[j]));
+            if (liveheatchart.Series.Count() == 0){
+                ChartValues<HeatPoint> values = new ChartValues<HeatPoint>();
+                for (int j = 0; j < lastInserted.aggregatedData.Count(); j++) {
+                    values.Add(new HeatPoint(j, livePanel.Item2.intensityData.Count(), lastInserted.aggregatedData[j]));
+                }
+                liveheatchart.Series.Add(new HeatSeries {
+                    Values = values,
+                    GradientStopCollection = new GradientStopCollection {
+                            new GradientStop(System.Windows.Media.Color.FromRgb(51, 51, 255), 0), //from 0.65 to 0.75
+                            new GradientStop(System.Windows.Media.Color.FromRgb(51, 255, 51), 0.20), // from 0 to 0.5
+                            new GradientStop(System.Windows.Media.Color.FromRgb(153, 255, 51), .40), //from 0.5 to 0.65                   
+                            new GradientStop(System.Windows.Media.Color.FromRgb(255, 153, 51), .60), //from 0.75 to 0.85
+                            new GradientStop(System.Windows.Media.Color.FromRgb(255, 0, 0), .80) //from 0.85 to 1(max value)
+                        }
+                });
             }
-
-            liveheatchart.Series.Add(new HeatSeries {
-                Values = values,
-                GradientStopCollection = new GradientStopCollection {
-                        new GradientStop(System.Windows.Media.Color.FromRgb(51, 51, 255), 0), //from 0.65 to 0.75
-                        new GradientStop(System.Windows.Media.Color.FromRgb(51, 255, 51), 0.20), // from 0 to 0.5
-                        new GradientStop(System.Windows.Media.Color.FromRgb(153, 255, 51), .40), //from 0.5 to 0.65                   
-                        new GradientStop(System.Windows.Media.Color.FromRgb(255, 153, 51), .60), //from 0.75 to 0.85
-                        new GradientStop(System.Windows.Media.Color.FromRgb(255, 0, 0), .80) //from 0.85 to 1(max value)
-                    }
-            });
+            else{
+                for (int j = 0; j < lastInserted.aggregatedData.Count(); j++) {
+                    liveheatchart.Series.Last().Values.Add(new HeatPoint(j, livePanel.Item2.intensityData.Count(), lastInserted.aggregatedData[j]));
+            }               
+            }
         }
 
         internal async void DrawGraph() {
@@ -390,7 +389,6 @@ namespace Arduin
                 timer1.Stop();
             }
         }
-
 
         private void textBox1_TextChanged(object sender, EventArgs e) {
             Backend.Model.Settings.projectName = projectName.Text;
