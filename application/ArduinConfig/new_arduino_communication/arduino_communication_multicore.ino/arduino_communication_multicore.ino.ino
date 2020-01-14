@@ -1,124 +1,74 @@
 // shared variables for all cores
-//#include <Arduino.h>
+
 StartOfInitialised_LMURam_Variables
- static uint8_t gate = 2;  // positive number of POINTS to keep the gate for ions open 
- static uint8_t  sampling = 5; // mikroseconds , spece between POINTS (positive number)
 EndOfInitialised_LMURam_Variables
 
 // unused core 0 , but must be declared
 void setup() {
-  SerialASC.begin(2000000); // 9600
+  SerialASC.begin(2000000); //  2000000
 }
 
 void loop() {}
 
 
-StartOfInitialised_CPU2_Variables
- /* String gateString = "";
-  String samplingString = "";
-  bool space = false;
-  char incoming = ' ';*/
-EndOfInitialised_CPU2_Variables
-
-void setup2() {  }
-
-// CORE 2 sends data to UI 
-void loop2() {
-  // incomming data format : <GATE SAMPLING+Q> : 12 55Q
-  /*while (SerialASC.available() > 0){
-    incoming = SerialASC.read();
-    
-    if(incoming == 'Q'){
-      gate = gateString.toInt();
-      sampling = samplingString.toInt();
-      space = false;
-      gateString = "";
-      samplingString = "";
-      break;
-    }
-    
-    if(incoming == ' '){
-      space = true;
-    }else{
-      if(!space){
-        gateString += incoming;
-      }else{
-        samplingString += incoming;
-      }
-    }
-  } */
-  delayMicroseconds(8000);   
-  sendDataToUI();
-}
-
-
-
-StartOfUninitialised_CPU1_Variables
- static int VADCcontainer[8000]; // container for measured data - will be send to UI
-EndOfUninitialised_CPU1_Variables
+StartOfUninitialised_CPU2_Variables
+ static int VADCcontainer[5200]; // container for measured data - will be send to UI
+EndOfUninitialised_CPU2_Variables
 
 // CPU1 Initialised Data 
-StartOfInitialised_CPU1_Variables
-  const int PIN_TO_SPECTROMETER = 13; // pin which allow ions to transfer into specrometer
-  const int MAX_TIME = 20480; // 20 480 mikroseconds, maximum one measurement
-  const int POINTS = 8000; // maximum 4096 measurements
-  String gateString = "";
-  String samplingString = "";
-  bool space = false;
-  char incoming = ' ';
-EndOfInitialised_CPU1_Variables
+StartOfInitialised_CPU2_Variables
+ const int PIN_TO_SPECTROMETER = 13; // pin which allow ions to transfer into specrometer
+ uint8_t gate = 4;  // positive number of POINTS to keep the gate for ions open 
+ uint8_t  sampling = 25; // mikroseconds , spece between POINTS (positive number)
+ const int MAX_TIME = 20000; // maximum one measurement
+ const int POINTS = 5000; // maximum measurements
+EndOfInitialised_CPU2_Variables
 
 
-void setup1() {
+void setup2() {  
   pinMode(PIN_TO_SPECTROMETER, OUTPUT);
+  pinMode(12, OUTPUT);
+  pinMode(11, OUTPUT);
   analogReadResolution(12);
+   
+ }
 
-}
 
-// 1.) keep the gate open for ion throughput into spectrometer
-// 2.) measure data from spectrometer
-// 3.) send all data to UI
-void loop1() {
-  while (SerialASC.available() > 0){
-    incoming = (char) SerialASC.read();
-    if(incoming == '"'){
-      continue;
-    }
-    
-    if(incoming == 'Q'){
-      gate = gateString.toInt();
-      sampling = samplingString.toInt();
-      //SerialASC.println("string =  " + gateString + "  " + samplingString);
-      //SerialASC.println("converted =  " + String(gate, DEC) + "  " + String(sampling, DEC));
-      space = false;
-      gateString = "";
-      samplingString = "";
-      break;
-    }
-    
-    if(incoming == ' '){
-      space = true;
-    }else{
-      if(!space){
-        gateString += incoming;
-      }else{
-        samplingString +=  incoming;
+void loop2() {
+  delay(5); 
+
+  if(SerialASC.available() > 0){
+      char incoming = SerialASC.read();
+      gate = (incoming - '0') * 2 ;
+      
+      incoming = SerialASC.read();
+      sampling =  (incoming - '0') * 5;
+     
+      // reset
+      for (int i = 0; i < POINTS; i++){
+        VADCcontainer[i] = 0;
       }
-    }
   } 
-  
-  // time exceed 20 480us, so less then 4096 will be mesaured, based on time
+
+
+   // time exceed 20 000us, so less then 4096 will be mesaured, based on time
   if( sampling * (POINTS + 1)  > MAX_TIME){
     spectrometerCommunicationMicroseconds();
   }else{
     spectrometerCommunicationPOINTS();
   }
+  
+  sendDataToUI();
 }
 
 
 
+void setup1() {}
+void loop1() {}
+
+
 /** time for measurement is less than 20 000, so measure
- *  maximum 4096 POINTS and send to GUI */
+ *  maximum 4000 POINTS and send to GUI */
 void spectrometerCommunicationPOINTS(){
   int gateCycleOpen = 0; // how much time to open gate for ions
   double lastMicroseconds = 0; // temporary variable for calculation
@@ -171,11 +121,10 @@ void sendDataToUI(){
  SerialASC.println("START");
 
   for (int i = 0; i < POINTS; i++){
-    // no measurement, not neccessary to send to GUI
-    if(i < POINTS - 10 && VADCcontainer[i] == 0 && VADCcontainer[i+1] == 0 && VADCcontainer[i+2] == 0){
+    if(i - 10 < POINTS && VADCcontainer[i] == 0 && VADCcontainer[i + 1] == 0 && VADCcontainer[i + 2] == 0){
       break;
     }
-      SerialASC.println(String(VADCcontainer[i]));
+     SerialASC.println(String(VADCcontainer[i]));
   }
 
   SerialASC.println("END");

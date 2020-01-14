@@ -319,9 +319,10 @@ namespace Arduin
                         aggregatedData[i] = (i > 250 && i < 300) ? rnd.Next(100, 180) : rnd.Next(52);
                     }
                     this.aggData.aggregatedData = aggregatedData;
-                    await Task.Run(() => Thread.Sleep(1000));
+                    await Task.Run(() => Thread.Sleep(2000));
                     // ----------------------------------------
-                    // this.aggData =  await Task.Run(() =>  DataManagementService.Instance.getAggregatedData());
+                    
+                   // this.aggData =  await Task.Run(() =>  DataManagementService.Instance.getAggregatedData());
 
 
                     // HEAT MAP  - if user pressed rending heap map
@@ -456,7 +457,7 @@ namespace Arduin
                 ArduinoConnectionService.Instance.sendSettingsToArduino();
                 MessageBox.Show("Settings was sent to arduino");
             } catch (Exception error) {
-                MessageBox.Show("Erorr occured : " + error.Message);
+                MessageBox.Show("Erorr occured sending settings to arduino: " + error.Message);
             }
         }
 
