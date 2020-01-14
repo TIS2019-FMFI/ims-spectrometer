@@ -26,7 +26,7 @@ namespace Arduin.Backend{
         }
 
 
-        private SerialPort serial = new SerialPort();
+        private static SerialPort serial = new SerialPort();
 
 
         /**
@@ -38,7 +38,7 @@ namespace Arduin.Backend{
             }
 
             try {
-                serial.BaudRate = 2000000; // 2000000
+                serial.BaudRate = 2000000;
                 serial.PortName = portFromName();
                 serial.Open();
             } catch (Exception ex) {
@@ -66,13 +66,9 @@ namespace Arduin.Backend{
                 if (line.Equals("START")) {
                     buffer = new int[Measurement.BUFFER_SIZE];
                     position = 0;
-                  //  Console.WriteLine("Start measurement");
                 } else if (line.Equals("END")) {
-                  //  Console.WriteLine("End measurement");
-
                     Measurement oneMeasurementCycle = new Measurement();
                     oneMeasurementCycle.measurement = new int[position];
-
                     Array.Copy(buffer, oneMeasurementCycle.measurement, position);
 
                     return oneMeasurementCycle;
@@ -96,8 +92,14 @@ namespace Arduin.Backend{
          */
         public void sendSettingsToArduino(){
             if (serial.IsOpen) {
-                String send = Settings.gate + " " + Settings.sampling + "Q";
-                serial.WriteLine(send); // + Environment.NewLine
+                String send = Settings.gate.ToString() + Settings.sampling.ToString();
+                Console.WriteLine(send);
+                serial.Write(send); 
+
+                // removed data inside buffer
+                serial.DiscardOutBuffer();
+                serial.DiscardInBuffer();
+
                 return;
             }
             throw new ApplicationException("No connection , can not send settings to Arduino");
