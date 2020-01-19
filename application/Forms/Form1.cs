@@ -233,11 +233,35 @@ namespace Arduin
         }
 
         private void Form1_Load(object sender, EventArgs e) {
+            GateFill();
+            SamplingFill();
             InitializeSettings();
             InitializeMobility();
             InitializeGraphSettings();
             EnableScrolling();
             projectName.Text = Backend.Model.Settings.projectName;
+        }
+
+        private void SamplingFill()
+        {
+            List<object> ItemObject = new List<object>();
+            for (int i = 5; i <= 45; i += 5)
+            {
+                ItemObject.Add(i);
+            }
+            comboBox2.Items.AddRange(ItemObject.ToArray());
+            comboBox2.SelectedItem = comboBox2.Items[comboBox2.Items.IndexOf(Settings.sampling)];
+        }
+
+        private void GateFill()
+        {
+            List<object> ItemObject = new List<object>();
+            for (int i = 2; i <= 16; i += 2)
+            {
+                ItemObject.Add(i);
+            }
+            comboBox1.Items.AddRange(ItemObject.ToArray());
+            comboBox1.SelectedItem = comboBox1.Items[comboBox1.Items.IndexOf(Settings.gate)];
         }
 
         private void AddHeatChartFromFile(Panel heatpanel, IntensityData idata) {
@@ -359,9 +383,7 @@ namespace Arduin
 
         private void InitializeSettings() {
             numericseconds.Text = Settings.repeatSeconds.ToString();
-            numericsampling.Text = Settings.sampling.ToString();
             numericcount.Text = Settings.repeatCycles.ToString();
-            numericgate.Text = Settings.gate.ToString();
             repeatcountcheckbox.Checked = Settings.applyRepeatCount;
         }
 
@@ -444,8 +466,8 @@ namespace Arduin
 
             Settings.repeatSeconds = float.Parse(numericseconds.Text);
             Settings.repeatCycles = Convert.ToInt32(numericcount.Text);
-            Settings.sampling = Convert.ToInt32(numericsampling.Text);
-            Settings.gate = Convert.ToInt32(numericgate.Text);
+            Settings.sampling = Convert.ToInt32(comboBox2.SelectedItem);
+            Settings.gate = Convert.ToInt32(comboBox1.SelectedItem);
             Settings.applyRepeatCount = Convert.ToBoolean(repeatcountcheckbox.Checked);
 
             // do not send data into arduino if gate or sampling was not changed
