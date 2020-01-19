@@ -41,6 +41,8 @@ namespace Arduin
         private int referenceWidth = 1366;
         private int referenceHeight = 768;
 
+        private int currentSizeX = 1366;
+
         private AggregatedData aggData;
   
         Tuple<Panel, IntensityData> livePanel;
@@ -243,9 +245,10 @@ namespace Arduin
 
         private void Form1_Resize(object sender, System.EventArgs e)
         {
-            heatPanelSizeX = Math.Min(this.Size.Width - referenceWidth + , (int) System.Windows.SystemParameters.FullPrimaryScreenWidth);
-            heatSizeX = Math.Min(this.Size.Width - referenceWidth, (int)System.Windows.SystemParameters.FullPrimaryScreenWidth);
-            Debug.WriteLine(this.Size.Width - referenceWidth);
+            heatPanelSizeX = Math.Max(Math.Min(this.Size.Width - currentSizeX + referenceWidth, (int) System.Windows.SystemParameters.FullPrimaryScreenWidth), referenceWidth);
+            heatSizeX = Math.Max(Math.Min(this.Size.Width - currentSizeX + referenceWidth, (int)System.Windows.SystemParameters.FullPrimaryScreenWidth), referenceWidth);
+            currentSizeX = this.Size.Width;
+            Debug.WriteLine(heatPanelSizeX);
         }
 
         private void Form1_Load(object sender, EventArgs e) {
