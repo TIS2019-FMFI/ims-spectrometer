@@ -32,11 +32,14 @@ namespace Arduin
         private bool applyMobility = false;
 
         // Velkost intezitneho grafu X, Y
-        private int heatSizeX = 524;
+        private int heatSizeX = 1060;
         private int heatSizeY = 355;
 
         private int heatPanelSizeX = 1060;
         private int heatPanelSizeY = 455;
+
+        private int referenceWidth = 1366;
+        private int referenceHeight = 768;
 
         private AggregatedData aggData;
   
@@ -124,6 +127,7 @@ namespace Arduin
           
             liveheatchart = new LiveCharts.WinForms.CartesianChart();
             liveheatchart.Size = new Size(heatSizeX, heatSizeY);
+            liveheatchart.Anchor = (AnchorStyles.Left | AnchorStyles.Right);
             liveheatchart.Left = 0;
             liveheatchart.Top = 50;
             liveheatchart.DisableAnimations = true;
@@ -150,6 +154,7 @@ namespace Arduin
         private Panel CreateHeatPanel() {
             Panel heatpanel = new Panel();
             heatpanel.Size = new Size(heatPanelSizeX, heatPanelSizeY);
+            heatpanel.Anchor = (AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right);
             heatpanel.Left = 0;
             heatpanel.Top = graphpanel.Height;
             return heatpanel;
@@ -158,6 +163,7 @@ namespace Arduin
         private void AddButtons(Panel heatpanel, bool fromCurrent = false) {
             int buttonX = 100;
             int buttonY = 50;
+            this.Anchor = (AnchorStyles.Right);
 
             AddCancelButton(heatpanel, buttonX, buttonY);
 
@@ -172,6 +178,7 @@ namespace Arduin
             cancel.Size = new Size(buttonX, buttonY);
             cancel.Text = "Cancel";
             cancel.Left = heatSizeX - buttonX; cancel.Top = 0;
+            cancel.Anchor = (AnchorStyles.Right);
 
 
             cancel.Click += (s, e) => {
@@ -205,6 +212,7 @@ namespace Arduin
         private void SaveButton(Panel heatpanel, int buttonX, int buttonY) {
             Button save = new Button();
             save.Size = new Size(buttonX, buttonY);
+            save.Anchor = AnchorStyles.Right;
             save.Text = "Save";
             save.Left = heatSizeX - buttonX;
             save.Top = heatSizeY + buttonY;
@@ -214,6 +222,7 @@ namespace Arduin
         private void StartStopButton(Panel heatpanel, int buttonX, int buttonY) {
             Button startstop = new Button();
             startstop.Size = new Size(buttonX, buttonY);
+            startstop.Anchor = AnchorStyles.Right;
             startstop.Left = heatSizeX - 2 * buttonX;
             startstop.Top = heatSizeY + buttonY;
             startstop.Text = "Stop";
@@ -232,7 +241,15 @@ namespace Arduin
             heatpanel.Controls.Add(startstop);
         }
 
+        private void Form1_Resize(object sender, System.EventArgs e)
+        {
+            heatPanelSizeX = Math.Min(this.Size.Width - referenceWidth + , (int) System.Windows.SystemParameters.FullPrimaryScreenWidth);
+            heatSizeX = Math.Min(this.Size.Width - referenceWidth, (int)System.Windows.SystemParameters.FullPrimaryScreenWidth);
+            Debug.WriteLine(this.Size.Width - referenceWidth);
+        }
+
         private void Form1_Load(object sender, EventArgs e) {
+            Debug.WriteLine(this.Size);
             GateFill();
             SamplingFill();
             InitializeSettings();
@@ -268,6 +285,7 @@ namespace Arduin
             LiveCharts.WinForms.CartesianChart heatchart;
             heatchart = new LiveCharts.WinForms.CartesianChart();
             heatchart.Size = new Size(heatSizeX, heatSizeY);
+            heatchart.Anchor = (AnchorStyles.Left | AnchorStyles.Right);
             heatchart.Left = 0;
             heatchart.Top = 50;
             heatchart.DisableAnimations = true;

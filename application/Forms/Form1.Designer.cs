@@ -473,6 +473,7 @@
             // 
             // savegraphbutton
             // 
+            this.savegraphbutton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.savegraphbutton.BackColor = System.Drawing.Color.LimeGreen;
             this.savegraphbutton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.savegraphbutton.Location = new System.Drawing.Point(910, 0);
@@ -537,6 +538,8 @@
             // 
             // panel3
             // 
+            this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel3.Controls.Add(this.savegraphbutton);
             this.panel3.Location = new System.Drawing.Point(0, 639);
             this.panel3.Name = "panel3";
@@ -573,6 +576,7 @@
             this.Name = "Form1";
             this.Text = "Doplnit";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.Resize += new System.EventHandler(this.Form1_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.numericseconds)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel1.ResumeLayout(false);
