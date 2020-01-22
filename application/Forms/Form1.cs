@@ -38,10 +38,8 @@ namespace Arduin
         private int heatPanelSizeX = 1060;
         private int heatPanelSizeY = 455;
 
-        private int referenceWidth = 1366;
-        private int referenceHeight = 768;
-
         private int currentSizeX = 1366;
+        private int heatPanelOffset = 0;
 
         private AggregatedData aggData;
   
@@ -245,14 +243,13 @@ namespace Arduin
 
         private void Form1_Resize(object sender, System.EventArgs e)
         {
-            heatPanelSizeX = Math.Max(this.Size.Width - currentSizeX + referenceWidth - 400, referenceWidth);
-            heatSizeX = Math.Max(this.Size.Width - currentSizeX + referenceWidth - 400, referenceWidth);
             currentSizeX = this.Size.Width;
-            Debug.WriteLine(heatPanelSizeX);
+            heatPanelSizeX = currentSizeX - 306;
+            heatSizeX = currentSizeX - 306;
         }
 
         private void Form1_Load(object sender, EventArgs e) {
-            Debug.WriteLine(this.Size);
+            heatPanelOffset = currentSizeX - heatPanelSizeX;
             GateFill();
             SamplingFill();
             InitializeSettings();
