@@ -245,8 +245,8 @@ namespace Arduin
 
         private void Form1_Resize(object sender, System.EventArgs e)
         {
-            heatPanelSizeX = Math.Max(Math.Min(this.Size.Width - currentSizeX + referenceWidth, (int) System.Windows.SystemParameters.FullPrimaryScreenWidth), referenceWidth);
-            heatSizeX = Math.Max(Math.Min(this.Size.Width - currentSizeX + referenceWidth, (int)System.Windows.SystemParameters.FullPrimaryScreenWidth), referenceWidth);
+            heatPanelSizeX = Math.Max(this.Size.Width - currentSizeX + referenceWidth - 400, referenceWidth);
+            heatSizeX = Math.Max(this.Size.Width - currentSizeX + referenceWidth - 400, referenceWidth);
             currentSizeX = this.Size.Width;
             Debug.WriteLine(heatPanelSizeX);
         }
@@ -346,7 +346,8 @@ namespace Arduin
 
         internal async void DrawGraph() {
             while (isStarted) {
-                    try {
+                    try
+                {
                     cartesianChartMain.AxisY.Clear();
                     cartesianChartMain.AxisX.Clear();
 
@@ -360,33 +361,52 @@ namespace Arduin
                     Random rnd = new Random();
                     this.aggData = new AggregatedData();
                     int[] aggregatedData = new int[500];
-                    for (int i = 0; i < 500; i++) {
+                    for (int i = 0; i < 500; i++)
+                    {
                         aggregatedData[i] = (i > 250 && i < 300) ? rnd.Next(100, 180) : rnd.Next(52);
                     }
                     this.aggData.aggregatedData = aggregatedData;
                     await Task.Run(() => Thread.Sleep(2000));
                     // ----------------------------------------
-                    
-                   // this.aggData =  await Task.Run(() =>  DataManagementService.Instance.getAggregatedData());
+
+                    // this.aggData =  await Task.Run(() =>  DataManagementService.Instance.getAggregatedData());
 
 
                     // HEAT MAP  - if user pressed rending heap map
-                    if (heatIsStarted) {
+                    if (heatIsStarted)
+                    {
                         this.livePanel.Item2.intensityData.Add(this.aggData);
                         this.AddHeatChartFromCurrent();
                     }
 
+                    ValuesFill();
 
-                    cartesianChartMain.Series = new SeriesCollection {new LineSeries {
-                        Title = "Main Graph",
-                        PointGeometrySize = 0,
-                        Values = new ChartValues<int>(this.aggData.aggregatedData)
-                    }};
-
-                } catch (Exception err) {
+                }
+                catch (Exception err) {
                     MessageBox.Show("Connection not found : " + err.Message);
                     isStarted = !isStarted;
                 }
+            }
+        }
+
+        private void ValuesFill()
+        {
+            if (applyMobility)
+            {
+                double[] tmp = DataManagementService.Instance.calculateMobilities(aggData);
+                cartesianChartMain.Series = new SeriesCollection {new LineSeries {
+                        Title = "Main Graph",
+                        PointGeometrySize = 0,
+                        Values = new ChartValues<double>(tmp)
+                        }};
+            }
+            else
+            {
+                cartesianChartMain.Series = new SeriesCollection {new LineSeries {
+                        Title = "Main Graph",
+                        PointGeometrySize = 0,
+                        Values = new ChartValues<int>(this.aggData.aggregatedData)
+                        }};
             }
         }
 
@@ -517,6 +537,7 @@ namespace Arduin
 
         private void checkBox2_CheckedChanged(object sender, EventArgs e) {
             this.applyMobility = Convert.ToBoolean(moblityCheckBox.Checked);
+            ValuesFill();
         }
     }
 }
