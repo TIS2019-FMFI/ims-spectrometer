@@ -36,14 +36,12 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.numericseconds = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
-            this.numericsampling = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.repeatcountcheckbox = new System.Windows.Forms.CheckBox();
             this.numericcount = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
-            this.numericgate = new System.Windows.Forms.NumericUpDown();
             this.button3 = new System.Windows.Forms.Button();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
@@ -69,12 +67,13 @@
             this.SaveConfigButton = new System.Windows.Forms.Button();
             this.projectName = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericseconds)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericsampling)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericcount)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericgate)).BeginInit();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
@@ -84,6 +83,7 @@
             this.Mobility.SuspendLayout();
             this.graphpanel.SuspendLayout();
             this.panel4.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -91,7 +91,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 630);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(31, 20);
+            this.label1.Size = new System.Drawing.Size(28, 17);
             this.label1.TabIndex = 0;
             this.label1.Text = "1.1";
             // 
@@ -112,7 +112,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(18, 19);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(88, 20);
+            this.label2.Size = new System.Drawing.Size(75, 17);
             this.label2.TabIndex = 2;
             this.label2.Text = "Repeat (s)";
             this.label2.MouseHover += new System.EventHandler(this.label2_MouseHover);
@@ -137,7 +137,7 @@
             0,
             65536});
             this.numericseconds.Name = "numericseconds";
-            this.numericseconds.Size = new System.Drawing.Size(91, 26);
+            this.numericseconds.Size = new System.Drawing.Size(91, 23);
             this.numericseconds.TabIndex = 3;
             this.numericseconds.Value = new decimal(new int[] {
             1,
@@ -151,40 +151,17 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(17, 88);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(113, 20);
+            this.label3.Size = new System.Drawing.Size(95, 17);
             this.label3.TabIndex = 4;
             this.label3.Text = "Sampling (μs)";
             this.label3.MouseHover += new System.EventHandler(this.label3_MouseHover);
-            // 
-            // numericsampling
-            // 
-            this.numericsampling.Location = new System.Drawing.Point(136, 86);
-            this.numericsampling.Maximum = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.numericsampling.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericsampling.Name = "numericsampling";
-            this.numericsampling.Size = new System.Drawing.Size(91, 26);
-            this.numericsampling.TabIndex = 5;
-            this.numericsampling.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.numericsampling.ValueChanged += new System.EventHandler(this.SendConfigurationToArduino);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(18, 123);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(104, 20);
+            this.label4.Size = new System.Drawing.Size(88, 17);
             this.label4.TabIndex = 6;
             this.label4.Text = "Gate (Pulse)";
             this.label4.MouseHover += new System.EventHandler(this.label4_MouseHover);
@@ -201,12 +178,12 @@
             // 
             this.panel1.AutoSize = true;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.comboBox2);
+            this.panel1.Controls.Add(this.comboBox1);
             this.panel1.Controls.Add(this.repeatcountcheckbox);
             this.panel1.Controls.Add(this.numericcount);
             this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.numericgate);
             this.panel1.Controls.Add(this.button3);
-            this.panel1.Controls.Add(this.numericsampling);
             this.panel1.Controls.Add(this.textBox4);
             this.panel1.Controls.Add(this.label15);
             this.panel1.Controls.Add(this.pictureBox1);
@@ -224,7 +201,7 @@
             this.repeatcountcheckbox.AutoSize = true;
             this.repeatcountcheckbox.Location = new System.Drawing.Point(19, 157);
             this.repeatcountcheckbox.Name = "repeatcountcheckbox";
-            this.repeatcountcheckbox.Size = new System.Drawing.Size(133, 24);
+            this.repeatcountcheckbox.Size = new System.Drawing.Size(114, 21);
             this.repeatcountcheckbox.TabIndex = 14;
             this.repeatcountcheckbox.Text = "Repeat Count";
             this.repeatcountcheckbox.UseVisualStyleBackColor = true;
@@ -244,7 +221,7 @@
             0,
             0});
             this.numericcount.Name = "numericcount";
-            this.numericcount.Size = new System.Drawing.Size(91, 26);
+            this.numericcount.Size = new System.Drawing.Size(91, 23);
             this.numericcount.TabIndex = 13;
             this.numericcount.Value = new decimal(new int[] {
             60,
@@ -258,33 +235,10 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(18, 53);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(123, 20);
+            this.label5.Size = new System.Drawing.Size(105, 17);
             this.label5.TabIndex = 12;
             this.label5.Text = "Repeat (Count)";
             this.label5.MouseHover += new System.EventHandler(this.label5_MouseHover);
-            // 
-            // numericgate
-            // 
-            this.numericgate.Location = new System.Drawing.Point(136, 121);
-            this.numericgate.Maximum = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            this.numericgate.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericgate.Name = "numericgate";
-            this.numericgate.Size = new System.Drawing.Size(91, 26);
-            this.numericgate.TabIndex = 11;
-            this.numericgate.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.numericgate.ValueChanged += new System.EventHandler(this.SendConfigurationToArduino);
             // 
             // button3
             // 
@@ -299,7 +253,7 @@
             // 
             this.textBox4.Location = new System.Drawing.Point(68, 244);
             this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(45, 26);
+            this.textBox4.Size = new System.Drawing.Size(45, 23);
             this.textBox4.TabIndex = 8;
             // 
             // label15
@@ -307,7 +261,7 @@
             this.label15.AutoSize = true;
             this.label15.Location = new System.Drawing.Point(16, 244);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(55, 20);
+            this.label15.Size = new System.Drawing.Size(46, 17);
             this.label15.TabIndex = 4;
             this.label15.Text = "Y max";
             // 
@@ -347,7 +301,7 @@
             0,
             0});
             this.numericUpDown7.Name = "numericUpDown7";
-            this.numericUpDown7.Size = new System.Drawing.Size(120, 26);
+            this.numericUpDown7.Size = new System.Drawing.Size(120, 23);
             this.numericUpDown7.TabIndex = 8;
             this.numericUpDown7.Value = new decimal(new int[] {
             7,
@@ -361,7 +315,7 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(16, 126);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(57, 20);
+            this.label9.Size = new System.Drawing.Size(48, 17);
             this.label9.TabIndex = 7;
             this.label9.Text = "U (kV)";
             this.label9.MouseHover += new System.EventHandler(this.label9_MouseHover);
@@ -376,7 +330,7 @@
             0,
             0});
             this.numericUpDown6.Name = "numericUpDown6";
-            this.numericUpDown6.Size = new System.Drawing.Size(120, 26);
+            this.numericUpDown6.Size = new System.Drawing.Size(120, 23);
             this.numericUpDown6.TabIndex = 6;
             this.numericUpDown6.Value = new decimal(new int[] {
             293,
@@ -390,7 +344,7 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(16, 90);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(47, 20);
+            this.label8.Size = new System.Drawing.Size(40, 17);
             this.label8.TabIndex = 5;
             this.label8.Text = "T (K)";
             this.label8.MouseHover += new System.EventHandler(this.label8_MouseHover);
@@ -405,7 +359,7 @@
             0,
             0});
             this.numericUpDown5.Name = "numericUpDown5";
-            this.numericUpDown5.Size = new System.Drawing.Size(120, 26);
+            this.numericUpDown5.Size = new System.Drawing.Size(120, 23);
             this.numericUpDown5.TabIndex = 4;
             this.numericUpDown5.Value = new decimal(new int[] {
             700,
@@ -419,7 +373,7 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(17, 51);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(73, 20);
+            this.label7.Size = new System.Drawing.Size(62, 17);
             this.label7.TabIndex = 3;
             this.label7.Text = "p (mbar)";
             this.label7.MouseHover += new System.EventHandler(this.label7_MouseHover);
@@ -434,7 +388,7 @@
             0,
             0});
             this.numericUpDown4.Name = "numericUpDown4";
-            this.numericUpDown4.Size = new System.Drawing.Size(120, 26);
+            this.numericUpDown4.Size = new System.Drawing.Size(120, 23);
             this.numericUpDown4.TabIndex = 2;
             this.numericUpDown4.Value = new decimal(new int[] {
             1305,
@@ -448,7 +402,7 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(17, 14);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(59, 20);
+            this.label6.Size = new System.Drawing.Size(48, 17);
             this.label6.TabIndex = 1;
             this.label6.Text = "L (cm)";
             this.label6.MouseHover += new System.EventHandler(this.label6_MouseHover);
@@ -497,8 +451,8 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.graphpanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.graphpanel.Controls.Add(this.panel3);
             this.graphpanel.Controls.Add(this.elementHost1);
-            this.graphpanel.Controls.Add(this.savegraphbutton);
             this.graphpanel.Controls.Add(this.button5);
             this.graphpanel.Location = new System.Drawing.Point(278, 9);
             this.graphpanel.Name = "graphpanel";
@@ -519,9 +473,10 @@
             // 
             // savegraphbutton
             // 
+            this.savegraphbutton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.savegraphbutton.BackColor = System.Drawing.Color.LimeGreen;
             this.savegraphbutton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.savegraphbutton.Location = new System.Drawing.Point(907, 637);
+            this.savegraphbutton.Location = new System.Drawing.Point(910, 0);
             this.savegraphbutton.Name = "savegraphbutton";
             this.savegraphbutton.Size = new System.Drawing.Size(153, 32);
             this.savegraphbutton.TabIndex = 27;
@@ -572,7 +527,7 @@
             this.projectName.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.projectName.Location = new System.Drawing.Point(12, 8);
             this.projectName.Name = "projectName";
-            this.projectName.Size = new System.Drawing.Size(235, 26);
+            this.projectName.Size = new System.Drawing.Size(235, 23);
             this.projectName.TabIndex = 33;
             this.projectName.Text = "Project name";
             this.projectName.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
@@ -581,9 +536,35 @@
             // 
             this.timer1.Interval = 1000;
             // 
+            // panel3
+            // 
+            this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel3.Controls.Add(this.savegraphbutton);
+            this.panel3.Location = new System.Drawing.Point(0, 639);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(1063, 38);
+            this.panel3.TabIndex = 10;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(136, 120);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(92, 24);
+            this.comboBox1.TabIndex = 9;
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Location = new System.Drawing.Point(136, 85);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(92, 24);
+            this.comboBox2.TabIndex = 15;
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Linen;
             this.ClientSize = new System.Drawing.Size(1350, 729);
@@ -595,13 +576,12 @@
             this.Name = "Form1";
             this.Text = "Doplnit";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.Resize += new System.EventHandler(this.Form1_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.numericseconds)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericsampling)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericcount)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericgate)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).EndInit();
@@ -615,6 +595,7 @@
             this.graphpanel.PerformLayout();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
+            this.panel3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -627,7 +608,6 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.NumericUpDown numericseconds;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.NumericUpDown numericsampling;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panel1;
@@ -649,7 +629,6 @@
         private System.Windows.Forms.Panel graphpanel;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.TextBox projectName;
-        private System.Windows.Forms.NumericUpDown numericgate;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown numericcount;
         private System.Windows.Forms.CheckBox repeatcountcheckbox;
@@ -660,6 +639,9 @@
         private System.Windows.Forms.Integration.ElementHost elementHost1;
         private LiveCharts.Wpf.CartesianChart cartesianChartMain;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboBox2;
     }
 }
 
