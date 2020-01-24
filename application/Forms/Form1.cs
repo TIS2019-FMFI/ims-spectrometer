@@ -119,6 +119,7 @@ namespace Arduin
 
         public void CreateHeatFromCurrent()
         {
+            if (livePanel is null){ // <-- only ONE live heat graph is allowed!
             Panel heatCurrentPanel = CreateHeatPanel();
             IntensityData idata = new IntensityData();
           
@@ -136,6 +137,7 @@ namespace Arduin
             graphpanel.Controls.Add(heatCurrentPanel);
             livePanel = new Tuple<Panel, IntensityData>(heatCurrentPanel, idata);
             this.heatIsStarted = true;
+            }
         }
 
         private void CreateHeatFromFile(Backend.Model.IntensityData idata)
@@ -182,6 +184,9 @@ namespace Arduin
         }
 
         private void PanelReorder(Panel pan) {
+            if (livePanel != null){
+                allPanelsIntensityData.Add(livePanel);
+            }
             foreach (Tuple<Panel, IntensityData> i in allPanelsIntensityData) {
                 graphpanel.Controls.Remove(i.Item1);
             }
@@ -199,6 +204,14 @@ namespace Arduin
                 i.Item1.Top = graphpanel.Height + k * heatPanelSizeY + k * 45;
                 graphpanel.Controls.Add(i.Item1);
                 k++;
+            }
+            if (allPanelsIntensityData.Contains(livePanel)){
+                allPanelsIntensityData.Remove(livePanel);
+            }
+            else{
+                if (livePanel != null){
+                    livePanel = null;
+                }
             }
         }
 
@@ -218,15 +231,17 @@ namespace Arduin
             startstop.Top = heatSizeY + buttonY;
             startstop.Text = "Stop";
             startstop.Click += (s, e) => {
-                heatIsStarted = !heatIsStarted;
-                if (!heatIsStarted) {
-                    startstop.Text = "Stop";
-                    // spusti vykreslovanie
-
-                } else {
+                /*heatIsStarted = !heatIsStarted;
+                if (heatIsStarted == true) {*/
+                    startstop.Text = "Stopped";
+                    heatIsStarted = false;
+                     //spusti vykreslovanie
+                //}
+                /*else {
                     startstop.Text = "Start";
                     // zastavi vyreslovanie
-                }
+                }*/
+                
             };
 
             heatpanel.Controls.Add(startstop);
@@ -276,13 +291,13 @@ namespace Arduin
 
         internal void AddHeatChartFromCurrent() {
             AggregatedData lastInserted = this.livePanel.Item2.intensityData[this.livePanel.Item2.intensityData.Count -1];
-            if (liveheatchart.Series.Count() == 0){
-                ChartValues<HeatPoint> values = new ChartValues<HeatPoint>();
+            ChartValues<HeatPoint> temporalvalues = new ChartValues<HeatPoint>();
                 for (int j = 0; j < lastInserted.aggregatedData.Count(); j++) {
-                    values.Add(new HeatPoint(j, livePanel.Item2.intensityData.Count(), lastInserted.aggregatedData[j]));
+                    temporalvalues.Add(new HeatPoint(j, livePanel.Item2.intensityData.Count(), lastInserted.aggregatedData[j]));
                 }
+            if (liveheatchart.Series.Count() == 0){
                 liveheatchart.Series.Add(new HeatSeries {
-                    Values = values,
+                    Values = temporalvalues,
                     GradientStopCollection = new GradientStopCollection {
                             new GradientStop(System.Windows.Media.Color.FromRgb(51, 51, 255), 0), //from 0.65 to 0.75
                             new GradientStop(System.Windows.Media.Color.FromRgb(51, 255, 51), 0.20), // from 0 to 0.5
@@ -295,7 +310,7 @@ namespace Arduin
             else{
                 for (int j = 0; j < lastInserted.aggregatedData.Count(); j++) {
                     liveheatchart.Series.Last().Values.Add(new HeatPoint(j, livePanel.Item2.intensityData.Count(), lastInserted.aggregatedData[j]));
-            }               
+                }               
             }
         }
 
