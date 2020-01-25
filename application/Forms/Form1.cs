@@ -39,7 +39,7 @@ namespace Arduin
         private int heatPanelSizeY = 455;
 
         private AggregatedData aggData;
-  
+
         Tuple<Panel, IntensityData> livePanel;
         LiveCharts.WinForms.CartesianChart liveheatchart;
         List<Tuple<Panel, IntensityData>> allPanelsIntensityData = new List<Tuple<Panel, IntensityData>>();
@@ -153,7 +153,7 @@ namespace Arduin
             Panel heatpanel = new Panel();
             heatpanel.Size = new Size(heatPanelSizeX, heatPanelSizeY);
             heatpanel.Left = 0;
-            heatpanel.Top = graphpanel.Height;
+            heatpanel.Top = graphpanel.Height-40;
             return heatpanel;
         }
 
@@ -198,7 +198,7 @@ namespace Arduin
                 }
             }
 
-            int k = 0;
+            int k = -1;
             foreach (Tuple<Panel, IntensityData> i in allPanelsIntensityData) {
                 i.Item1.Left = 0;
                 i.Item1.Top = graphpanel.Height + k * heatPanelSizeY + k * 45;
