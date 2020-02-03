@@ -16,7 +16,7 @@ namespace Arduin.Backend.Model{
          * How many seconds should one life cycle of measurement last, default values if 1 second, 
          * after that, all measured values need to be aggregated 
          */
-        public static float repeatSeconds { get; set; } = 3;
+        public static float repeatSeconds { get; set; } = 2;
 
 
         /**

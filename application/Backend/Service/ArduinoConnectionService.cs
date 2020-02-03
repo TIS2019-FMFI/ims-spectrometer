@@ -92,7 +92,8 @@ namespace Arduin.Backend{
          */
         public void sendSettingsToArduino(){
             if (serial.IsOpen) {
-                String send = Settings.gate.ToString() + Settings.sampling.ToString();
+                // HW requirements gate accumulating by 2, sampling by 5
+                String send = (Settings.gate / 2).ToString() + (Settings.sampling / 5 ).ToString();
                 Console.WriteLine(send);
                 serial.Write(send); 
 

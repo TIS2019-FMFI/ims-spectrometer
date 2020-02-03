@@ -48,6 +48,7 @@ namespace Arduin
         List<Tuple<Panel, IntensityData>> allPanelsIntensityData = new List<Tuple<Panel, IntensityData>>();
 
         public Form1() {
+            this.ignoreInsertedValues = true;
             InitializeComponent();
 
             // start arduino if stopped
@@ -56,7 +57,7 @@ namespace Arduin
             } catch (Exception error) {
                 MessageBox.Show("Erorr occured : " + error.Message);
             }
-
+            this.ignoreInsertedValues = false;
         }
 
         private void label2_MouseHover(object sender, EventArgs e) {
@@ -128,9 +129,9 @@ namespace Arduin
           
             liveheatchart = new LiveCharts.WinForms.CartesianChart();
             liveheatchart.Size = new Size(heatSizeX, heatSizeY);
-            liveheatchart.Anchor = (AnchorStyles.Left | AnchorStyles.Right);
+            liveheatchart.Anchor = (AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right);
             liveheatchart.Left = 0;
-            liveheatchart.Top = 50;
+            liveheatchart.Top = 5;
             liveheatchart.DisableAnimations = true;
             liveheatchart.Hoverable = false;
             liveheatchart.DataTooltip = null;
@@ -158,7 +159,7 @@ namespace Arduin
             heatpanel.Size = new Size(heatPanelSizeX, heatPanelSizeY);
             heatpanel.Anchor = (AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right);
             heatpanel.Left = 0;
-            heatpanel.Top = graphpanel.Height-40;
+            heatpanel.Top = graphpanel.Height-180;
             return heatpanel;
         }
 
@@ -179,9 +180,12 @@ namespace Arduin
             Button cancel = new Button();
             cancel.Size = new Size(buttonX, buttonY);
             cancel.Text = "Cancel";
-            cancel.Left = heatSizeX - buttonX; cancel.Top = 0;
+           // cancel.Left = heatSizeX - buttonX; 
+           // cancel.Top = 0;
             cancel.Anchor = (AnchorStyles.Right);
 
+            cancel.Left = heatSizeX - buttonX;
+            cancel.Top = heatSizeY;
 
             cancel.Click += (s, e) => {
                 PanelReorder(heatpanel);
@@ -226,18 +230,22 @@ namespace Arduin
             Button save = new Button();
             save.Size = new Size(buttonX, buttonY);
             save.Anchor = AnchorStyles.Right;
-            save.Text = "Save";
-            save.Left = heatSizeX - buttonX;
-            save.Top = heatSizeY + buttonY;
-            heatpanel.Controls.Add(save);
+            save.Text = "Save Intensity";
+            save.Left = heatSizeX - 2 * buttonX;
+            save.Top = heatSizeY;
+            save.Click += (s, e) => {
+                FileService.Instance.saveIntensityData(this.livePanel.Item2);
+            };
+
+           heatpanel.Controls.Add(save);
         }
 
         private void StartStopButton(Panel heatpanel, int buttonX, int buttonY) {
             Button startstop = new Button();
             startstop.Size = new Size(buttonX, buttonY);
             startstop.Anchor = AnchorStyles.Right;
-            startstop.Left = heatSizeX - 2 * buttonX;
-            startstop.Top = heatSizeY + buttonY;
+            startstop.Left = heatSizeX - 3 * buttonX;
+            startstop.Top = heatSizeY;
             startstop.Text = "Stop";
             startstop.Click += (s, e) => {
                 /*heatIsStarted = !heatIsStarted;
@@ -269,7 +277,6 @@ namespace Arduin
             SamplingFill();
             InitializeSettings();
             InitializeMobility();
-            InitializeGraphSettings();
             EnableScrolling();
             projectName.Text = Backend.Model.Settings.projectName;
         }
@@ -302,7 +309,7 @@ namespace Arduin
             heatchart.Size = new Size(heatSizeX, heatSizeY);
             heatchart.Anchor = (AnchorStyles.Left | AnchorStyles.Right);
             heatchart.Left = 0;
-            heatchart.Top = 50;
+            heatchart.Top = 5;
             heatchart.DisableAnimations = true;
             heatchart.Hoverable = false;
             heatchart.DataTooltip = null;
@@ -370,7 +377,7 @@ namespace Arduin
 
                     // MAIN CHART
                     // test -------------------------------------
-                    Random rnd = new Random();
+                   /* Random rnd = new Random();
                     this.aggData = new AggregatedData();
                     int[] aggregatedData = new int[500];
                     for (int i = 0; i < 500; i++)
@@ -378,10 +385,10 @@ namespace Arduin
                         aggregatedData[i] = (i > 250 && i < 300) ? rnd.Next(100, 180) : rnd.Next(52);
                     }
                     this.aggData.aggregatedData = aggregatedData;
-                    await Task.Run(() => Thread.Sleep(2000));
+                    await Task.Run(() => Thread.Sleep(2000));*/
                     // ----------------------------------------
 
-                    // this.aggData =  await Task.Run(() =>  DataManagementService.Instance.getAggregatedData());
+                     this.aggData =  await Task.Run(() =>  DataManagementService.Instance.getAggregatedData());
 
 
                     // HEAT MAP  - if user pressed rending heap map
@@ -405,7 +412,7 @@ namespace Arduin
         {
             if (applyMobility)
             {
-                double[] tmp = DataManagementService.Instance.calculateMobilities(aggData);
+                double[] tmp = DataManagementService.Instance.calculateMobilities(this.aggData);
                 cartesianChartMain.Series = new SeriesCollection {new LineSeries {
                         Title = "Main Graph",
                         PointGeometrySize = 0,
@@ -447,11 +454,6 @@ namespace Arduin
             numericUpDown7.Text = Backend.Model.Mobility.U.ToString();
         }
 
-        private void InitializeGraphSettings() {
-            //Default Y
-            int ymax = 10;
-            textBox4.Text = ymax.ToString();
-        }
 
         private  void button1_Click(object sender, EventArgs e) {
             isStarted = !isStarted;
@@ -510,7 +512,7 @@ namespace Arduin
         }
 
         private void SendConfigurationToArduino(object sender, EventArgs e) {
-            if (ignoreInsertedValues) {
+            if (ignoreInsertedValues || Convert.ToInt32(comboBox2.SelectedItem) == 0 || Convert.ToInt32(comboBox1.SelectedItem) == 0) {
                 return;
             }
 
