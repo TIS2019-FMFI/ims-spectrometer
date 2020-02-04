@@ -61,25 +61,28 @@ namespace Arduin.Backend{
             int[] buffer = new int[Measurement.BUFFER_SIZE];
 
             while (serial.IsOpen) {
-                line = serial.ReadLine().Trim(); // delete whitespace
-                
-                if (line.Equals("START")) {
-                    buffer = new int[Measurement.BUFFER_SIZE];
-                    position = 0;
-                } else if (line.Equals("END")) {
-                    Measurement oneMeasurementCycle = new Measurement();
-                    oneMeasurementCycle.measurement = new int[position];
-                    Array.Copy(buffer, oneMeasurementCycle.measurement, position);
+                try {
+                    line = serial.ReadLine().Trim(); // delete whitespace
 
-                    return oneMeasurementCycle;
-                } else {
-                    try {
-                        buffer[position++] = Convert.ToInt16(line);
-                    } catch (Exception ex) {
+                    if (line.Equals("START")) {
+                        buffer = new int[Measurement.BUFFER_SIZE];
                         position = 0;
-                        Console.WriteLine("Error occurred converting : " + line + " from serial port do double : " + ex.Message);
+                    } else if (line.Equals("END")) {
+                        Measurement oneMeasurementCycle = new Measurement();
+                        oneMeasurementCycle.measurement = new int[position];
+                        Array.Copy(buffer, oneMeasurementCycle.measurement, position);
+
+                        return oneMeasurementCycle;
+                    } else {
+                        try {
+                            buffer[position++] = Convert.ToInt16(line);
+                        } catch (Exception ex) {
+                            position = 0;
+                            Console.WriteLine("Error occurred converting : " + line + " from serial port do double : " + ex.Message);
+                        }
                     }
-                }
+                } catch { }
+
 
             }
             Console.WriteLine("No serial connection, could not read data");
@@ -91,19 +94,23 @@ namespace Arduin.Backend{
          * will send gate and sampling to arduino in format "gate sampling"
          */
         public void sendSettingsToArduino(){
-            if (serial.IsOpen) {
-                // HW requirements gate accumulating by 2, sampling by 5
-                String send = (Settings.gate / 2).ToString() + (Settings.sampling / 5 ).ToString();
-                Console.WriteLine(send);
-                serial.Write(send); 
+            try {
+                if (serial.IsOpen) {
+                    // HW requirements gate accumulating by 2, sampling by 5
+                    String send = (Settings.gate / 2).ToString() + (Settings.sampling / 5).ToString();
+                    Console.WriteLine(send);
+                    serial.Write(send);
 
-                // removed data inside buffer
-                serial.DiscardOutBuffer();
-                serial.DiscardInBuffer();
+                    // removed data inside buffer
+                    serial.DiscardOutBuffer();
+                    serial.DiscardInBuffer();
 
-                return;
+                    return;
+                }
+                throw new ApplicationException("No connection , can not send settings to Arduino");
+            } catch (Exception error) {
+                throw new ApplicationException("error " + error.Message);
             }
-            throw new ApplicationException("No connection , can not send settings to Arduino");
         }
 
         private string portFromName(string name = "Infineon DAS JDS COM"){

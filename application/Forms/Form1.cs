@@ -23,6 +23,9 @@ using System.Windows.Threading;
 namespace Arduin
 {
     public partial class Form1 : Form {
+        // true if generating random data into main graph, falso if connected to arduino
+        private bool isTesting = true; 
+
         private bool isStarted = false;
         private volatile bool heatIsStarted = false; // thread sharing attribute
 
@@ -159,7 +162,7 @@ namespace Arduin
             heatpanel.Size = new Size(heatPanelSizeX, heatPanelSizeY);
             heatpanel.Anchor = (AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right);
             heatpanel.Left = 0;
-            heatpanel.Top = graphpanel.Height-50;
+            heatpanel.Top = graphpanel.Height-65;
             return heatpanel;
         }
 
@@ -382,20 +385,20 @@ namespace Arduin
                     cartesianChartMain.DataTooltip = null;
 
                     // MAIN CHART
-                    // test -------------------------------------
-                    Random rnd = new Random();
-                    this.aggData = new AggregatedData();
-                    int[] aggregatedData = new int[500];
-                    for (int i = 0; i < 500; i++)
-                    {
-                        aggregatedData[i] = (i > 250 && i < 300) ? rnd.Next(100, 180) : rnd.Next(52);
+  
+                    if (this.isTesting) {
+                        Random rnd = new Random();
+                        this.aggData = new AggregatedData();
+                        int[] aggregatedData = new int[500];
+                        for (int i = 0; i < 500; i++) {
+                            aggregatedData[i] = (i > 250 && i < 300) ? rnd.Next(100, 180) : rnd.Next(52);
+                        }
+                        this.aggData.aggregatedData = aggregatedData;
+                        await Task.Run(() => Thread.Sleep(2000));
+                    } else {
+                        this.aggData = await Task.Run(() => DataManagementService.Instance.getAggregatedData());
                     }
-                    this.aggData.aggregatedData = aggregatedData;
-                    await Task.Run(() => Thread.Sleep(2000));
-                    // ----------------------------------------
-
-                    // this.aggData =  await Task.Run(() =>  DataManagementService.Instance.getAggregatedData());
-
+  
 
                     // HEAT MAP  - if user pressed rending heap map
                     if (heatIsStarted)
@@ -523,21 +526,21 @@ namespace Arduin
                 return;
             }
 
-            int oldSampling = Settings.sampling;
-            int oldGate = Settings.gate;
-
-            Settings.repeatSeconds = float.Parse(numericseconds.Text);
-            Settings.repeatCycles = Convert.ToInt32(numericcount.Text);
-            Settings.sampling = Convert.ToInt32(comboBox2.SelectedItem);
-            Settings.gate = Convert.ToInt32(comboBox1.SelectedItem);
-            Settings.applyRepeatCount = Convert.ToBoolean(repeatcountcheckbox.Checked);
-
-            // do not send data into arduino if gate or sampling was not changed
-            if(oldSampling == Settings.sampling && oldGate == Settings.gate) {
-                return;
-            }
-
             try {
+                int oldSampling = Settings.sampling;
+                int oldGate = Settings.gate;
+
+                Settings.repeatSeconds = float.Parse(numericseconds.Text);
+                Settings.repeatCycles = Convert.ToInt32(numericcount.Text);
+                Settings.sampling = Convert.ToInt32(comboBox2.SelectedItem);
+                Settings.gate = Convert.ToInt32(comboBox1.SelectedItem);
+                Settings.applyRepeatCount = Convert.ToBoolean(repeatcountcheckbox.Checked);
+
+                // do not send data into arduino if gate or sampling was not changed
+                if (oldSampling == Settings.sampling && oldGate == Settings.gate) {
+                    return;
+                }
+
                 ArduinoConnectionService.Instance.sendSettingsToArduino();
                 MessageBox.Show("Settings was sent to arduino");
             } catch (Exception error) {
