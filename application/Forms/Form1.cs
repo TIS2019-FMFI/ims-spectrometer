@@ -131,7 +131,7 @@ namespace Arduin
             liveheatchart.Size = new Size(heatSizeX, heatSizeY);
             liveheatchart.Anchor = (AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right);
             liveheatchart.Left = 0;
-            liveheatchart.Top = 5;
+            liveheatchart.Top = 50;
             liveheatchart.DisableAnimations = true;
             liveheatchart.Hoverable = false;
             liveheatchart.DataTooltip = null;
@@ -159,7 +159,7 @@ namespace Arduin
             heatpanel.Size = new Size(heatPanelSizeX, heatPanelSizeY);
             heatpanel.Anchor = (AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right);
             heatpanel.Left = 0;
-            heatpanel.Top = graphpanel.Height-180;
+            heatpanel.Top = graphpanel.Height-50;
             return heatpanel;
         }
 
@@ -185,7 +185,7 @@ namespace Arduin
             cancel.Anchor = (AnchorStyles.Right);
 
             cancel.Left = heatSizeX - buttonX;
-            cancel.Top = heatSizeY;
+            cancel.Top = heatSizeY + buttonY;
 
             cancel.Click += (s, e) => {
                 PanelReorder(heatpanel);
@@ -222,6 +222,7 @@ namespace Arduin
             else{
                 if (livePanel != null){
                     livePanel = null;
+                    this.heatIsStarted = false;
                 }
             }
         }
@@ -232,9 +233,14 @@ namespace Arduin
             save.Anchor = AnchorStyles.Right;
             save.Text = "Save Intensity";
             save.Left = heatSizeX - 2 * buttonX;
-            save.Top = heatSizeY;
+            save.Top = heatSizeY + buttonY;
             save.Click += (s, e) => {
-                FileService.Instance.saveIntensityData(this.livePanel.Item2);
+                try {
+                    FileService.Instance.saveIntensityData(this.livePanel.Item2);
+                    MessageBox.Show("Intensity data has been saved ");
+                } catch (Exception error) {
+                    MessageBox.Show("Erorr occured during saving intensity data: " + error.Message);
+                }
             };
 
            heatpanel.Controls.Add(save);
@@ -245,7 +251,7 @@ namespace Arduin
             startstop.Size = new Size(buttonX, buttonY);
             startstop.Anchor = AnchorStyles.Right;
             startstop.Left = heatSizeX - 3 * buttonX;
-            startstop.Top = heatSizeY;
+            startstop.Top = heatSizeY + buttonY; ;
             startstop.Text = "Stop";
             startstop.Click += (s, e) => {
                 /*heatIsStarted = !heatIsStarted;
@@ -309,7 +315,7 @@ namespace Arduin
             heatchart.Size = new Size(heatSizeX, heatSizeY);
             heatchart.Anchor = (AnchorStyles.Left | AnchorStyles.Right);
             heatchart.Left = 0;
-            heatchart.Top = 5;
+            heatchart.Top = 50;
             heatchart.DisableAnimations = true;
             heatchart.Hoverable = false;
             heatchart.DataTooltip = null;
@@ -377,7 +383,7 @@ namespace Arduin
 
                     // MAIN CHART
                     // test -------------------------------------
-                   /* Random rnd = new Random();
+                    Random rnd = new Random();
                     this.aggData = new AggregatedData();
                     int[] aggregatedData = new int[500];
                     for (int i = 0; i < 500; i++)
@@ -385,10 +391,10 @@ namespace Arduin
                         aggregatedData[i] = (i > 250 && i < 300) ? rnd.Next(100, 180) : rnd.Next(52);
                     }
                     this.aggData.aggregatedData = aggregatedData;
-                    await Task.Run(() => Thread.Sleep(2000));*/
+                    await Task.Run(() => Thread.Sleep(2000));
                     // ----------------------------------------
 
-                     this.aggData =  await Task.Run(() =>  DataManagementService.Instance.getAggregatedData());
+                    // this.aggData =  await Task.Run(() =>  DataManagementService.Instance.getAggregatedData());
 
 
                     // HEAT MAP  - if user pressed rending heap map
@@ -480,6 +486,7 @@ namespace Arduin
             }
             try {
                 FileService.Instance.saveAggregatedData(this.aggData);
+                MessageBox.Show("Aggregated data has been saved ");
             } catch (Exception error) {
                 MessageBox.Show("Erorr occured : " + error.Message);
             }
