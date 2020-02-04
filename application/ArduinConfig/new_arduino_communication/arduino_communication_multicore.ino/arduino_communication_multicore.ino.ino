@@ -18,8 +18,8 @@ EndOfUninitialised_CPU2_Variables
 // CPU1 Initialised Data 
 StartOfInitialised_CPU2_Variables
  const int PIN_TO_SPECTROMETER = 13; // pin which allow ions to transfer into specrometer
- uint8_t gate = 4;  // positive number of POINTS to keep the gate for ions open 
- uint8_t  sampling = 25; // mikroseconds , spece between POINTS (positive number)
+ uint8_t gate = 2;  // positive number of POINTS to keep the gate for ions open 
+ uint8_t  sampling = 5; // mikroseconds , spece between POINTS (positive number)
  const int MAX_TIME = 20000; // maximum one measurement
  const int POINTS = 5000; // maximum measurements
 EndOfInitialised_CPU2_Variables

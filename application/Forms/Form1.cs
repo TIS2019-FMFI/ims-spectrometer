@@ -23,6 +23,9 @@ using System.Windows.Threading;
 namespace Arduin
 {
     public partial class Form1 : Form {
+        // true if generating random data into main graph, falso if connected to arduino
+        private bool isTesting = true; 
+
         private bool isStarted = false;
         private volatile bool heatIsStarted = false; // thread sharing attribute
 
@@ -48,6 +51,7 @@ namespace Arduin
         List<Tuple<Panel, IntensityData>> allPanelsIntensityData = new List<Tuple<Panel, IntensityData>>();
 
         public Form1() {
+            this.ignoreInsertedValues = true;
             InitializeComponent();
 
             // start arduino if stopped
@@ -56,7 +60,7 @@ namespace Arduin
             } catch (Exception error) {
                 MessageBox.Show("Erorr occured : " + error.Message);
             }
-
+            this.ignoreInsertedValues = false;
         }
 
         private void label2_MouseHover(object sender, EventArgs e) {
@@ -128,7 +132,7 @@ namespace Arduin
           
             liveheatchart = new LiveCharts.WinForms.CartesianChart();
             liveheatchart.Size = new Size(heatSizeX, heatSizeY);
-            liveheatchart.Anchor = (AnchorStyles.Left | AnchorStyles.Right);
+            liveheatchart.Anchor = (AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right);
             liveheatchart.Left = 0;
             liveheatchart.Top = 50;
             liveheatchart.DisableAnimations = true;
@@ -158,7 +162,7 @@ namespace Arduin
             heatpanel.Size = new Size(heatPanelSizeX, heatPanelSizeY);
             heatpanel.Anchor = (AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right);
             heatpanel.Left = 0;
-            heatpanel.Top = graphpanel.Height-40;
+            heatpanel.Top = graphpanel.Height-65;
             return heatpanel;
         }
 
@@ -179,9 +183,12 @@ namespace Arduin
             Button cancel = new Button();
             cancel.Size = new Size(buttonX, buttonY);
             cancel.Text = "Cancel";
-            cancel.Left = heatSizeX - buttonX; cancel.Top = 0;
+           // cancel.Left = heatSizeX - buttonX; 
+           // cancel.Top = 0;
             cancel.Anchor = (AnchorStyles.Right);
 
+            cancel.Left = heatSizeX - buttonX;
+            cancel.Top = heatSizeY + buttonY;
 
             cancel.Click += (s, e) => {
                 PanelReorder(heatpanel);
@@ -218,6 +225,7 @@ namespace Arduin
             else{
                 if (livePanel != null){
                     livePanel = null;
+                    this.heatIsStarted = false;
                 }
             }
         }
@@ -226,18 +234,27 @@ namespace Arduin
             Button save = new Button();
             save.Size = new Size(buttonX, buttonY);
             save.Anchor = AnchorStyles.Right;
-            save.Text = "Save";
-            save.Left = heatSizeX - buttonX;
+            save.Text = "Save Intensity";
+            save.Left = heatSizeX - 2 * buttonX;
             save.Top = heatSizeY + buttonY;
-            heatpanel.Controls.Add(save);
+            save.Click += (s, e) => {
+                try {
+                    FileService.Instance.saveIntensityData(this.livePanel.Item2);
+                    MessageBox.Show("Intensity data has been saved ");
+                } catch (Exception error) {
+                    MessageBox.Show("Erorr occured during saving intensity data: " + error.Message);
+                }
+            };
+
+           heatpanel.Controls.Add(save);
         }
 
         private void StartStopButton(Panel heatpanel, int buttonX, int buttonY) {
             Button startstop = new Button();
             startstop.Size = new Size(buttonX, buttonY);
             startstop.Anchor = AnchorStyles.Right;
-            startstop.Left = heatSizeX - 2 * buttonX;
-            startstop.Top = heatSizeY + buttonY;
+            startstop.Left = heatSizeX - 3 * buttonX;
+            startstop.Top = heatSizeY + buttonY; ;
             startstop.Text = "Stop";
             startstop.Click += (s, e) => {
                 /*heatIsStarted = !heatIsStarted;
@@ -269,7 +286,6 @@ namespace Arduin
             SamplingFill();
             InitializeSettings();
             InitializeMobility();
-            InitializeGraphSettings();
             EnableScrolling();
             projectName.Text = Backend.Model.Settings.projectName;
         }
@@ -369,20 +385,20 @@ namespace Arduin
                     cartesianChartMain.DataTooltip = null;
 
                     // MAIN CHART
-                    // test -------------------------------------
-                    Random rnd = new Random();
-                    this.aggData = new AggregatedData();
-                    int[] aggregatedData = new int[500];
-                    for (int i = 0; i < 500; i++)
-                    {
-                        aggregatedData[i] = (i > 250 && i < 300) ? rnd.Next(100, 180) : rnd.Next(52);
+  
+                    if (this.isTesting) {
+                        Random rnd = new Random();
+                        this.aggData = new AggregatedData();
+                        int[] aggregatedData = new int[500];
+                        for (int i = 0; i < 500; i++) {
+                            aggregatedData[i] = (i > 250 && i < 300) ? rnd.Next(100, 180) : rnd.Next(52);
+                        }
+                        this.aggData.aggregatedData = aggregatedData;
+                        await Task.Run(() => Thread.Sleep(2000));
+                    } else {
+                        this.aggData = await Task.Run(() => DataManagementService.Instance.getAggregatedData());
                     }
-                    this.aggData.aggregatedData = aggregatedData;
-                    await Task.Run(() => Thread.Sleep(2000));
-                    // ----------------------------------------
-
-                    // this.aggData =  await Task.Run(() =>  DataManagementService.Instance.getAggregatedData());
-
+  
 
                     // HEAT MAP  - if user pressed rending heap map
                     if (heatIsStarted)
@@ -405,7 +421,7 @@ namespace Arduin
         {
             if (applyMobility)
             {
-                double[] tmp = DataManagementService.Instance.calculateMobilities(aggData);
+                double[] tmp = DataManagementService.Instance.calculateMobilities(this.aggData);
                 cartesianChartMain.Series = new SeriesCollection {new LineSeries {
                         Title = "Main Graph",
                         PointGeometrySize = 0,
@@ -447,11 +463,6 @@ namespace Arduin
             numericUpDown7.Text = Backend.Model.Mobility.U.ToString();
         }
 
-        private void InitializeGraphSettings() {
-            //Default Y
-            int ymax = 10;
-            textBox4.Text = ymax.ToString();
-        }
 
         private  void button1_Click(object sender, EventArgs e) {
             isStarted = !isStarted;
@@ -478,6 +489,7 @@ namespace Arduin
             }
             try {
                 FileService.Instance.saveAggregatedData(this.aggData);
+                MessageBox.Show("Aggregated data has been saved ");
             } catch (Exception error) {
                 MessageBox.Show("Erorr occured : " + error.Message);
             }
@@ -510,25 +522,25 @@ namespace Arduin
         }
 
         private void SendConfigurationToArduino(object sender, EventArgs e) {
-            if (ignoreInsertedValues) {
-                return;
-            }
-
-            int oldSampling = Settings.sampling;
-            int oldGate = Settings.gate;
-
-            Settings.repeatSeconds = float.Parse(numericseconds.Text);
-            Settings.repeatCycles = Convert.ToInt32(numericcount.Text);
-            Settings.sampling = Convert.ToInt32(comboBox2.SelectedItem);
-            Settings.gate = Convert.ToInt32(comboBox1.SelectedItem);
-            Settings.applyRepeatCount = Convert.ToBoolean(repeatcountcheckbox.Checked);
-
-            // do not send data into arduino if gate or sampling was not changed
-            if(oldSampling == Settings.sampling && oldGate == Settings.gate) {
+            if (ignoreInsertedValues || Convert.ToInt32(comboBox2.SelectedItem) == 0 || Convert.ToInt32(comboBox1.SelectedItem) == 0) {
                 return;
             }
 
             try {
+                int oldSampling = Settings.sampling;
+                int oldGate = Settings.gate;
+
+                Settings.repeatSeconds = float.Parse(numericseconds.Text);
+                Settings.repeatCycles = Convert.ToInt32(numericcount.Text);
+                Settings.sampling = Convert.ToInt32(comboBox2.SelectedItem);
+                Settings.gate = Convert.ToInt32(comboBox1.SelectedItem);
+                Settings.applyRepeatCount = Convert.ToBoolean(repeatcountcheckbox.Checked);
+
+                // do not send data into arduino if gate or sampling was not changed
+                if (oldSampling == Settings.sampling && oldGate == Settings.gate) {
+                    return;
+                }
+
                 ArduinoConnectionService.Instance.sendSettingsToArduino();
                 MessageBox.Show("Settings was sent to arduino");
             } catch (Exception error) {

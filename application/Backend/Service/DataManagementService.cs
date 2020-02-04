@@ -99,14 +99,25 @@ namespace Arduin.Backend{
         }
 
 
-
+        /*
+         * Mobilitne zobrazenie je vhodnejsie na identifikaciu ionov. Vztah medzi driftovym casom a pohyblivostou je jednoduchy vzorec. 
+         * Kde treba zadat niekolko parametrov merania 
+         * (dlzku trubice-L(cm), 
+         * tlak plynu - p- (pa), 
+         * teplotu plynu T(K), 
+         * napatie na driftovej trubici U (kV))  (mohli by sa zadavat ) 
+         * a samozrejme driftovy cas -t (ms) 
+         * potom je mozne vypocitat redukovanu pohyblivost ioniov. Vzorec je:
+         * Ko=(L^2/U*t)[(p*To)/(po*T))
+         * Kde po je normálny tlak (101325 Pa), To je 293.15 K, 
+         */
         public double[] calculateMobilities(AggregatedData data) {
-            double[] mobilityData = new double[data.aggregatedData.Length];
+            double[] mobilityData = new double[10]; // data.aggregatedData.Length
 
             double Pa = 100.0 * Mobility.p;//Pa <- mbar
             double kV = 1000.0 * Mobility.U; //V <- kV
 
-            for (int i = 0; i < data.aggregatedData.Length; i++) {
+            for (int i = 0; i < 10; i++) {
                 double t = (i + 0.5) * Settings.sampling / 1000.0e3;//milliseconds       
                 var K0 = (Mobility.L * Mobility.L / (kV * t)) * (Pa * 293.15 / (101325.0 * Mobility.T));
                 mobilityData[i] = K0;
