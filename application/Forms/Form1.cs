@@ -382,7 +382,8 @@ namespace Arduin
                     // disalbe animation for faster rendering
                     cartesianChartMain.DisableAnimations = true;
                     cartesianChartMain.Hoverable = false;
-                    cartesianChartMain.DataTooltip = null;
+                    //cartesianChartMain.DataTooltip = null;
+                    //Debug.WriteLine(cartesianChartMain.MouseEnter);
 
                     // MAIN CHART
   
@@ -406,7 +407,7 @@ namespace Arduin
                         this.livePanel.Item2.intensityData.Add(this.aggData);
                         this.AddHeatChartFromCurrent();
                     }
-
+                    
                     ValuesFill();
 
                 }
@@ -419,11 +420,13 @@ namespace Arduin
 
         private void ValuesFill()
         {
+            DoubleBuffered = true;
+
             if (applyMobility)
             {
                 double[] tmp = DataManagementService.Instance.calculateMobilities(this.aggData);
                 cartesianChartMain.Series = new SeriesCollection {new LineSeries {
-                        Title = "Main Graph",
+                        Title = "Y Axis",
                         PointGeometrySize = 0,
                         Values = new ChartValues<double>(tmp)
                         }};
@@ -431,7 +434,7 @@ namespace Arduin
             else
             {
                 cartesianChartMain.Series = new SeriesCollection {new LineSeries {
-                        Title = "Main Graph",
+                        Title = "Y Axis:",
                         PointGeometrySize = 0,
                         Values = new ChartValues<int>(this.aggData.aggregatedData)
                         }};
