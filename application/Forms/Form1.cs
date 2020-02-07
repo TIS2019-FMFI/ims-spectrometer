@@ -373,6 +373,8 @@ namespace Arduin
         }
 
         internal async void DrawGraph() {
+            SeriesCollection s = new SeriesCollection();
+            LineSeries l = new LineSeries();
             while (isStarted) {
                     try
                 {
@@ -407,7 +409,8 @@ namespace Arduin
                         this.livePanel.Item2.intensityData.Add(this.aggData);
                         this.AddHeatChartFromCurrent();
                     }
-                    
+                    cartesianChartMain.Zoom = ZoomingOptions.X;
+
                     ValuesFill();
 
                 }
@@ -420,7 +423,7 @@ namespace Arduin
 
         private void ValuesFill()
         {
-            DoubleBuffered = true;
+            this.DoubleBuffered = true;
 
             if (applyMobility)
             {
@@ -428,7 +431,7 @@ namespace Arduin
                 cartesianChartMain.Series = new SeriesCollection {new LineSeries {
                         Title = "Y Axis",
                         PointGeometrySize = 0,
-                        Values = new ChartValues<double>(tmp)
+                        Values = new ChartValues<double>(tmp) 
                         }};
             }
             else
