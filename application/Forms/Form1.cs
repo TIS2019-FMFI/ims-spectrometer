@@ -407,7 +407,9 @@ namespace Arduin
                         this.livePanel.Item2.intensityData.Add(this.aggData);
                         this.AddHeatChartFromCurrent();
                     }
-                    
+
+                    cartesianChartMain.Zoom = ZoomingOptions.X;
+
                     ValuesFill();
 
                 }
