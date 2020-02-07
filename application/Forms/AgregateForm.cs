@@ -30,6 +30,5 @@ namespace Arduin
             Close();
             form1.CreateHeatFromCurrent();
         }
-
     }
 }

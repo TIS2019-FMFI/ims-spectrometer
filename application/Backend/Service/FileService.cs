@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Arduin.Backend.Model;
 
+
 namespace Arduin.Backend
 {
     // SINGLETON , use as FileService.instance.XXXX !!!
@@ -30,6 +31,8 @@ namespace Arduin.Backend
         public const string AGGREGATED_DATA_PATH = "Data\\Agregated_Data\\";  // path where aggregated data will be saved
 
         public const string INTENSITY_PATH = "Data\\Intensity_Data\\";  // path where intensity graph will be saved 
+
+        public const string INTENSITY_COLOR_PATH = "Data\\Intensity_Color\\";  // path where intensity graph color will be saved 
 
         private void createFolderIfNotExists(string path) {
             if (!System.IO.Directory.Exists(path)) {
@@ -243,6 +246,22 @@ namespace Arduin.Backend
                 throw new FileLoadException("Could not parse file content into IntensityData, got error : " + e.Message);
             }
             return intensityData;
+        }
+
+        public List<string[]> intensity_color(string projectPath){
+            List<string[]> colors = new List<string[]>();
+            string line = "";
+            Console.ReadLine ();
+            try{
+                using (var streamReader = tryToOpenFile(projectPath)) {
+                    while ((line = streamReader.ReadLine()) != null) {
+                        colors.Add(line.Split(' '));
+                    }
+                }
+            } catch (Exception e) {
+                throw new FileLoadException("Could not parse file content into IntensityData, got error : " + e.Message);
+            }
+            return colors;
         }
     }
 }
