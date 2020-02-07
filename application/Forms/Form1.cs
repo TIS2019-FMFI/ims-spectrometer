@@ -46,9 +46,23 @@ namespace Arduin
 
         private AggregatedData aggData;
 
-        Tuple<Panel, IntensityData> livePanel;
+        Tuple<Panel, IntensityData, HeatSeries> livePanel;
         LiveCharts.WinForms.CartesianChart liveheatchart;
-        List<Tuple<Panel, IntensityData>> allPanelsIntensityData = new List<Tuple<Panel, IntensityData>>();
+        HeatSeries liveheat = new HeatSeries();
+        List<Tuple<Panel, IntensityData, HeatSeries>> allPanelsIntensityData = new List<Tuple<Panel, IntensityData, HeatSeries>>();
+
+        GradientStopCollection gradient = GradientFromFile(AppDomain.CurrentDomain.BaseDirectory + "Data\\Intensity_Color\\auto_color.txt");           
+        static private GradientStopCollection GradientFromFile(string path){
+            List<string[]> list = FileService.Instance.intensity_color(path);
+            GradientStopCollection g = new GradientStopCollection();
+            for (int i = 0; i < list.Count(); i++) {
+                    g.Add(new GradientStop(
+                        System.Windows.Media.Color.FromRgb(
+                           Convert.ToByte(list[i][0]), Convert.ToByte(list[i][1]), Convert.ToByte(list[i][2])),
+                        Convert.ToDouble(list[i][3])/100));
+            }
+            return g;
+        }
 
         public Form1() {
             this.ignoreInsertedValues = true;
@@ -108,6 +122,32 @@ namespace Arduin
             myMessageBoxh.ShowDialog();
         }
 
+        private void gradientbutton_Click(object sender, EventArgs e) {
+            open_gradient();
+        }
+
+        public void open_gradient() {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "txt|*.txt";
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                gradient = GradientFromFile(ofd.FileName);
+                UseGradientForAll();
+            } else {
+                DialogResult dr = MessageBox.Show("Please choose a file", "File not found", MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning);
+                if (dr == DialogResult.Retry) {
+                    open_gradient();
+                }
+            }
+        }
+
+        private void UseGradientForAll(){
+            liveheat.GradientStopCollection = gradient;
+            /*foreach (Tuple<Panel, IntensityData, HeatSeries> i in allPanelsIntensityData) {
+                i.Item3.GradientStopCollection = gradient;
+            }*/
+        }
+
         public void OpenHeatMap() {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "csv|*.csv";
@@ -143,7 +183,7 @@ namespace Arduin
 
             AddButtons(heatCurrentPanel, true);
             graphpanel.Controls.Add(heatCurrentPanel);
-            livePanel = new Tuple<Panel, IntensityData>(heatCurrentPanel, idata);
+            livePanel = new Tuple<Panel, IntensityData, HeatSeries>(heatCurrentPanel, idata, null);
             this.heatIsStarted = true;
             }
         }
@@ -154,7 +194,6 @@ namespace Arduin
             AddHeatChartFromFile(heatpanel, idata);
             AddButtons(heatpanel);
             graphpanel.Controls.Add(heatpanel);
-            allPanelsIntensityData.Add(new Tuple<Panel, IntensityData>(heatpanel, idata));
         }
         
         private Panel CreateHeatPanel() {
@@ -201,11 +240,11 @@ namespace Arduin
             if (livePanel != null){
                 allPanelsIntensityData.Add(livePanel);
             }
-            foreach (Tuple<Panel, IntensityData> i in allPanelsIntensityData) {
+            foreach (Tuple<Panel, IntensityData, HeatSeries> i in allPanelsIntensityData) {
                 graphpanel.Controls.Remove(i.Item1);
             }
    
-            foreach (Tuple<Panel, IntensityData> i in allPanelsIntensityData) {
+            foreach (Tuple<Panel, IntensityData, HeatSeries> i in allPanelsIntensityData) {
                 if (pan.Equals(i.Item1)) {
                     allPanelsIntensityData.Remove(i);
                     break;
@@ -213,7 +252,7 @@ namespace Arduin
             }
 
             int k = -1;
-            foreach (Tuple<Panel, IntensityData> i in allPanelsIntensityData) {
+            foreach (Tuple<Panel, IntensityData, HeatSeries> i in allPanelsIntensityData) {
                 i.Item1.Left = 0;
                 i.Item1.Top = graphpanel.Height + k * heatPanelSizeY + k * 45;
                 graphpanel.Controls.Add(i.Item1);
@@ -257,17 +296,8 @@ namespace Arduin
             startstop.Top = heatSizeY + buttonY; ;
             startstop.Text = "Stop";
             startstop.Click += (s, e) => {
-                /*heatIsStarted = !heatIsStarted;
-                if (heatIsStarted == true) {*/
                     startstop.Text = "Stopped";
-                    heatIsStarted = false;
-                     //spusti vykreslovanie
-                //}
-                /*else {
-                    startstop.Text = "Start";
-                    // zastavi vyreslovanie
-                }*/
-                
+                    heatIsStarted = false;                
             };
 
             heatpanel.Controls.Add(startstop);
@@ -333,17 +363,12 @@ namespace Arduin
                 }
             }
             values.AddRange(buffer);
-
-            heatchart.Series.Add(new HeatSeries {
+            HeatSeries hs = new HeatSeries {
                 Values = values,
-                GradientStopCollection = new GradientStopCollection {
-                    new GradientStop(System.Windows.Media.Color.FromRgb(51, 51, 255), 0), //from 0.65 to 0.75
-                    new GradientStop(System.Windows.Media.Color.FromRgb(51, 255, 51), 0.20), // from 0 to 0.5
-                    new GradientStop(System.Windows.Media.Color.FromRgb(153, 255, 51), .40), //from 0.5 to 0.65                   
-                    new GradientStop(System.Windows.Media.Color.FromRgb(255, 153, 51), .60), //from 0.75 to 0.85
-                    new GradientStop(System.Windows.Media.Color.FromRgb(255, 0, 0), .80) //from 0.85 to 1(max value)
-               }
-            });
+                GradientStopCollection = gradient
+            };
+            allPanelsIntensityData.Add(new Tuple<Panel, IntensityData, HeatSeries>(heatpanel, idata, hs));
+            heatchart.Series.Add(hs);
             heatpanel.Controls.Add(heatchart);
         }
 
@@ -354,20 +379,16 @@ namespace Arduin
                     temporalvalues.Add(new HeatPoint(j, livePanel.Item2.intensityData.Count(), lastInserted.aggregatedData[j]));
                 }
             if (liveheatchart.Series.Count() == 0){
-                liveheatchart.Series.Add(new HeatSeries {
+                liveheat = new HeatSeries {
                     Values = temporalvalues,
-                    GradientStopCollection = new GradientStopCollection {
-                            new GradientStop(System.Windows.Media.Color.FromRgb(51, 51, 255), 0), //from 0.65 to 0.75
-                            new GradientStop(System.Windows.Media.Color.FromRgb(51, 255, 51), 0.20), // from 0 to 0.5
-                            new GradientStop(System.Windows.Media.Color.FromRgb(153, 255, 51), .40), //from 0.5 to 0.65                   
-                            new GradientStop(System.Windows.Media.Color.FromRgb(255, 153, 51), .60), //from 0.75 to 0.85
-                            new GradientStop(System.Windows.Media.Color.FromRgb(255, 0, 0), .80) //from 0.85 to 1(max value)
-                        }
-                });
+                    GradientStopCollection = gradient
+                };
+                liveheatchart.Series.Add(liveheat);
             }
             else{
                 for (int j = 0; j < lastInserted.aggregatedData.Count(); j++) {
-                    liveheatchart.Series.Last().Values.Add(new HeatPoint(j, livePanel.Item2.intensityData.Count(), lastInserted.aggregatedData[j]));
+                    //liveheatchart.Series.Last().Values.Add(new HeatPoint(j, livePanel.Item2.intensityData.Count(), lastInserted.aggregatedData[j]));
+                    liveheat.Values.Add(new HeatPoint(j, livePanel.Item2.intensityData.Count(), lastInserted.aggregatedData[j]));
                 }               
             }
         }
@@ -465,7 +486,6 @@ namespace Arduin
             numericUpDown6.Text = Backend.Model.Mobility.T.ToString();
             numericUpDown7.Text = Backend.Model.Mobility.U.ToString();
         }
-
 
         private  void button1_Click(object sender, EventArgs e) {
             isStarted = !isStarted;

@@ -67,7 +67,7 @@
             this.SaveConfigButton = new System.Windows.Forms.Button();
             this.projectName = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.ButtonAndrej = new System.Windows.Forms.Button();
+            this.buttongradient = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericseconds)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
@@ -453,7 +453,7 @@
             // 
             this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel3.Controls.Add(this.ButtonAndrej);
+            this.panel3.Controls.Add(this.buttongradient);
             this.panel3.Controls.Add(this.savegraphbutton);
             this.panel3.Location = new System.Drawing.Point(0, 639);
             this.panel3.Name = "panel3";
@@ -538,12 +538,13 @@
             // 
             // ButtonAndrej
             // 
-            this.ButtonAndrej.Location = new System.Drawing.Point(0, 0);
-            this.ButtonAndrej.Name = "ButtonAndrej";
-            this.ButtonAndrej.Size = new System.Drawing.Size(153, 32);
-            this.ButtonAndrej.TabIndex = 28;
-            this.ButtonAndrej.Text = "ButtonAndrej";
-            this.ButtonAndrej.UseVisualStyleBackColor = true;
+            this.buttongradient.Location = new System.Drawing.Point(0, 0);
+            this.buttongradient.Name = "buttongradient";
+            this.buttongradient.Size = new System.Drawing.Size(153, 32);
+            this.buttongradient.TabIndex = 28;
+            this.buttongradient.Text = "gradient color";
+            this.buttongradient.UseVisualStyleBackColor = true;
+            this.buttongradient.Click += new System.EventHandler(this.gradientbutton_Click);
             // 
             // Form1
             // 
@@ -621,7 +622,7 @@
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.ComboBox comboBox2;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Button ButtonAndrej;
+        private System.Windows.Forms.Button buttongradient;
     }
 }
 
