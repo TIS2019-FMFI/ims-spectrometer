@@ -51,7 +51,15 @@ namespace Arduin
         HeatSeries liveheat = new HeatSeries();
         List<Tuple<Panel, IntensityData, HeatSeries>> allPanelsIntensityData = new List<Tuple<Panel, IntensityData, HeatSeries>>();
 
-        GradientStopCollection gradient = GradientFromFile(AppDomain.CurrentDomain.BaseDirectory + "Data\\Intensity_Color\\auto_color.txt");           
+        GradientStopCollection gradient = new GradientStopCollection {
+                    new GradientStop(System.Windows.Media.Color.FromRgb(51, 51, 255), .0), //from 0 to 0.2
+                    new GradientStop(System.Windows.Media.Color.FromRgb(51, 255, 51), .20), // from 0.2 to 0.4
+                    new GradientStop(System.Windows.Media.Color.FromRgb(153, 255, 51), .40), //from 0.4 to 0.6                  
+                    new GradientStop(System.Windows.Media.Color.FromRgb(255, 153, 51), .60), //from 0.60 to 0.80
+                    new GradientStop(System.Windows.Media.Color.FromRgb(255, 0, 0), .80) //from 0.80 to 1(max value)
+               };
+        //GradientFromFile(AppDomain.CurrentDomain.BaseDirectory + "Data\\Intensity_Color\\auto_color.txt");           
+
         static private GradientStopCollection GradientFromFile(string path){
             List<string[]> list = FileService.Instance.intensity_color(path);
             GradientStopCollection g = new GradientStopCollection();
